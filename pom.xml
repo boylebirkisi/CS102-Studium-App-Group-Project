@@ -1,5 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>cs102groupproject</groupId>
     <artifactId>groupproject</artifactId>
@@ -8,44 +11,69 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
+        <tyrus.version>2.1.5</tyrus.version>
     </properties>
+    
     <dependencies>
+        <!-- JavaFX dependencies -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>17.0.8</version>
         </dependency>
-
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
             <version>17.0.8</version>
         </dependency>
 
-          <dependency>
+        <!-- Google Calendar dependencies -->
+        <dependency>
             <groupId>com.google.api-client</groupId>
             <artifactId>google-api-client</artifactId>
             <version>2.8.1</version>
         </dependency>
-
         <dependency>
             <groupId>com.google.oauth-client</groupId>
             <artifactId>google-oauth-client-jetty</artifactId>
             <version>1.34.1</version>
         </dependency>
-        
         <dependency>
             <groupId>com.google.http-client</groupId>
             <artifactId>google-http-client-gson</artifactId>
             <version>1.46.1</version>
         </dependency>
-
         <dependency>
             <groupId>com.google.apis</groupId>
             <artifactId>google-api-services-calendar</artifactId>
-            <version>v3-rev20250115-2.0.0</version>
+            <version>v3-rev411-1.25.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.websocket</groupId>
+            <artifactId>javax.websocket-api</artifactId>
+            <version>1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.tyrus.bundles</groupId>
+            <artifactId>tyrus-standalone-client</artifactId>
+            <version>2.1.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.tyrus</groupId>
+            <artifactId>tyrus-server</artifactId>
+            <version>2.1.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.tyrus</groupId>
+            <artifactId>tyrus-container-grizzly-server</artifactId>
+            <version>2.1.5</version>
         </dependency>
     </dependencies>
+    
     <build>
         <plugins>
             <plugin>
@@ -62,8 +90,6 @@
                 <version>0.0.6</version>
                 <executions>
                     <execution>
-                        <!-- Default configuration for running -->
-                        <!-- Usage: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>cs102groupproject.App</mainClass>

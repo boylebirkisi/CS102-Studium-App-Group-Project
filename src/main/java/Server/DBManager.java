@@ -53,10 +53,32 @@ public class DBManager {
         }
     }
 
+        public boolean getUserByEmail(String name, String email, String password) {
+        // Use PreparedStatement for security (prevents SQL Injection)
+        String sqlQuery = "INSERT INTO users(name, email, password) VALUES(?, ?, ?)"; 
+
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sqlQuery)) {
+
+            if (conn == null) return false; // Connection failed
+            
+            pstmt.setString(1, name);
+            pstmt.setString(2, email);
+            pstmt.setString(3, password);
+
+            int rowsAffected = pstmt.executeUpdate();
+            // If at least one row was affected, that means the insertion was successful.
+            return rowsAffected > 0;
+            
+        } catch (SQLException e) {
+            System.err.println("Database operation failed: " + e.getMessage());
+            return false;
+        }
+    }
+
     public static void main(String[] args) {
         DBManager db = new DBManager();
         String hashedPassword = new PasswordHasher().hashPassword("password123");
-        boolean success = db.insertUser("delfin", "deryilmaz06@gmail.com", hashedPassword);
+        boolean success = db.insertUser("delffafin", "deryilmaz06@gmail.com", hashedPassword);
         if (success) System.out.println("Insert successful.");
     }
 }

@@ -8,5 +8,7 @@ public enum ActionType {
     UPDATE_DATA,
     DELETE_DATA,
     ERROR,
-    SUCCESS
+    SUCCESS,
+    START_GROUP_SESSION, 
+    GROUP_SESSION_CREATED
 }

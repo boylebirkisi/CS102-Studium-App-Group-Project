@@ -134,7 +134,7 @@
                   <HBox prefHeight="353.0" prefWidth="132.0" BorderPane.alignment="CENTER">
                      <children>
                         <Line endX="-101.32843017578125" endY="351.29290771484375" startX="-100.0" strokeWidth="2.0" />
-                        <VBox prefHeight="352.0" prefWidth="131.0">
+                        <VBox prefHeight="352.0" prefWidth="131.0" style="-fx-background-color: beige;">
                            <children>
                               <HBox prefHeight="18.0" prefWidth="100.0">
                                  <children>
@@ -189,12 +189,12 @@
                                  <children>
                                     <ImageView>
                                        <image>
-                                          <Image url="@../../../../../../Users/ali-m/Desktop/Market.png" />
+                                          <Image url="@../../../../../../Users/ali-m/Desktop/groupproject%20assets/Market.png" />
                                        </image>
                                     </ImageView>
                                     <ImageView>
                                        <image>
-                                          <Image url="@../../../../../../Users/ali-m/Desktop/Storage.png" />
+                                          <Image url="@../../../../../../Users/ali-m/Desktop/groupproject%20assets/Storage.png" />
                                        </image>
                                     </ImageView>
                                  </children>
@@ -212,7 +212,7 @@
                      <children>
                         <ImageView fitHeight="355.0" fitWidth="502.0">
                            <image>
-                              <Image url="@../../../../../../Users/ali-m/Desktop/Office.png" />
+                              <Image url="@../../../../../../Users/ali-m/Desktop/groupproject%20assets/Office.png" />
                            </image>
                         </ImageView>
                         <ImageView fitHeight="38.0" fitWidth="40.0" layoutX="327.0" layoutY="127.0">
@@ -220,14 +220,14 @@
                               <Image url="@../../../../../../Users/ali-m/Downloads/output-onlinepngtools%20(1).png" />
                            </image>
                         </ImageView>
-                        <ImageView fitHeight="55.0" fitWidth="57.0" layoutX="245.0" layoutY="74.0" preserveRatio="true">
+                        <ImageView fitHeight="54.0" fitWidth="56.0" layoutX="245.0" layoutY="73.0">
                            <image>
-                              <Image url="@../../../../../../Users/ali-m/Desktop/Calendar.png" />
+                              <Image url="@../../../../../../Users/ali-m/Desktop/groupproject%20assets/Calendar.png" />
                            </image>
                         </ImageView>
-                        <ImageView fitHeight="19.0" fitWidth="53.0" layoutX="321.0" layoutY="65.0" preserveRatio="true">
+                        <ImageView fitHeight="26.0" fitWidth="53.0" layoutX="321.0" layoutY="62.0">
                            <image>
-                              <Image url="@../../../../../../Users/ali-m/Desktop/pdf.PNG" />
+                              <Image url="@../../../../../../Users/ali-m/Desktop/groupproject%20assets/pdf.PNG" />
                            </image>
                         </ImageView>
                      </children>

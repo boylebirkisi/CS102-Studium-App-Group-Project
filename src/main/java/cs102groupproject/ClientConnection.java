@@ -1,5 +1,5 @@
 package cs102groupproject;
 
-public class DBOperations {
+public class ClientConnection {
     
 }

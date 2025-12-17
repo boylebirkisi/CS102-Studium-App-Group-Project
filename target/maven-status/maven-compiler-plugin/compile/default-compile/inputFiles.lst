@@ -1,7 +1,8 @@
-/Users/delfineryilmaz/Desktop/Studium/CS102-Studium-App-Group-Project/src/main/java/cs102groupproject/WebSocketServer.java
+/Users/delfineryilmaz/Desktop/Studium/CS102-Studium-App-Group-Project/src/main/java/cs102groupproject/ChatServer.java
 /Users/delfineryilmaz/Desktop/Studium/CS102-Studium-App-Group-Project/src/main/java/cs102groupproject/DBOperations.java
 /Users/delfineryilmaz/Desktop/Studium/CS102-Studium-App-Group-Project/src/main/java/cs102groupproject/GoogleOperations.java
-/Users/delfineryilmaz/Desktop/Studium/CS102-Studium-App-Group-Project/src/main/java/cs102groupproject/WebSocketClient.java
 /Users/delfineryilmaz/Desktop/Studium/CS102-Studium-App-Group-Project/src/main/java/cs102groupproject/PrimaryController.java
 /Users/delfineryilmaz/Desktop/Studium/CS102-Studium-App-Group-Project/src/main/java/cs102groupproject/SecondaryController.java
+/Users/delfineryilmaz/Desktop/Studium/CS102-Studium-App-Group-Project/src/main/java/cs102groupproject/ChatClient.java
+/Users/delfineryilmaz/Desktop/Studium/CS102-Studium-App-Group-Project/src/main/java/cs102groupproject/ClientConnection.java
 /Users/delfineryilmaz/Desktop/Studium/CS102-Studium-App-Group-Project/src/main/java/cs102groupproject/App.java

@@ -19,7 +19,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-@ServerEndpoint("/chat")
+@ServerEndpoint("/app")
 public class ChatServer {
 
     // Thread-safe set to store all active WebSocket sessions

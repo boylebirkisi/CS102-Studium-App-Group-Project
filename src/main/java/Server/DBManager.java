@@ -3,7 +3,7 @@ package Server;
 import java.sql.*;
 
 public class DBManager {
-     // 1. Connection Details, database URL, username and password
+     // Connection Details
     private static final String DB_URL = "jdbc:postgresql://34.59.31.201:5432/studium";
     private static final String USER = "postgres";
     private static final String PASS = "P3c,YKR[a~}THbM9";
@@ -16,10 +16,9 @@ public class DBManager {
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
-            System.out.println("Connected to the database!"); // Uncomment for testing
+            System.out.println("Connected to the database!"); 
         } catch (SQLException e) {
             System.err.println("Connection failed! Check credentials and network. Error: " + e.getMessage());
-            // In a real application, you would log this error.
         }
         return conn;
     }
@@ -54,7 +53,7 @@ public class DBManager {
     }
 
         public boolean getUserByEmail(String name, String email, String password) {
-        // Use PreparedStatement for security (prevents SQL Injection)
+        // Use PreparedStatement for security preventing SQL Injwction
         String sqlQuery = "INSERT INTO users(name, email, password) VALUES(?, ?, ?)"; 
 
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sqlQuery)) {

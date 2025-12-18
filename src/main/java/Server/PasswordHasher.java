@@ -2,7 +2,9 @@ package Server;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 /**
- * 
+ * Provides methods to hash and verify passwords using BCrypt library.
+ * Author: Delfin Eryılmaz
+ * Date: 18.12.2025
  */
 public class PasswordHasher {
     private final int SALT_COUNTS = 12;

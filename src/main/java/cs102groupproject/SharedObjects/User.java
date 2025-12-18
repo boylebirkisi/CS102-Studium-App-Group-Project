@@ -3,7 +3,8 @@ package cs102groupproject.SharedObjects;
 public class User {
     private String id;
     private String username;
-    private UserCredentials credentials;
+    private String googleID;
+    private String email;
     private int soloCurrency;
     private int groupCurrency;
     private boolean isVerified;
@@ -12,7 +13,8 @@ public class User {
     public User(String id, String username, UserCredentials credentials, int soloCurrency, int groupCurrency, boolean isVerified, String avatar) {
         this.id = id;
         this.username = username;
-        this.credentials = credentials;
+        this.googleID = googleID;
+        this.email = email;
         this.soloCurrency = soloCurrency;
         this.groupCurrency = groupCurrency;
         this.isVerified = isVerified;
@@ -25,8 +27,11 @@ public class User {
     public String getUsername() {
         return username;
     }
-    public UserCredentials getCredentials() {
-        return credentials;
+    public String getGoogleID() {
+        return googleID;
+    }
+    public String getEmail() {
+        return email;
     }
     public int getSoloCurrency() {
         return soloCurrency;

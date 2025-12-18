@@ -55,7 +55,7 @@ public class GoogleOAuthClient {
                 clientSecrets,
                 SCOPES
             )
-            .setAccessType("offline")
+            .setAccessType("offline") // Gives refresh token
             .setDataStoreFactory(new MemoryDataStoreFactory())
             .build();
 

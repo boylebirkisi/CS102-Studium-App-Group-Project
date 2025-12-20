@@ -1,20 +1,18 @@
 package cs102groupproject.SharedObjects;
 
-import cs102groupproject.User;
-
 public class Session {
-    protected User owner;
-    protected String name;
-    protected String type;
-    protected int no;
-    protected String id;
-    protected int length;
-    protected int remainingSeconds;
-    protected int breakLength;
-    protected int totalSeconds;
-    protected boolean isPaused;
-    protected boolean inBreak;
-    protected boolean isCompleted;
+    private User owner;
+    private String name;
+    private String type;
+    private int no;
+    private String id;
+    private int length;
+    private int remainingSeconds;
+    private int breakLength;
+    private int totalSeconds;
+    private boolean isPaused;
+    private boolean inBreak;
+    private boolean isCompleted;
 
     public Session(User owner,String name, String type, int no, String id, int length, int breakLength)
     {

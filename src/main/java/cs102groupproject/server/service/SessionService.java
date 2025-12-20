@@ -1,25 +1,33 @@
 package cs102groupproject.server.service;
 
-import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import cs102groupproject.SharedObjects.GroupSession;
-import cs102groupproject.server.model.entity.SessionEntity;
 import cs102groupproject.server.websocket.ClientConnection;
-
 
 public class SessionService {
 
-    private final Map<String, GroupSession> sessions = new ConcurrentHashMap<>();
+    private static final Map<String, GroupSession> sessions = new ConcurrentHashMap<>();
 
-    public GroupSession createGroupSession() {
-        GroupSession s = new GroupSession();
-        sessions.put(s.getId(), s);
-        return s;
+    public GroupSession createGroupSession(ClientConnection owner) {
+        GroupSession session = new GroupSession();
+        sessions.put(session.getId(), session);
+        session.addParticipant(owner);
+        return session;
+    }
+
+    public GroupSession joinGroupSession(String id, ClientConnection client) {
+        GroupSession session = sessions.get(id);
+        if (session == null) {
+            throw new IllegalArgumentException("Session not found");
+        }
+        session.addParticipant(client);
+        return session;
     }
 }
+
+
 
 
 

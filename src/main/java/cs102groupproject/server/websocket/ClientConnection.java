@@ -2,6 +2,8 @@ package cs102groupproject.server.websocket;
 
 import jakarta.websocket.Session;
 
+import java.util.Map;
+
 import cs102groupproject.SharedObjects.ActionType;
 import cs102groupproject.SharedObjects.GroupSession;
 import cs102groupproject.SharedObjects.ProtocolMessage;
@@ -11,6 +13,8 @@ public class ClientConnection {
 
     private final Session socketSession;
     private final SessionService sessionService = new SessionService();
+
+    private String currentGroupSessionId;
 
     public ClientConnection(Session session) {
         this.socketSession = session;
@@ -28,12 +32,26 @@ public class ClientConnection {
         switch (message.getAction()) {
 
             case START_GROUP_SESSION: {
-                GroupSession groupSession =
-                        sessionService.createGroupSession();
+                GroupSession session =
+                        sessionService.createGroupSession(this);
 
                 send(new ProtocolMessage(
                         ActionType.GROUP_SESSION_CREATED,
-                        groupSession
+                        Map.of("sessionId", session.getId())
+                ));
+
+                break;
+            }
+
+            case JOIN_GROUP_SESSION: {
+                Map<?, ?> payload = (Map<?, ?>) message.getPayload();
+                String id = payload.get("sessionId").toString();
+
+                sessionService.joinGroupSession(id, this);
+
+                send(new ProtocolMessage(
+                        ActionType.JOINED_GROUP_SESSION,
+                        Map.of("sessionId", id)
                 ));
 
                 break;

@@ -22,7 +22,7 @@ public class ProtocolMessage {
     }
 
     public Object getPayload() {
-        return payload;
+        return payload; 
     }
 
     public String toJson() {

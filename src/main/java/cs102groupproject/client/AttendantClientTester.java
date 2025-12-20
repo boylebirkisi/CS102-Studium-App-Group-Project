@@ -8,13 +8,23 @@ import cs102groupproject.SharedObjects.ActionType;
 import cs102groupproject.SharedObjects.ProtocolMessage;
 
 @ClientEndpoint
-public class TestClient {
-    private static String groupSessionId;
+public class AttendantClientTester {
 
     @OnOpen
     public void onOpen(Session session) {
+
+        // ID oluşana kadar bekle (TEST AMAÇLI)
+        while (TestClient.getGroupSessionId() == null) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ignored) {}
+        }
+
         ProtocolMessage msg =
-                new ProtocolMessage(ActionType.START_GROUP_SESSION, null);
+                new ProtocolMessage(
+                        ActionType.JOIN_GROUP_SESSION,
+                        Map.of("sessionId", TestClient.getGroupSessionId())
+                );
 
         session.getAsyncRemote().sendText(msg.toJson());
     }
@@ -22,16 +32,6 @@ public class TestClient {
     @OnMessage
     public void onMessage(String message) {
         System.out.println("Server response: " + message);
-
-        ProtocolMessage msg =
-                ProtocolMessage.fromJson(message);
-
-        if (msg.getAction() == ActionType.GROUP_SESSION_CREATED) {
-            Map<?, ?> payload = (Map<?, ?>) msg.getPayload();
-            groupSessionId = (String) payload.get("sessionId");
-
-            System.out.println("Group session id saved: " + groupSessionId);
-        }
     }
 
     @OnClose
@@ -39,21 +39,15 @@ public class TestClient {
         System.out.println("Connection closed");
     }
 
-    public static String getGroupSessionId() {
-        return groupSessionId;
-    }
-
-
     public static void main(String[] args) throws Exception {
         WebSocketContainer container =
                 ContainerProvider.getWebSocketContainer();
 
         container.connectToServer(
-                TestClient.class,
+                AttendantClientTester.class,
                 URI.create("ws://localhost:8080/ws")
         );
 
-        Thread.sleep(10_000);
+        Thread.sleep(20_000);
     }
-
 }

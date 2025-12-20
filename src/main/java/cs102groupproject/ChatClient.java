@@ -2,6 +2,9 @@ package cs102groupproject;
 
 import jakarta.websocket.*;
 import org.glassfish.tyrus.client.ClientManager;
+
+import cs102groupproject.SharedObjects.Session;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URI;

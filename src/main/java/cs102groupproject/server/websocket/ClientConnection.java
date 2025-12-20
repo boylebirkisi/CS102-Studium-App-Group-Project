@@ -1,4 +1,4 @@
-package cs102groupproject.server.websocket;
+package cs102groupproject.Server.websocket;
 
 import jakarta.websocket.Session;
 
@@ -7,17 +7,25 @@ import java.util.Map;
 import cs102groupproject.SharedObjects.ActionType;
 import cs102groupproject.SharedObjects.GroupSession;
 import cs102groupproject.SharedObjects.ProtocolMessage;
-import cs102groupproject.server.service.SessionService;
+import cs102groupproject.Server.service.AuthService;
+import cs102groupproject.Server.service.SessionService;
 
 public class ClientConnection {
 
+    /** WebSocket session associated with the client */
     private final Session socketSession;
-    private final SessionService sessionService = new SessionService();
 
-    private String currentGroupSessionId;
+
+    /** Services handling business logic */
+    private static final AuthService authService = new AuthService();
+    private static final SessionService sessionService = new SessionService();
+
+    /** Logged-in user ID (null if not authenticated) */
+    private String userId;
 
     public ClientConnection(Session session) {
         this.socketSession = session;
+        userId = null;
     }
 
     public void onMessage(String json) {
@@ -31,6 +39,22 @@ public class ClientConnection {
 
         switch (message.getAction()) {
 
+            //*********test case************* 
+            case DEV_LOGIN: {
+                Map<?, ?> payload = (Map<?, ?>) message.getPayload();
+                String username = (String) payload.get("username");
+
+                // Fake auth (TEST AMAÇLI)
+                this.userId = "dev-" + username;
+
+                System.out.println("✅ DEV_LOGIN success, userId = " + this.userId);
+
+                send(new ProtocolMessage(
+                        ActionType.LOGIN_SUCCESS,
+                        this.userId
+                ));
+                break;
+            }
             case START_GROUP_SESSION: {
                 GroupSession session =
                         sessionService.createGroupSession(this);
@@ -57,6 +81,20 @@ public class ClientConnection {
                 break;
             }
 
+            case LOGIN_WITH_GOOGLE: {
+                Map<?, ?> payload = (Map<?, ?>) message.getPayload();
+                String token = payload.get("accessToken").toString();
+
+                String userId = AuthService.registerWithGoogle(token);
+
+                this.userId = userId;
+
+                send(new ProtocolMessage(
+                        ActionType.LOGIN_SUCCESS,
+                        userId
+                ));
+                break;
+            }
             default: sendError("Unknown action");
         }
     }

@@ -1,8 +1,8 @@
-package cs102groupproject.server;
+package cs102groupproject.Server;
 
 import org.glassfish.tyrus.server.Server;
 
-import cs102groupproject.server.websocket.WebSocketServer;
+import cs102groupproject.Server.websocket.WebSocketServer;
 
 /**
  * Starts the WebSocket server.

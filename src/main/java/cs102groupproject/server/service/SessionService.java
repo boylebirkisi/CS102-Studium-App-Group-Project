@@ -1,10 +1,10 @@
-package cs102groupproject.server.service;
+package cs102groupproject.Server.service;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import cs102groupproject.SharedObjects.GroupSession;
-import cs102groupproject.server.websocket.ClientConnection;
+import cs102groupproject.Server.websocket.ClientConnection;
 
 public class SessionService {
 

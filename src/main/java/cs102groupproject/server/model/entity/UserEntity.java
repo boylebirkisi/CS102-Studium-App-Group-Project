@@ -1,4 +1,4 @@
-package cs102groupproject.server.model.entity;
+package cs102groupproject.Server.model.entity;
 
 /**
  * Represents a user record stored in the database. Used internally by the server and never exposed to the client.

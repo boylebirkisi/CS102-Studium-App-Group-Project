@@ -1,4 +1,4 @@
-package cs102groupproject.client;
+package cs102groupproject.Client;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 /**
- * JavaFX App Entry point of the JavaFX client application. Initializes the UI and loads the primary scene.
+ * JavaFX App
  */
 public class App extends Application {
 
@@ -17,7 +17,12 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("primary"), 640, 480);
+        try {
+            WebSocketClient.connect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        scene = new Scene(loadFXML("Login1TEST"), 640, 480);
         stage.setScene(scene);
         stage.show();
     }
@@ -27,7 +32,7 @@ public class App extends Application {
     }
 
     private static Parent loadFXML(String fxml) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/cs102groupproject/" + fxml + ".fxml"));
         return fxmlLoader.load();
     }
 

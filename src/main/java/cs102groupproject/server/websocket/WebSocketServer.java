@@ -1,4 +1,4 @@
-package cs102groupproject.server.websocket;
+package cs102groupproject.Server.websocket;
 
 import jakarta.websocket.OnClose;
 import jakarta.websocket.OnMessage;
@@ -21,6 +21,7 @@ public class WebSocketServer {
 
     @OnMessage
     public void onMessage(String message, Session session) {
+        System.out.println("📩 RAW MESSAGE FROM CLIENT: " + message);
         ClientConnection connection =
                 (ClientConnection) session
                         .getUserProperties()

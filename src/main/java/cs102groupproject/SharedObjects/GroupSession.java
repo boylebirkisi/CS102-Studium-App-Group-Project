@@ -5,7 +5,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import cs102groupproject.server.websocket.ClientConnection;
+import cs102groupproject.Server.websocket.ClientConnection;
 
 public class GroupSession {
 

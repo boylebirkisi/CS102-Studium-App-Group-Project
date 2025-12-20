@@ -1,4 +1,4 @@
-package cs102groupproject.server.legacy;
+package cs102groupproject.Server.legacy;
 
 import jakarta.websocket.*;
 import org.glassfish.tyrus.client.ClientManager;

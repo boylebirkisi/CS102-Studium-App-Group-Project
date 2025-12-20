@@ -1,4 +1,4 @@
-package cs102groupproject.server;
+package cs102groupproject.Server;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 /**

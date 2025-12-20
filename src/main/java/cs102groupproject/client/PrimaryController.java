@@ -1,4 +1,4 @@
-package cs102groupproject.client;
+package cs102groupproject.Client;
 
 import java.io.IOException;
 import javafx.fxml.FXML;

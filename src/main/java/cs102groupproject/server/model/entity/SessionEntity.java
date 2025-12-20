@@ -1,4 +1,4 @@
-package cs102groupproject.server.model.entity;
+package cs102groupproject.Server.model.entity;
 
 /**
  * Represents a session stored in the database. Tracks session state and is managed by SessionService.

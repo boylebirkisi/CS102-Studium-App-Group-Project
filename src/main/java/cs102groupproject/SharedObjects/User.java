@@ -1,0 +1,43 @@
+package cs102groupproject.SharedObjects;
+
+public class User {
+    private String id;
+    private String username;
+    private UserCredentials credentials;
+    private int soloCurrency;
+    private int groupCurrency;
+    private boolean isVerified;
+    private String avatar;
+
+    public User(String id, String username, UserCredentials credentials, int soloCurrency, int groupCurrency, boolean isVerified, String avatar) {
+        this.id = id;
+        this.username = username;
+        this.credentials = credentials;
+        this.soloCurrency = soloCurrency;
+        this.groupCurrency = groupCurrency;
+        this.isVerified = isVerified;
+        this.avatar = avatar;
+    }
+
+    public String getId() {
+        return id;
+    }
+    public String getUsername() {
+        return username;
+    }
+    public UserCredentials getCredentials() {
+        return credentials;
+    }
+    public int getSoloCurrency() {
+        return soloCurrency;
+    }
+    public int getGroupCurrency() {
+        return groupCurrency;
+    }
+    public boolean isVerified() {
+        return isVerified;
+    }
+    public String getAvatar() {
+        return avatar;
+    }
+}

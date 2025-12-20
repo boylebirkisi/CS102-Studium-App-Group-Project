@@ -1,4 +1,4 @@
-package cs102groupproject;
+package cs102groupproject.SharedObjects;
 
 import java.util.ArrayList;
 

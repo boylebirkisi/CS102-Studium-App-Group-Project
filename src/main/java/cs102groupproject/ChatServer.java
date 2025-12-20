@@ -4,6 +4,8 @@ import jakarta.websocket.*;
 import jakarta.websocket.server.ServerEndpoint;
 import org.glassfish.tyrus.server.Server;
 
+import cs102groupproject.SharedObjects.Session;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

@@ -2,11 +2,9 @@ package cs102groupproject.SharedObjects;
 
 import java.util.ArrayList;
 
-import cs102groupproject.User;
-
 public class GroupSession extends Session {
-    protected ArrayList<User> participants;
-    protected GroupChat chat;
+    private ArrayList<User> participants;
+    private GroupChat chat;
 
     public GroupSession(User owner, ArrayList<User> participants, String name, String type, int no, String id, int length, int breakLength)
     {

@@ -3,9 +3,9 @@ package cs102groupproject.SharedObjects;
 import java.time.LocalDate;
 
 public class ChatMessage {
-    protected String senderID;
-    protected String message;
-    protected LocalDate timestamp;
+    private String senderID;
+    private String message;
+    private LocalDate timestamp;
 
     public ChatMessage(String senderID, String message)
     {

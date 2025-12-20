@@ -3,7 +3,7 @@ package cs102groupproject.SharedObjects;
 import java.util.ArrayList;
 
 public class GroupChat {
-    protected ArrayList<ChatMessage> messages; 
+    private ArrayList<ChatMessage> messages; 
 
     public GroupChat()
     {

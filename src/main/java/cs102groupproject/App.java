@@ -22,7 +22,7 @@ public class App extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        scene = new Scene(loadFXML("primary"), 640, 480);
+        scene = new Scene(loadFXML("primary"), 640, 480); // to use login test, change primary to Login1TEST 
         stage.setScene(scene);
         stage.show();
     }

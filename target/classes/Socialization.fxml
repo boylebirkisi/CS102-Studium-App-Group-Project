@@ -37,6 +37,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -46,7 +47,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cs102groupproject.Client.SocializationController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -95,8 +96,8 @@
                      <children>
                         <HBox alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="312.0" spacing="10.0">
                            <children>
-                              <Button mnemonicParsing="false" text="Users" />
-                              <Button mnemonicParsing="false" text="Sessions" />
+                              <Button fx:id="searchUsersButton" mnemonicParsing="false" text="Users" />
+                              <Button fx:id="searchSessionsButton" mnemonicParsing="false" text="Sessions" />
                            </children>
                            <padding>
                               <Insets right="10.0" />
@@ -105,22 +106,26 @@
                         <HBox alignment="CENTER_LEFT" prefHeight="32.0" prefWidth="312.0">
                            <children>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Name: " />
-                              <TextField prefHeight="26.0" prefWidth="74.0" promptText="______________" />
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Major: " />
-                              <TextField prefHeight="26.0" prefWidth="74.0" promptText="______________" />
+                              <TextField fx:id="nameTextField" prefHeight="26.0" prefWidth="74.0" promptText="______________" />
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Department: " />
+                              <TextField fx:id="departmentTextField" prefHeight="26.0" prefWidth="74.0" promptText="______________" />
                            </children>
                         </HBox>
-                        <HBox prefHeight="135.0" prefWidth="312.0">
-                           <children>
-                              <VBox prefHeight="135.0" prefWidth="155.0" />
-                              <VBox prefHeight="135.0" prefWidth="156.0" />
-                           </children>
-                        </HBox>
+                        <ScrollPane>
+                           <content>
+                              <HBox fx:id="searchResultsHBox" prefHeight="135.0" prefWidth="312.0">
+                                 <children>
+                                    <VBox prefHeight="135.0" prefWidth="155.0" />
+                                    <VBox prefHeight="135.0" prefWidth="156.0" />
+                                 </children>
+                              </HBox>
+                           </content>
+                        </ScrollPane>
                      </children>
                   </VBox>
                   <Pane layoutY="62.0" prefHeight="105.0" prefWidth="312.0" style="-fx-background-color: EFE6D8; -fx-background-radius: 15;">
                      <children>
-                        <Text layoutX="42.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="You have earned currencyAmount so far. Study more, earn more." wrappingWidth="92.1331787109375" />
+                        <Text fx:id="currencyEarnedLabel" layoutX="42.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="You have earned currencyAmount so far. Study more, earn more." wrappingWidth="92.1331787109375" />
                         <Pane layoutX="198.0" layoutY="9.0" prefHeight="87.0" prefWidth="92.0" style="-fx-background-color: E7D3A8; -fx-background-radius: 15;">
                            <children>
                               <Text layoutX="8.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Create Group Study Session" wrappingWidth="74.39999999999998" />
@@ -139,7 +144,7 @@
                               </Text>
                            </children>
                         </HBox>
-                        <VBox prefHeight="262.0" prefWidth="226.0" style="-fx-background-color: E7D3A8;" />
+                        <VBox fx:id="friendsVBox" prefHeight="262.0" prefWidth="226.0" style="-fx-background-color: E7D3A8;" />
                         <HBox alignment="CENTER_LEFT" prefHeight="22.0" prefWidth="226.0" style="-fx-background-color: EFE6D8;">
                            <children>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Online: " />

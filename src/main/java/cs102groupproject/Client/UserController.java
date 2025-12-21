@@ -34,23 +34,23 @@ public class UserController {
     @FXML
     private void displayUserInfo()
     {
-        HBox userInfoContent = new HBox();
+        VBox userInfoContent = new VBox();
 
         String avatar = manager.getCurrentUser().getAvatar();
         Label avatarLabel = new Label(avatar);
         Label usernameLabel = new Label("Username: " + manager.getCurrentUser().getUsername());
         Label departmentLabel = new Label("Department: " + manager.getCurrentUser().getDepartment());
         Label emailLabel = new Label("Email: " + manager.getCurrentUser().getEmail().getEmail());
-        HBox infoBox = new HBox(usernameLabel, departmentLabel, emailLabel);
+        VBox infoBox = new VBox(usernameLabel, departmentLabel, emailLabel);
         userInfoContent.getChildren().addAll(avatarLabel, infoBox);
 
         Button editButton = new Button ("Edit Info");
         userInfoContent.getChildren().add(editButton);
         editButton.setOnAction(e -> {
-            VBox usernameBox = new VBox(new Label("New Username: "), new TextField());
-            VBox departmentBox = new VBox(new Label("New Department: "), new TextField());
-            VBox emailBox = new VBox(new Label("New Email: "), new TextField());
-            HBox editBox = new HBox(usernameBox, departmentBox, emailBox);
+            HBox usernameBox = new HBox(new Label("New Username: "), new TextField());
+            HBox departmentBox = new HBox(new Label("New Department: "), new TextField());
+            HBox emailBox = new HBox(new Label("New Email: "), new TextField());
+            VBox editBox = new VBox(usernameBox, departmentBox, emailBox);
             infoBox.getChildren().set(1, editBox);
             Button saveChangesButton = new Button ("Save Changes");
             userInfoContent.getChildren().set(userInfoContent.getChildren().indexOf(editButton), saveChangesButton);
@@ -72,8 +72,8 @@ public class UserController {
             });
         });
 
-        VBox oldPasswordBox = new VBox(new Label("Old Password: "), new TextField());
-        VBox newPasswordBox = new VBox(new Label("New Password: "), new TextField());
+        HBox oldPasswordBox = new HBox(new Label("Old Password: "), new TextField());
+        HBox newPasswordBox = new HBox(new Label("New Password: "), new TextField());
         Button changePasswordButton = new Button ("Change Password");
         changePasswordButton.setOnAction(e -> {
             String oldPasswordInput = ((TextField)oldPasswordBox.getChildren().get(1)).getText();
@@ -83,7 +83,7 @@ public class UserController {
                 manager.getCurrentUser().getEmail().setPassword(newPasswordInput);
             }
         });
-        HBox passwordBox = new HBox(oldPasswordBox, newPasswordBox, changePasswordButton);
+        VBox passwordBox = new VBox(oldPasswordBox, newPasswordBox, changePasswordButton);
         userInfoContent.getChildren().add(passwordBox);
 
         userInfo.setContent(userInfoContent);
@@ -96,7 +96,7 @@ public class UserController {
         Label individualSessionsLabel = new Label("Individual Sessions: " + String.valueOf(manager.getCurrentUser().getIndividualSessionsCompleted()));
         Label groupSessionsLabel = new Label("Group Sessions: " + String.valueOf(manager.getCurrentUser().getGroupSessionsCompleted()));
         Label totalMinutesLabel = new Label("Total Minutes Spent: " + String.valueOf(manager.getCurrentUser().getTotalMinutesSpent()));
-        HBox sessionStatsContent = new HBox(sessionsCompletedLabel, individualSessionsLabel, groupSessionsLabel, totalMinutesLabel);
+        VBox sessionStatsContent = new VBox(sessionsCompletedLabel, individualSessionsLabel, groupSessionsLabel, totalMinutesLabel);
         sessionStats.setContent(sessionStatsContent);
     }
 
@@ -105,14 +105,14 @@ public class UserController {
     {
         ScrollPane habitStats = new ScrollPane();
         Label habitStatsLabel = new Label("Completed Habits: ");
-        HBox habitStatsContent = new HBox();
+        VBox habitStatsContent = new VBox();
         for (Habit habit : manager.getCurrentUser().getHabitsCompleted())
         {
             Label habitLabel = new Label(habit.getName() + ": " + habit.calculateCompletionCount() + "/30");
             habitStatsContent.getChildren().add(habitLabel);
         }
         habitStats.setContent(habitStatsContent);
-        HBox habitStatsTotalContent = new HBox(habitStatsLabel, habitStats);
+        VBox habitStatsTotalContent = new VBox(habitStatsLabel, habitStats);
         habitStats.setContent(habitStatsTotalContent);
     }
 }

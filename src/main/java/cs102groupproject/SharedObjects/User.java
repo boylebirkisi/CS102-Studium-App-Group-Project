@@ -3,15 +3,17 @@ package cs102groupproject.SharedObjects;
 public class User {
     private String id;
     private String username;
+    private String department;
     private UserCredentials credentials;
     private int soloCurrency;
     private int groupCurrency;
     private boolean isVerified;
     private String avatar;
 
-    public User(String id, String username, UserCredentials credentials, int soloCurrency, int groupCurrency, boolean isVerified, String avatar) {
+    public User(String id, String username, String department, UserCredentials credentials, int soloCurrency, int groupCurrency, boolean isVerified, String avatar) {
         this.id = id;
         this.username = username;
+        this.department = department;
         this.credentials = credentials;
         this.soloCurrency = soloCurrency;
         this.groupCurrency = groupCurrency;
@@ -24,6 +26,9 @@ public class User {
     }
     public String getUsername() {
         return username;
+    }
+    public String getDepartment() {
+        return department;
     }
     public UserCredentials getCredentials() {
         return credentials;

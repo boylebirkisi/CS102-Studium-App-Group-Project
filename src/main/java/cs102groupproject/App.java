@@ -5,7 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
+import cs102groupproject.Client.WebSocketClient;
 import java.io.IOException;
 
 /**
@@ -17,6 +17,11 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+        try {
+            WebSocketClient.connect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         scene = new Scene(loadFXML("primary"), 640, 480);
         stage.setScene(scene);
         stage.show();

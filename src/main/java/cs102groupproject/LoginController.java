@@ -2,12 +2,13 @@ package cs102groupproject;
 
 import com.google.api.client.auth.oauth2.Credential;
 import cs102groupproject.SharedObjects.AppEvent;
-import Server.AuthService;
 import cs102groupproject.Client.GoogleCalendarAPI;
 import cs102groupproject.Client.GoogleOAuthClient;
+import cs102groupproject.Server.AuthService;
 import cs102groupproject.SharedObjects.AppEvent;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.util.converter.LocalDateStringConverter;
 
 public class LoginController {
 
@@ -40,9 +41,6 @@ public class LoginController {
     
                 String userId = AuthService.registerWithGoogle(accessToken);
                 GoogleCalendarAPI calendarAPI = new GoogleCalendarAPI(credential);
-
-                AppEvent event = new AppEvent("study", "#FF0000", null, null, userId, 5, null);
-                calendarAPI.createEvent(event);
 
                 // Updates UI on JavaFX App Thread
                 Platform.runLater(() -> {

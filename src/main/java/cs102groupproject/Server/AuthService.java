@@ -1,4 +1,4 @@
-package Server;
+package cs102groupproject.Server;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.auth.oauth2.Credential;

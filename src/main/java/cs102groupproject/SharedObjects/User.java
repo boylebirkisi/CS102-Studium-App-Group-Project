@@ -10,7 +10,7 @@ public class User {
     private boolean isVerified;
     private String avatar;
 
-    public User(String id, String username, UserCredentials credentials, int soloCurrency, int groupCurrency, boolean isVerified, String avatar) {
+    public User(String id, String username, String email, String googleID,int soloCurrency, int groupCurrency, boolean isVerified, String avatar) {
         this.id = id;
         this.username = username;
         this.googleID = googleID;

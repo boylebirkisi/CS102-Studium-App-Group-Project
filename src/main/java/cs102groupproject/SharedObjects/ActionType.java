@@ -2,11 +2,17 @@ package cs102groupproject.SharedObjects;
 
 public enum ActionType {
     REGISTER,
-    LOGIN,
+    LOGIN_WITH_GOOGLE,
     LOGOUT,
     FETCH_DATA,
     UPDATE_DATA,
     DELETE_DATA,
-    ERROR,
-    SUCCESS
+    START_GROUP_SESSION,
+    JOIN_GROUP_SESSION,
+    GROUP_SESSION_CREATED,
+    GROUP_SESSION_JOINED,
+    ERROR, 
+    JOINED_GROUP_SESSION,
+    LOGIN_SUCCESS,
+    DEV_LOGIN
 }

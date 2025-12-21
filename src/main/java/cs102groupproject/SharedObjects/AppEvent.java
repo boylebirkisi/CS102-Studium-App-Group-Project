@@ -2,7 +2,7 @@ package cs102groupproject.SharedObjects;
 
 import java.time.LocalDate;
 
-public class Event extends TransferObject {
+public class AppEvent extends TransferObject {
     private String name;
     private String color;
     private LocalDate start;
@@ -12,7 +12,7 @@ public class Event extends TransferObject {
     private String id;
     private int googleCaldendarID;
 
-    public Event(String name, String color, LocalDate start, LocalDate finish, String userId, int importance, String id, int googleCaldendarID)
+    public AppEvent(String name, String color, LocalDate start, LocalDate finish, String userId, int importance, String id, int googleCaldendarID)
     {
         this.name = name;
         this.color = color;

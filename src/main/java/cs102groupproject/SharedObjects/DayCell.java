@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class DayCell {
     private ArrayList<Task> weeklyTasks;
     private ArrayList<Task> dailyTasks;
-    private ArrayList<Event> events;
+    private ArrayList<AppEvent> events;
     private LocalDate date;
 
     public DayCell(LocalDate date) {
@@ -18,9 +18,9 @@ public class DayCell {
 
     public ArrayList<Task> getWeeklyTasks() {return weeklyTasks;}
     public ArrayList<Task> getDailyTasks() {return dailyTasks;}
-    public ArrayList<Event> getEvents() {return events;}
+    public ArrayList<AppEvent> getEvents() {return events;}
     public LocalDate getDate() {return date;}
     public void addWeeklyTask(Task task) {weeklyTasks.add(task);}
     public void addDailyTask(Task task) {dailyTasks.add(task);}
-    public void addEvent(Event event) {events.add(event);}
+    public void addEvent(AppEvent event) {events.add(event);}
 }

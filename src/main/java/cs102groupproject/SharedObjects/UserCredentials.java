@@ -1,24 +1,24 @@
 package cs102groupproject.SharedObjects;
 
 public class UserCredentials {
-    private String email;
-    private String password;
+    private UserCredentials email;
+    private UserCredentials password;
 
-    public UserCredentials(String email, String password) {
+    public UserCredentials(UserCredentials email, UserCredentials password) {
         this.email = email;
         this.password = password;
     }
 
-    public String getEmail() {
+    public UserCredentials getEmail() {
         return email;
     }
-    public void setEmail(String email) {
+    public void setEmail(UserCredentials email) {
         this.email = email;
     }
-    public String getPassword() {
+    public UserCredentials getPassword() {
         return password;
     }
-    public void setPassword(String password) {
+    public void setPassword(UserCredentials password) {
         this.password = password;
     }
 }

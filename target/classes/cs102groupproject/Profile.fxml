@@ -99,17 +99,17 @@
                <children>
                   <Accordion id="profile" prefHeight="364.0" prefWidth="131.0">
                     <panes>
-                      <TitledPane id="userInfo" animated="false" text="User Information">
+                      <TitledPane id="userInfo" fx:id="userInfo" animated="false" onMouseClicked="#displayInfo" text="User Information">
                         <content>
                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                         </content>
                       </TitledPane>
-                      <TitledPane id="sessionStats" animated="false" text="Session Statistics">
+                      <TitledPane id="sessionStats" fx:id="sessionStats" animated="false" text="Session Statistics">
                         <content>
                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                         </content>
                       </TitledPane>
-                      <TitledPane id="habitStats" animated="false" text="Habit Statistics">
+                      <TitledPane id="habitStats" fx:id="habitStats" animated="false" text="Habit Statistics">
                         <content>
                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                         </content>

@@ -24,6 +24,16 @@ public class Habit extends TransferObject{
     public String getId() {return id;}
     public String getUserId() {return userId;}
 
+    public int calculateCompletionCount()
+    {
+        int completedDays = 0;
+        for (boolean completed : getCompletedArr())
+        {
+            if (completed) completedDays++;
+        }
+        return completedDays;
+    }
+
     public void invertCompletedAtIndex(int index)
     {
         completedArr[index] = !completedArr[index];

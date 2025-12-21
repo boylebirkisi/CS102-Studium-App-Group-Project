@@ -1,5 +1,7 @@
 package cs102groupproject.SharedObjects;
 
+import java.util.ArrayList;
+
 public class User {
     private String id;
     private String username;
@@ -7,6 +9,10 @@ public class User {
     private UserCredentials credentials;
     private int soloCurrency;
     private int groupCurrency;
+    private int individualSessionsCompleted;
+    private int groupSessionsCompleted;
+    private int totalMinutesSpent;
+    private ArrayList<Habit> habitsCompleted;
     private boolean isVerified;
     private String avatar;
 
@@ -19,6 +25,10 @@ public class User {
         this.groupCurrency = groupCurrency;
         this.isVerified = isVerified;
         this.avatar = avatar;
+        individualSessionsCompleted = 0;
+        groupSessionsCompleted = 0;
+        totalMinutesSpent = 0;
+        habitsCompleted = new ArrayList<>();
     }
 
     public String getId() {
@@ -27,8 +37,14 @@ public class User {
     public String getUsername() {
         return username;
     }
+    public void setUsername(String username) {
+        this.username = username;
+    }
     public String getDepartment() {
         return department;
+    }
+    public void setDepartment(String department) {
+        this.department = department;
     }
     public UserCredentials getCredentials() {
         return credentials;
@@ -44,6 +60,30 @@ public class User {
     }
     public void setGroupCurrency(int groupCurrency) {
         this.groupCurrency = groupCurrency;
+    }
+    public int getIndividualSessionsCompleted() {
+        return individualSessionsCompleted;
+    }
+    public void incrementIndividualSessionsCompleted() {
+        this.individualSessionsCompleted++;
+    }
+    public int getGroupSessionsCompleted() {
+        return groupSessionsCompleted;
+    }
+    public void incrementGroupSessionsCompleted() {
+        this.groupSessionsCompleted++;
+    }
+    public int getTotalMinutesSpent() {
+        return totalMinutesSpent;
+    }
+    public void addMinutesSpent(int minutes) {
+        this.totalMinutesSpent += minutes;
+    }
+    public ArrayList<Habit> getHabitsCompleted() {
+        return habitsCompleted;
+    }
+    public void addHabitCompleted(Habit habit) {
+        this.habitsCompleted.add(habit);
     }
     public boolean isVerified() {
         return isVerified;

@@ -1,31 +1,35 @@
-package cs102groupproject.SharedObjects;
-import com.google.api.client.json.gson.GsonFactory;
+ackage cs102groupproject.SharedObjects;
+
+import com.google.gson.Gson;
+
+/**
+ * Represents a message exchanged between client and server.
+ */
 public class ProtocolMessage {
 
-    private ActionType type;
-    private Object content;
+    private static final Gson gson = new Gson();
 
-    public ProtocolMessage(ActionType type, Object content) {
-        this.type = type;
-        this.content = content;
+    private ActionType action;
+    private Object payload;
+
+    public ProtocolMessage(ActionType action, Object payload) {
+        this.action = action;
+        this.payload = payload;
+    }
+
+    public ActionType getAction() {
+        return action;
+    }
+
+    public Object getPayload() {
+        return payload; 
     }
 
     public String toJson() {
-        GsonFactory factory = new GsonFactory();
-        try {
-            return factory.toString(this);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        return gson.toJson(this);
     }
 
-    public static void main(String[] args) {
-        ProtocolMessage msg = new ProtocolMessage(ActionType.LOGIN, "User login request");
-        System.out.println("Message Type: " + msg.type);
-        System.out.println("Message Content: " + msg.content);
-
-        System.out.println("JSON Representation: " + msg.toJson());
-
+    public static ProtocolMessage fromJson(String json) {
+        return gson.fromJson(json, ProtocolMessage.class);
     }
 }

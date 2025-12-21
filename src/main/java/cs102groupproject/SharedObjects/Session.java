@@ -1,5 +1,7 @@
 package cs102groupproject.SharedObjects;
 
+import java.time.LocalDateTime;
+
 public class Session {
     private User owner;
     private String name;
@@ -10,11 +12,12 @@ public class Session {
     private int remainingSeconds;
     private int breakLength;
     private int totalSeconds;
+    private LocalDateTime startDate;
     private boolean isPaused;
     private boolean inBreak;
     private boolean isCompleted;
 
-    public Session(User owner,String name, String type, int no, String id, int length, int breakLength)
+    public Session(User owner,String name, String type, int no, String id, int length, int breakLength, LocalDateTime startDate)
     {
         this.owner = owner;
         this.name = name;
@@ -28,6 +31,7 @@ public class Session {
         isPaused = false;
         inBreak = false;
         isCompleted = false;
+        this.startDate = startDate;
     }
 
     public String getName() {return name;}
@@ -61,6 +65,7 @@ public class Session {
     public boolean getInBreak() {return inBreak;}
     public boolean getIsCompleted() {return isCompleted;}
     public void setIsCompletedTrue() {isCompleted = true;}
+    public LocalDateTime getDate() {return startDate;}
 
     /**
      * Starts the session.

@@ -40,7 +40,7 @@ public class UserController {
         Label avatarLabel = new Label(avatar);
         Label usernameLabel = new Label("Username: " + manager.getCurrentUser().getUsername());
         Label departmentLabel = new Label("Department: " + manager.getCurrentUser().getDepartment());
-        Label emailLabel = new Label("Email: " + manager.getCurrentUser().getCredentials().getEmail());
+        Label emailLabel = new Label("Email: " + manager.getCurrentUser().getEmail().getEmail());
         HBox infoBox = new HBox(usernameLabel, departmentLabel, emailLabel);
         userInfoContent.getChildren().addAll(avatarLabel, infoBox);
 
@@ -65,7 +65,7 @@ public class UserController {
                 }
                 if (!((TextField)emailBox.getChildren().get(1)).getText().isEmpty())
                 {
-                    manager.getCurrentUser().getCredentials().setEmail(((TextField)emailBox.getChildren().get(1)).getText());
+                    manager.getCurrentUser().getEmail().setEmail(((TextField)emailBox.getChildren().get(1)).getText());
                 }
                 infoBox.getChildren().set(1, infoBox);
                 userInfoContent.getChildren().set(userInfoContent.getChildren().indexOf(saveChangesButton), editButton);
@@ -78,9 +78,9 @@ public class UserController {
         changePasswordButton.setOnAction(e -> {
             String oldPasswordInput = ((TextField)oldPasswordBox.getChildren().get(1)).getText();
             String newPasswordInput = ((TextField)newPasswordBox.getChildren().get(1)).getText();
-            if (oldPasswordInput.equals(manager.getCurrentUser().getCredentials().getPassword()) && !newPasswordInput.isEmpty())
+            if (oldPasswordInput.equals(manager.getCurrentUser().getEmail().getPassword()) && !newPasswordInput.isEmpty())
             {
-                manager.getCurrentUser().getCredentials().setPassword(newPasswordInput);
+                manager.getCurrentUser().getEmail().setPassword(newPasswordInput);
             }
         });
         HBox passwordBox = new HBox(oldPasswordBox, newPasswordBox, changePasswordButton);

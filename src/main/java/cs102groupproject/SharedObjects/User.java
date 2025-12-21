@@ -6,7 +6,8 @@ public class User {
     private String id;
     private String username;
     private String department;
-    private UserCredentials credentials;
+    private String email;
+    private String googleID;
     private int soloCurrency;
     private int groupCurrency;
     private int individualSessionsCompleted;
@@ -16,11 +17,56 @@ public class User {
     private boolean isVerified;
     private String avatar;
 
-    public User(String id, String username, String department, UserCredentials credentials, int soloCurrency, int groupCurrency, boolean isVerified, String avatar) {
+    /**
+     * Constructor for existing users.
+     * @param id
+     * @param username
+     * @param department
+     * @param email
+     * @param googleID
+     * @param soloCurrency
+     * @param groupCurrency
+     * @param isVerified
+     * @param avatar
+     * @param individualSessionsCompleted
+     * @param groupSessionsCompleted
+     * @param totalMinutesSpent
+     * @param habitsCompleted
+     */
+    public User(String id, String username, String department, String email, String googleID, int soloCurrency, int groupCurrency, boolean isVerified, String avatar, int individualSessionsCompleted, int groupSessionsCompleted, int totalMinutesSpent, ArrayList<Habit> habitsCompleted) {
         this.id = id;
         this.username = username;
         this.department = department;
-        this.credentials = credentials;
+        this.email = email;
+        this.googleID = googleID;
+        this.soloCurrency = soloCurrency;
+        this.groupCurrency = groupCurrency;
+        this.isVerified = isVerified;
+        this.avatar = avatar;
+        this.individualSessionsCompleted = individualSessionsCompleted;
+        this.groupSessionsCompleted = groupSessionsCompleted;
+        this.totalMinutesSpent = totalMinutesSpent;
+        this.habitsCompleted = habitsCompleted;
+    }
+
+    /**
+     * Constructor for new users.
+     * @param id
+     * @param username
+     * @param department
+     * @param email
+     * @param googleID
+     * @param soloCurrency
+     * @param groupCurrency
+     * @param isVerified
+     * @param avatar
+     */
+    public User(String id, String username, String department, String email, String googleID, int soloCurrency, int groupCurrency, boolean isVerified, String avatar) {
+        this.id = id;
+        this.username = username;
+        this.department = department;
+        this.email = email;
+        this.googleID = googleID;
         this.soloCurrency = soloCurrency;
         this.groupCurrency = groupCurrency;
         this.isVerified = isVerified;
@@ -46,8 +92,14 @@ public class User {
     public void setDepartment(String department) {
         this.department = department;
     }
-    public UserCredentials getCredentials() {
-        return credentials;
+    public String getGoogleID() {
+        return googleID;
+    }
+    public String getEmail() {
+        return email;
+    }
+    public void setEmail(String email) {
+        this.email = email;
     }
     public int getSoloCurrency() {
         return soloCurrency;

@@ -1,4 +1,4 @@
-package Server;
+package cs102groupproject.Server;
 
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpTransport;
@@ -23,13 +23,21 @@ import java.util.Arrays;
 import java.util.List;
 
 public class GoogleCredentialManager {
-    private final String CLIENT_ID;
-    private final String CLIENT_SECRET;
-    private final NetHttpTransport HTTP_TRANSPORT;
-    private final JsonFactory JSON_FACTORY;
-    private final GoogleClientSecrets clientSecrets;
+     private static final String CLIENT_ID = "698771530420-m8t1rqdt78eb64c0stt3hc7s1f5v9dlc.apps.googleusercontent.com";
 
-    private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
+    public static final NetHttpTransport HTTP_TRANSPORT;
+    public static final GsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
 
-    
+    // Prevents the creation of multiple HTTP transports.
+    static {
+        try {
+            HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Credential getCredentialsFromAccessToken(String accessToken) {
+        return new GoogleCredential().setAccessToken(accessToken);
+    }
 }

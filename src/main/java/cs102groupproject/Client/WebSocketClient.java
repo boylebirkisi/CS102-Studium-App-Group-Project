@@ -2,6 +2,7 @@ package cs102groupproject.Client;
 
 import java.net.URI;
 
+import cs102groupproject.App;
 import cs102groupproject.SharedObjects.ProtocolMessage;
 import jakarta.websocket.Session;
 import jakarta.websocket.ClientEndpoint;

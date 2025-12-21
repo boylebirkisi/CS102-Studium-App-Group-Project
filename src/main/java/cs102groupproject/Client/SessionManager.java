@@ -1,13 +1,14 @@
 package cs102groupproject.Client;
-
 import cs102groupproject.SharedObjects.User;
+import jakarta.websocket.Session; 
+
 public class SessionManager {
     User currentUser;
     String sessionID;
     boolean isLoggedIn;
-    Client client;
+    Session client;
 
-    public SessionManager(Client client) {
+    public SessionManager(Session client) {
         this.client = client;
         isLoggedIn = false;
         currentUser = null;

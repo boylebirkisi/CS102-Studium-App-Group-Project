@@ -1,4 +1,4 @@
-ackage cs102groupproject.SharedObjects;
+package cs102groupproject.SharedObjects;
 
 import com.google.gson.Gson;
 

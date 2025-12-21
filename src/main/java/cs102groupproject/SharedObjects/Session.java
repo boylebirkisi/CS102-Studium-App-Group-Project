@@ -17,6 +17,22 @@ public class Session {
     private boolean inBreak;
     private boolean isCompleted;
 
+    public Session() {
+        this.owner = null;
+        this.name = "";
+        this.type = "";
+        this.no = 0;
+        this.id = "";
+        this.length = 0;
+        remainingSeconds = 0;
+        totalSeconds = 0;
+        this.breakLength = 0;
+        isPaused = false;
+        inBreak = false;
+        isCompleted = false;
+        this.startDate = LocalDateTime.now();
+    }
+
     public Session(User owner,String name, String type, int no, String id, int length, int breakLength, LocalDateTime startDate)
     {
         this.owner = owner;

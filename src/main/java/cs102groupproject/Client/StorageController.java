@@ -3,6 +3,8 @@ package cs102groupproject.Client;
 import javafx.fxml.FXML;
 import java.io.IOException;
 
+import cs102groupproject.App;
+
 public class StorageController {
 
     @FXML

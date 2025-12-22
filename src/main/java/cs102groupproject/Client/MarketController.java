@@ -5,6 +5,7 @@ import javafx.scene.control.Label;
 
 import java.io.IOException;
 
+import cs102groupproject.App;
 import cs102groupproject.SharedObjects.*;
 
 public class MarketController {
@@ -13,7 +14,7 @@ public class MarketController {
 
     @FXML
     public void initialize() {
-        User u = Session.getCurrentUser();
+        User u = ClientSession.getCurrentUser();
         moneyLabel.setText(
             "Solo: " + u.getSoloCurrency() +
             " | Group: " + u.getGroupCurrency()

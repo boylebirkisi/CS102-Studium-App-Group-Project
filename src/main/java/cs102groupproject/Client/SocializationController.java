@@ -295,13 +295,13 @@ public class SocializationController {
     private void displayOnlineFriends()
     {
         ArrayList<User> onlineFriends = new ArrayList<>();
-        for (User friend : friendsList)
-        {
-            if (friend.isOnline())
-            {
-                onlineFriends.add(friend);
-            }
-        }
+        // for (User friend : friendsList)
+        // {
+        //     if (friend.isOnline())
+        //     {
+        //         onlineFriends.add(friend);
+        //     }
+        // }
         for (User onlineFriend: onlineFriends)
         {
             Label avatarLabel = new Label(onlineFriend.getAvatar());

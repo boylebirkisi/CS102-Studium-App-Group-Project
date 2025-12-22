@@ -7,6 +7,7 @@ import java.util.Map;
 import cs102groupproject.SharedObjects.ActionType;
 import cs102groupproject.SharedObjects.GroupSession;
 import cs102groupproject.SharedObjects.ProtocolMessage;
+import cs102groupproject.SharedObjects.User;
 import cs102groupproject.Server.AuthService;
 import cs102groupproject.Server.SessionService;
 
@@ -85,9 +86,9 @@ public class ClientConnection {
                 Map<?, ?> payload = (Map<?, ?>) message.getPayload();
                 String token = payload.get("accessToken").toString();
 
-                String userId = AuthService.registerWithGoogle(token);
+                User userId = AuthService.registerWithGoogle(token);
 
-                this.userId = userId;
+                System.out.println("✅ LOGIN_WITH_GOOGLE success, userId = " + userId.getId());
 
                 send(new ProtocolMessage(
                         ActionType.LOGIN_SUCCESS,

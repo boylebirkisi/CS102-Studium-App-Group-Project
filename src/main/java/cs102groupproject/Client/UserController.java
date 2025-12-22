@@ -14,7 +14,7 @@ import cs102groupproject.SharedObjects.Habit;
 import cs102groupproject.SharedObjects.Session;
 
 public class UserController {
-    SessionManager manager;
+    ClientSession manager;
     ArrayList<Habit> habits;
     ArrayList<Session> sessions;
     @FXML
@@ -29,9 +29,11 @@ public class UserController {
     {
     }
 
-    public void setSessionManager(SessionManager manager)
+    public void setFields(ClientSession manager, ArrayList<Habit> habits, ArrayList<Session> sessions)
     {
         this.manager = manager;
+        this.habits = habits;
+        this.sessions = sessions;
         refreshUI();
     }
 

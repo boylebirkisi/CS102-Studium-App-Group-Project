@@ -221,7 +221,7 @@
       <Button layoutX="443.0" layoutY="24.0" mnemonicParsing="false" prefHeight="0.0" prefWidth="110.0" text="Weekly" />
       <AnchorPane layoutX="29.0" layoutY="309.0" prefHeight="376.0" prefWidth="260.0" style="-fx-background-color: #E7D3A8; -fx-background-radius: 20;">
          <children>
-            <Button layoutX="175.0" layoutY="336.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="70.0" text="Add Event" />
+            <Button layoutX="175.0" layoutY="336.0" mnemonicParsing="false" onAction="#addEventButtonClicked" prefHeight="26.0" prefWidth="70.0" text="Add Event" />
             <ScrollPane>
                <content>
                   <VBox fx:id="eventsVBox" prefHeight="336.0" prefWidth="260.0" style="-fx-background-color: #E7D3A8; -fx-background-radius: 20;" />

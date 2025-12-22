@@ -61,7 +61,7 @@ public class LoginController{
         // Add your logic here (e.g., opening a new window)
         Platform.runLater(() -> {
                     try {
-                        App.setRoot("Planner");
+                        App.loadScrollableScene();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

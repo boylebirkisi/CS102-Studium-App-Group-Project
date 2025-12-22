@@ -8,6 +8,7 @@ import cs102groupproject.SharedObjects.ActionType;
 import cs102groupproject.SharedObjects.GroupSession;
 import cs102groupproject.SharedObjects.ProtocolMessage;
 import cs102groupproject.SharedObjects.User;
+import cs102groupproject.SharedObjects.UserCredentials;
 import cs102groupproject.Server.AuthService;
 import cs102groupproject.Server.SessionService;
 
@@ -88,6 +89,10 @@ public class ClientConnection {
                 String token = payload.get("accessToken").toString();
 
                 User user = AuthService.registerWithGoogle(token);
+                if (user == null) {
+                    sendError("LOGIN_WITH_GOOGLE failed");
+                    return;
+                }
 
                 System.out.println("✅ LOGIN_WITH_GOOGLE success, userId = " + user.getId());
 
@@ -95,6 +100,29 @@ public class ClientConnection {
                         ActionType.LOGIN_SUCCESS,
                         user
                 ));
+                break;
+            }
+
+            case REGISTER: {
+                Map<?, ?> payload = (Map<?, ?>) message.getPayload();
+                UserCredentials credentials = (UserCredentials) payload.get("credentials");
+
+                User user = AuthService.register(credentials);
+                break;
+            }
+
+            case SEND_VERIFICATION_CODE: {
+                Map<?, ?> payload = (Map<?, ?>) message.getPayload();
+                String email = payload.get("email").toString();
+
+                boolean success = AuthService.sendVerificationCode(email);
+                if (!success) {
+                    sendError("Failed to send verification code");
+                    return;
+                }
+
+                System.out.println("✅ Verification code sent to " + email);
+
                 break;
             }
             default: sendError("Unknown action");

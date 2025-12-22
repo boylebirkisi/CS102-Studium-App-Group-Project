@@ -31,7 +31,7 @@ public class SocializationController {
     ArrayList<User> friendsList;
     ArrayList<User> onlineUsers;
     @FXML
-    private Label currencyEarnedLabel;
+    private Text currencyEarnedLabel;
     @FXML
     private Button searchUsersButton;
     @FXML

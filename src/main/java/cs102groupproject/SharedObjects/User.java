@@ -22,10 +22,6 @@ public class User {
      * @param groupCurrency
      * @param isVerified
      * @param avatar
-     * @param individualSessionsCompleted
-     * @param groupSessionsCompleted
-     * @param totalMinutesSpent
-     * @param habitsCompleted
      */
     public User(int id, String username, String department, String email, String googleID, int soloCurrency, int groupCurrency, boolean isVerified, String avatar) {
         this.id = id;

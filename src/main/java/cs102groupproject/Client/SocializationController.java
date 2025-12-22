@@ -1,22 +1,32 @@
 package cs102groupproject.Client;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import cs102groupproject.SharedObjects.Session;
 import cs102groupproject.SharedObjects.User;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class SocializationController {
+    Stage popUpStage = null;
     SessionManager manager;
     ArrayList<User> friendsList;
     @FXML
@@ -50,17 +60,26 @@ public class SocializationController {
     @FXML
     private HBox onlineFriendsHBox;
 
-    public SocializationController(SessionManager manager) {
-        this.manager = manager;
+    public ArrayList<User> getFriendsList() {return friendsList;}
+    public void addFriend(User friend) {friendsList.add(friend);}
+    public void removeFriend(User friend) {friendsList.remove(friend);}
+
+    @FXML
+    private void initialize()
+    {
         friendsList = new ArrayList<>();
+    }
+
+    public void setSessionManager(SessionManager manager) {
+        this.manager = manager;
+        refreshUI();
+    }
+
+    private void refreshUI() {
         displayCurrencyEarned();
         listFriends();
         displayOnlineFriends();
     }
-
-    public ArrayList<User> getFriendsList() {return friendsList;}
-    public void addFriend(User friend) {friendsList.add(friend);}
-    public void removeFriend(User friend) {friendsList.remove(friend);}
 
     @FXML
     private void displayCurrencyEarned()
@@ -69,9 +88,9 @@ public class SocializationController {
     }
 
     @FXML
-    private void createGroupSessionButtonFunctionality()
+    private void createGroupSessionButtonFunctionality() throws IOException
     {
-        // Open the group session creation pop-up window
+        showPopUp();
     }
 
     @FXML
@@ -250,17 +269,18 @@ public class SocializationController {
                 //Open chat with friend
             });
             userBox.getChildren().add(sendMessageButton);
-            userBox.setOnMouseClicked(e ->
+            ContextMenu contextMenu = new ContextMenu();
+            MenuItem removeFriendItem = new MenuItem("Remove Friend");
+            removeFriendItem.setOnAction(e ->
             {
-                if (e.getButton() == MouseButton.SECONDARY)
-                {
-                    new Label("Remove Friend").setOnMouseClicked(event ->
-                    {
-                        removeFriend(user);
-                        friendsVBox.getChildren().remove(userBox);
-                    });
-                }
+                removeFriend(user);
+                friendsVBox.getChildren().remove(userBox);
             });
+            contextMenu.getItems().add(removeFriendItem);
+
+            userBox.setOnContextMenuRequested(e ->
+                contextMenu.show(userBox, e.getScreenX(), e.getScreenY())
+            );
         }
 
         Button visitOfficeButton = new Button("Visit Office");
@@ -288,5 +308,27 @@ public class SocializationController {
             onlineFriendsHBox.getChildren().add(avatarLabel);
         }
         onlineFriendsHBox.setSpacing(10);
+    }
+
+    public void showPopUp() throws IOException
+    {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/GroupSessionPlannerPopUp.fxml"));
+        Parent popUpRoot = loader.load();
+        Scene scene = new Scene(popUpRoot);
+        popUpStage = new Stage();
+        popUpStage.setScene(scene);
+        popUpStage.setTitle("Group Session Planner");
+        popUpStage.setScene(new Scene(popUpRoot));
+        popUpStage.initStyle(StageStyle.UTILITY);
+        popUpStage.initModality(Modality.WINDOW_MODAL);
+        popUpStage.initOwner(createGroupSessionButton.getScene().getWindow());
+        popUpStage.show();
+        popUpStage.setResizable(false);
+        popUpStage.centerOnScreen();
+    }
+
+    public void closePopUp()
+    {
+        popUpStage.close();
     }
 }

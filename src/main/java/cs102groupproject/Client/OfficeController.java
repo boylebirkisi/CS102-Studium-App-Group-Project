@@ -75,6 +75,10 @@ import cs102groupproject.App;
 
 public class OfficeController {
 
+    @FXML private void initialize()
+    {
+    }
+    
     @FXML
     private void deskClicked() throws IOException {
         System.out.println("DESK CLICKED: Going to Market");

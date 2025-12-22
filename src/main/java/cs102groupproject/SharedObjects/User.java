@@ -1,19 +1,13 @@
 package cs102groupproject.SharedObjects;
 
-import java.util.ArrayList;
-
 public class User {
-    private String id;
+    private int id;
     private String username;
     private String department;
     private String email;
     private String googleID;
     private int soloCurrency;
     private int groupCurrency;
-    private int individualSessionsCompleted;
-    private int groupSessionsCompleted;
-    private int totalMinutesSpent;
-    private ArrayList<Habit> habitsCompleted;
     private boolean isVerified;
     private String avatar;
 
@@ -33,7 +27,7 @@ public class User {
      * @param totalMinutesSpent
      * @param habitsCompleted
      */
-    public User(String id, String username, String department, String email, String googleID, int soloCurrency, int groupCurrency, boolean isVerified, String avatar, int individualSessionsCompleted, int groupSessionsCompleted, int totalMinutesSpent, ArrayList<Habit> habitsCompleted) {
+    public User(int id, String username, String department, String email, String googleID, int soloCurrency, int groupCurrency, boolean isVerified, String avatar) {
         this.id = id;
         this.username = username;
         this.department = department;
@@ -43,10 +37,6 @@ public class User {
         this.groupCurrency = groupCurrency;
         this.isVerified = isVerified;
         this.avatar = avatar;
-        this.individualSessionsCompleted = individualSessionsCompleted;
-        this.groupSessionsCompleted = groupSessionsCompleted;
-        this.totalMinutesSpent = totalMinutesSpent;
-        this.habitsCompleted = habitsCompleted;
     }
 
     /**
@@ -61,8 +51,32 @@ public class User {
      * @param isVerified
      * @param avatar
      */
-    public User(String id, String username, String department, String email, String googleID, int soloCurrency, int groupCurrency, boolean isVerified, String avatar) {
+    public User(int id, String username, String department, String email, String googleID, boolean isVerified, String avatar) {
         this.id = id;
+        this.username = username;
+        this.department = department;
+        this.email = email;
+        this.googleID = googleID;
+        soloCurrency = 0;
+        groupCurrency = 0;
+        this.isVerified = isVerified;
+        this.avatar = avatar;
+    }
+
+    /**
+     * Constructor for new users that doesn't have an ID yet.
+     * @param id
+     * @param username
+     * @param department
+     * @param email
+     * @param googleID
+     * @param soloCurrency
+     * @param groupCurrency
+     * @param isVerified
+     * @param avatar
+     */
+    public User(String username, String department, String email, String googleID, int soloCurrency, int groupCurrency, boolean isVerified, String avatar) {
+        id = -1; //indicates that the user has not been assigned an ID yet
         this.username = username;
         this.department = department;
         this.email = email;
@@ -71,13 +85,9 @@ public class User {
         this.groupCurrency = groupCurrency;
         this.isVerified = isVerified;
         this.avatar = avatar;
-        individualSessionsCompleted = 0;
-        groupSessionsCompleted = 0;
-        totalMinutesSpent = 0;
-        habitsCompleted = new ArrayList<>();
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
     public String getUsername() {
@@ -112,30 +122,6 @@ public class User {
     }
     public void setGroupCurrency(int groupCurrency) {
         this.groupCurrency = groupCurrency;
-    }
-    public int getIndividualSessionsCompleted() {
-        return individualSessionsCompleted;
-    }
-    public void incrementIndividualSessionsCompleted() {
-        this.individualSessionsCompleted++;
-    }
-    public int getGroupSessionsCompleted() {
-        return groupSessionsCompleted;
-    }
-    public void incrementGroupSessionsCompleted() {
-        this.groupSessionsCompleted++;
-    }
-    public int getTotalMinutesSpent() {
-        return totalMinutesSpent;
-    }
-    public void addMinutesSpent(int minutes) {
-        this.totalMinutesSpent += minutes;
-    }
-    public ArrayList<Habit> getHabitsCompleted() {
-        return habitsCompleted;
-    }
-    public void addHabitCompleted(Habit habit) {
-        this.habitsCompleted.add(habit);
     }
     public boolean isVerified() {
         return isVerified;

@@ -7,7 +7,7 @@ public class Session {
     private String name;
     private String type;
     private int no;
-    private String id;
+    private int id;
     private int length;
     private int remainingSeconds;
     private int breakLength;
@@ -22,7 +22,7 @@ public class Session {
         this.name = "";
         this.type = "";
         this.no = 0;
-        this.id = "";
+        this.id = -1; //indicates that the session has not been assigned an ID yet
         this.length = 0;
         remainingSeconds = 0;
         totalSeconds = 0;
@@ -33,13 +33,30 @@ public class Session {
         this.startDate = LocalDateTime.now();
     }
 
-    public Session(User owner,String name, String type, int no, String id, int length, int breakLength, LocalDateTime startDate)
+    public Session(User owner,String name, String type, int no, int id, int length, int breakLength, LocalDateTime startDate)
     {
         this.owner = owner;
         this.name = name;
         this.type = type;
         this.no = no;
         this.id = id;
+        this.length = length;
+        remainingSeconds = length * no;
+        totalSeconds = length * no;
+        this.breakLength = breakLength;
+        isPaused = false;
+        inBreak = false;
+        isCompleted = false;
+        this.startDate = startDate;
+    }
+
+    public Session(User owner,String name, String type, int no, int length, int breakLength, LocalDateTime startDate)
+    {
+        this.owner = owner;
+        this.name = name;
+        this.type = type;
+        this.no = no;
+        id = -1; //indicates that the session has not been assigned an ID yet
         this.length = length;
         remainingSeconds = length * no;
         totalSeconds = length * no;
@@ -62,8 +79,8 @@ public class Session {
         this.remainingSeconds = this.length * this.no;
     }
 
-    public String getId() {return id;}
-    public void setId(String id) {this.id = id;}
+    public int getId() {return id;}
+    public void setId(int id) {this.id = id;}
     public int getLength() {return length;}
 
     public void setLength(int length)

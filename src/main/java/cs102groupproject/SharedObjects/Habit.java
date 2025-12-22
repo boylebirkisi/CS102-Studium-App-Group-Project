@@ -7,13 +7,28 @@ public class Habit extends TransferObject{
     private LocalDate creationDate;
     private String completionString;
     private int id;
+<<<<<<< HEAD
     private String userId;
 
     public Habit(String name, int id, String userId)
+=======
+    private int userId;
+
+    public Habit(String name, int id, int userId)
+>>>>>>> main
     {
         this.name = name;
         completionString = "000000000000000000000000000000";
         this.id = id;
+        this.userId = userId;
+        creationDate = LocalDate.now();
+    }
+    
+    public Habit(String name, int userId)
+    {
+        this.name = name;
+        completionString = "000000000000000000000000000000";
+        id = -1 ; //indicates that the habit has not been assigned an ID yet
         this.userId = userId;
         creationDate = LocalDate.now();
     }
@@ -22,7 +37,11 @@ public class Habit extends TransferObject{
     public LocalDate getCreationDate() {return creationDate;}
     public String getCompletionString() {return completionString;}
     public int getId() {return id;}
+<<<<<<< HEAD
     public String getUserId() {return userId;}
+=======
+    public int getUserId() {return userId;}
+>>>>>>> main
 
     public int calculateCompletionCount()
     {

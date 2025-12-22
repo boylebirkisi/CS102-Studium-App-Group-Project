@@ -1,0 +1,13 @@
+29 September - 5 October: We started preliminary discussion on the project idea. I participated in the discussions, provided my own ideas and helped go through the other ideas that were proposed.
+6 October - 12 October: We eliminated most of the proposed ideas and came down to a few core candidates. I communicated with the course professor and helped eliminate some of them, and we decided on our project.
+13 October - 19 October: I helped write the requirements report, mostly handling the formatting, writing introduction and some of the details part. I also edited the whole report afterwards, fixing grammar errors and making it clearer overall.
+20 October - 26 October: I helped prepare our presentation.
+27 October - 2 November: I participated in meetings on UI design.
+3 November - 9 November: I wasn't able to do much for the project this week due to personal issues.
+10 November - 16 November: I formatted the final revision of the UI design report, wrote some parts of it and edited it to fix grammar errors and make it clearer.
+17 November - 23 November: I participated in meetings about the details of our implementation of the project and some design details.
+24 November - 30 November: I participated in meetings about the details of our implementation of the project and some design details.
+1 December - 7 December: I handled the formatting of our detailed design reeport and wrote most of the client classes, I also wrote the conclusion part and the technologies used part. I edited the report to fix grammar errors and make it clearer. 
+8 December - 14 December: I discussed with my team members to understand how I should implement my parts of the code so that it will be compatible with the server and the database code and their envisioned workflow.
+15 December - 21 December: I designed fxml files, controllers and the object classes themselves for the client side of the project.
+22 December - 28 December: 

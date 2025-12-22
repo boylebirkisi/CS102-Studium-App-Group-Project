@@ -1,13 +1,17 @@
 package cs102groupproject.Client;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import cs102groupproject.SharedObjects.Session;
 import cs102groupproject.SharedObjects.User;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContextMenu;
@@ -17,8 +21,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class SocializationController {
+    Stage popUpStage = null;
     SessionManager manager;
     ArrayList<User> friendsList;
     @FXML
@@ -80,9 +88,9 @@ public class SocializationController {
     }
 
     @FXML
-    private void createGroupSessionButtonFunctionality()
+    private void createGroupSessionButtonFunctionality() throws IOException
     {
-        // Open the group session creation pop-up window
+        showPopUp();
     }
 
     @FXML
@@ -300,5 +308,27 @@ public class SocializationController {
             onlineFriendsHBox.getChildren().add(avatarLabel);
         }
         onlineFriendsHBox.setSpacing(10);
+    }
+
+    public void showPopUp() throws IOException
+    {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/GroupSessionPlannerPopUp.fxml"));
+        Parent popUpRoot = loader.load();
+        Scene scene = new Scene(popUpRoot);
+        popUpStage = new Stage();
+        popUpStage.setScene(scene);
+        popUpStage.setTitle("Group Session Planner");
+        popUpStage.setScene(new Scene(popUpRoot));
+        popUpStage.initStyle(StageStyle.UTILITY);
+        popUpStage.initModality(Modality.WINDOW_MODAL);
+        popUpStage.initOwner(createGroupSessionButton.getScene().getWindow());
+        popUpStage.show();
+        popUpStage.setResizable(false);
+        popUpStage.centerOnScreen();
+    }
+
+    public void closePopUp()
+    {
+        popUpStage.close();
     }
 }

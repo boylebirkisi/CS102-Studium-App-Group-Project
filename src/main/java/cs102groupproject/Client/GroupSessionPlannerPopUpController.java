@@ -1,22 +1,40 @@
 package cs102groupproject.Client;
 
-import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 
+import cs102groupproject.SharedObjects.GroupSession;
+import cs102groupproject.SharedObjects.User;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.TilePane;
+import javafx.scene.layout.VBox;
 
 public class GroupSessionPlannerPopUpController {
     SocializationController ownerController;
     SessionManager manager;
     @FXML
-    private Button createGroupSessionButton;
-    
+    private TextField sessionNameTextField;
+    @FXML
+    private TextField sessionNoTextField;
+    @FXML
+    private TextField sessionLengthTextField;
+    @FXML
+    private RadioButton publicRadioButton;
+    @FXML
+    private RadioButton privateRadioButton;
+    @FXML
+    private TilePane friendsTilePane;
+    @FXML
+    private DatePicker startDatePicker;
+    @FXML
+    private TextField timeTextField;
+
     @FXML
     private void initialize()
     {
@@ -26,22 +44,48 @@ public class GroupSessionPlannerPopUpController {
     {
         this.ownerController = ownerController;
         this.manager = manager;
+        populateFriendsList();
     }
 
-    public void showPopUp() throws IOException
+    private void populateFriendsList()
     {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/GroupSessionPlannerPopUp.fxml"));
-        Parent popUpRoot = loader.load();
-        Scene scene = new Scene(popUpRoot);
-        Stage popUpStage = new Stage();
-        popUpStage.setScene(scene);
-        popUpStage.setTitle("Group Session Planner");
-        popUpStage.setScene(new Scene(popUpRoot));
-        popUpStage.initStyle(StageStyle.UTILITY);
-        popUpStage.initModality(Modality.WINDOW_MODAL);
-        popUpStage.initOwner(createGroupSessionButton.getScene().getWindow());
-        popUpStage.show();
-        popUpStage.setResizable(false);
-        popUpStage.centerOnScreen();
+        ArrayList<User> friendsList = ownerController.getFriendsList();
+        for (int i = 0; i < friendsList.size(); i++)
+        {
+            User friend = friendsList.get(i);
+            int Avatar = friend.getAvatar().toCharArray()[0];
+            Label friendLabel = new Label(friend.getUsername() + " / " + friend.getDepartment());
+            HBox friendBox = new HBox(Avatar, friendLabel);
+            if (i % 2 == 0)
+                ((VBox)friendsTilePane.getChildren().get(0)).getChildren().add(friendBox);
+            else
+                ((VBox)friendsTilePane.getChildren().get(1)).getChildren().add(friendBox);
+        }
+    }
+
+    @FXML
+    private void handleCreateSessionButton()
+    {
+        String sessionName = sessionNameTextField.getText();
+        int sessionNo = Integer.parseInt(sessionNoTextField.getText());
+        String[] lengthParts = sessionLengthTextField.getText().split("/");
+        int sessionLength = Integer.parseInt(lengthParts[0]);
+        int breakLength = Integer.parseInt(lengthParts[1]);
+        boolean isPublic = publicRadioButton.isSelected();
+        String[] timeParts = timeTextField.getText().split(":");
+        int hour = Integer.parseInt(timeParts[0]);
+        int minute = Integer.parseInt(timeParts[1]);
+        LocalDateTime startDate = startDatePicker.getValue().atTime(hour, minute);
+        //send notification to invited friends, they will be added to session if they accept.
+        GroupSession session = new GroupSession(manager.getCurrentUser(), new ArrayList<>(),
+            sessionName, "GroupSession", sessionNo, sessionLength,
+            breakLength, startDate, isPublic);
+        ownerController.closePopUp();
+    }
+
+    @FXML
+    private void handleCancelButton()
+    {
+        ownerController.closePopUp();
     }
 }

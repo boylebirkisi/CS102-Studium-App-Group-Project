@@ -18,9 +18,20 @@ public class UserController {
     @FXML
     private TitledPane habitStats;
 
-    public UserController(SessionManager manager) {
+    @FXML
+    private void initialize()
+    {
+    }
+
+    public void setSessionManager(SessionManager manager)
+    {
         this.manager = manager;
-        //displayUserInfo();
+        refreshUI();
+    }
+
+    private void refreshUI()
+    {
+        // displayUserInfo();
         displaySessionStats();
         displayHabitStats();
     }

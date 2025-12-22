@@ -10,7 +10,9 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
@@ -50,17 +52,26 @@ public class SocializationController {
     @FXML
     private HBox onlineFriendsHBox;
 
-    public SocializationController(SessionManager manager) {
-        this.manager = manager;
+    public ArrayList<User> getFriendsList() {return friendsList;}
+    public void addFriend(User friend) {friendsList.add(friend);}
+    public void removeFriend(User friend) {friendsList.remove(friend);}
+
+    @FXML
+    private void initialize()
+    {
         friendsList = new ArrayList<>();
+    }
+
+    public void setSessionManager(SessionManager manager) {
+        this.manager = manager;
+        refreshUI();
+    }
+
+    private void refreshUI() {
         displayCurrencyEarned();
         listFriends();
         displayOnlineFriends();
     }
-
-    public ArrayList<User> getFriendsList() {return friendsList;}
-    public void addFriend(User friend) {friendsList.add(friend);}
-    public void removeFriend(User friend) {friendsList.remove(friend);}
 
     @FXML
     private void displayCurrencyEarned()
@@ -250,17 +261,18 @@ public class SocializationController {
                 //Open chat with friend
             });
             userBox.getChildren().add(sendMessageButton);
-            userBox.setOnMouseClicked(e ->
+            ContextMenu contextMenu = new ContextMenu();
+            MenuItem removeFriendItem = new MenuItem("Remove Friend");
+            removeFriendItem.setOnAction(e ->
             {
-                if (e.getButton() == MouseButton.SECONDARY)
-                {
-                    new Label("Remove Friend").setOnMouseClicked(event ->
-                    {
-                        removeFriend(user);
-                        friendsVBox.getChildren().remove(userBox);
-                    });
-                }
+                removeFriend(user);
+                friendsVBox.getChildren().remove(userBox);
             });
+            contextMenu.getItems().add(removeFriendItem);
+
+            userBox.setOnContextMenuRequested(e ->
+                contextMenu.show(userBox, e.getScreenX(), e.getScreenY())
+            );
         }
 
         Button visitOfficeButton = new Button("Visit Office");

@@ -6,6 +6,10 @@ import cs102groupproject.App;
 
 public class StorageController {
 
+    @FXML private void initialize()
+    {
+    }
+    
     @FXML
     private void goBack() throws IOException {
         System.out.println("BACK TO OFFICE");

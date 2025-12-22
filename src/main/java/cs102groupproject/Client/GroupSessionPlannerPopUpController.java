@@ -16,8 +16,13 @@ public class GroupSessionPlannerPopUpController {
     SessionManager manager;
     @FXML
     private Button createGroupSessionButton;
+    
+    private void initialize()
+    {
+    }
 
-    public GroupSessionPlannerPopUpController(SocializationController ownerController, SessionManager manager) {
+    public void setControllerAndManager(SocializationController ownerController, SessionManager manager)
+    {
         this.ownerController = ownerController;
         this.manager = manager;
     }

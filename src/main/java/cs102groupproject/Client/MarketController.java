@@ -12,14 +12,15 @@ public class MarketController {
     @FXML
     private Label moneyLabel;
 
-    @FXML
-    public void initialize() {
-        User u = ClientSession.getCurrentUser();
-        moneyLabel.setText(
-            "Solo: " + u.getSoloCurrency() +
-            " | Group: " + u.getGroupCurrency()
-        );
-    }
+    // @FXML
+    // public void initialize() {
+    //     User u = Session.getCurrentUser();
+    //     moneyLabel.setText(
+    //         "Solo: " + u.getSoloCurrency() +
+    //         " | Group: " + u.getGroupCurrency()
+    //     );
+    // }
+
     @FXML
     private void goBack() throws IOException {
         System.out.println("BACK TO OFFICE");

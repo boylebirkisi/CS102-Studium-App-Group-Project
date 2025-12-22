@@ -47,10 +47,15 @@ public class SocializationController {
     private TextField sessionNameTextField;
     @FXML
     private VBox friendsVBox;
+    @FXML
+    private HBox onlineFriendsHBox;
 
     public SocializationController(SessionManager manager) {
         this.manager = manager;
         friendsList = new ArrayList<>();
+        displayCurrencyEarned();
+        listFriends();
+        displayOnlineFriends();
     }
 
     public ArrayList<User> getFriendsList() {return friendsList;}
@@ -264,5 +269,24 @@ public class SocializationController {
         });
         userBox.setSpacing(10);
         return userBox;
+    }
+
+    @FXML
+    private void displayOnlineFriends()
+    {
+        ArrayList<User> onlineFriends = new ArrayList<>();
+        for (User friend : friendsList)
+        {
+            if (friend.isOnline())
+            {
+                onlineFriends.add(friend);
+            }
+        }
+        for (User onlineFriend: onlineFriends)
+        {
+            Label avatarLabel = new Label(onlineFriend.getAvatar());
+            onlineFriendsHBox.getChildren().add(avatarLabel);
+        }
+        onlineFriendsHBox.setSpacing(10);
     }
 }

@@ -34,6 +34,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
@@ -103,15 +104,27 @@
                               <Insets right="10.0" />
                            </padding>
                         </HBox>
-                        <HBox alignment="CENTER_LEFT" prefHeight="32.0" prefWidth="312.0">
+                        <HBox fx:id="searchParameters" alignment="CENTER_LEFT" prefHeight="32.0" prefWidth="312.0">
                            <children>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Name: " />
-                              <TextField fx:id="nameTextField" prefHeight="26.0" prefWidth="74.0" promptText="______________" />
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Department: " />
-                              <TextField fx:id="departmentTextField" prefHeight="26.0" prefWidth="74.0" promptText="______________" />
+                              <HBox fx:id="userSearchParameters" alignment="CENTER">
+                                 <children>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Name: " />
+                                    <TextField fx:id="userNameTextField" prefHeight="26.0" prefWidth="74.0" promptText="______" />
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Department: " />
+                                    <TextField fx:id="departmentTextField" prefHeight="26.0" prefWidth="74.0" promptText="______" />
+                                 </children>
+                              </HBox>
+                              <HBox fx:id="sessionParameters" alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <CheckBox fx:id="aboutToStartCheckBox" mnemonicParsing="false" text="About to start" />
+                                    <CheckBox fx:id="hasStartedCheckBox" mnemonicParsing="false" text="Has started" />
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Name: " />
+                                    <TextField fx:id="sessionNameTextField" promptText="______" />
+                                 </children>
+                              </HBox>
                            </children>
                         </HBox>
-                        <ScrollPane>
+                        <ScrollPane fx:id="user">
                            <content>
                               <HBox fx:id="searchResultsHBox" prefHeight="135.0" prefWidth="312.0">
                                  <children>
@@ -144,7 +157,11 @@
                               </Text>
                            </children>
                         </HBox>
-                        <VBox fx:id="friendsVBox" prefHeight="262.0" prefWidth="226.0" style="-fx-background-color: E7D3A8;" />
+                        <ScrollPane>
+                           <content>
+                              <VBox fx:id="friendsVBox" prefHeight="262.0" prefWidth="226.0" style="-fx-background-color: E7D3A8;" />
+                           </content>
+                        </ScrollPane>
                         <HBox alignment="CENTER_LEFT" prefHeight="22.0" prefWidth="226.0" style="-fx-background-color: EFE6D8;">
                            <children>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Online: " />

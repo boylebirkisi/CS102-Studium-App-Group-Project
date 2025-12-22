@@ -7,10 +7,16 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.VBox;
 
+import java.util.ArrayList;
+
+import cs102groupproject.SharedObjects.GroupSession;
 import cs102groupproject.SharedObjects.Habit;
+import cs102groupproject.SharedObjects.Session;
 
 public class UserController {
     SessionManager manager;
+    ArrayList<Habit> habits;
+    ArrayList<Session> sessions;
     @FXML
     private TitledPane userInfo;
     @FXML
@@ -101,9 +107,22 @@ public class UserController {
     private void displaySessionStats()
     {
         Label sessionsCompletedLabel = new Label("Sessions Completed: ");
-        Label individualSessionsLabel = new Label("Individual Sessions: " + String.valueOf(manager.getCurrentUser().getIndividualSessionsCompleted()));
-        Label groupSessionsLabel = new Label("Group Sessions: " + String.valueOf(manager.getCurrentUser().getGroupSessionsCompleted()));
-        Label totalMinutesLabel = new Label("Total Minutes Spent: " + String.valueOf(manager.getCurrentUser().getTotalMinutesSpent()));
+        int soloSessionsCompleted = 0;
+        int groupSessionsCompleted = 0;
+        int totalMinutesSpent = 0;
+        for (int i = 0; i < sessions.size(); i++)
+        {
+            Session session = sessions.get(i);
+            if (session.getIsCompleted())
+                if (session instanceof GroupSession)
+                    groupSessionsCompleted++;
+                else
+                    soloSessionsCompleted++;
+                totalMinutesSpent += (session.getTotalSeconds() - session.getRemainingSeconds()) / 60;
+        }
+        Label individualSessionsLabel = new Label("Individual Sessions: " + String.valueOf(soloSessionsCompleted));
+        Label groupSessionsLabel = new Label("Group Sessions: " + String.valueOf(groupSessionsCompleted));
+        Label totalMinutesLabel = new Label("Total Minutes Spent: " + String.valueOf(totalMinutesSpent));
         VBox sessionStatsContent = new VBox(sessionsCompletedLabel, individualSessionsLabel, groupSessionsLabel, totalMinutesLabel);
         sessionStats.setContent(sessionStatsContent);
     }
@@ -114,7 +133,7 @@ public class UserController {
         ScrollPane habitStats = new ScrollPane();
         Label habitStatsLabel = new Label("Completed Habits: ");
         VBox habitStatsContent = new VBox();
-        for (Habit habit : manager.getCurrentUser().getHabitsCompleted())
+        for (Habit habit : habits)
         {
             Label habitLabel = new Label(habit.getName() + ": " + habit.calculateCompletionCount() + "/30");
             habitStatsContent.getChildren().add(habitLabel);

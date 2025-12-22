@@ -86,9 +86,13 @@ public class ClientConnection {
                 Map<?, ?> payload = (Map<?, ?>) message.getPayload();
                 String token = payload.get("accessToken").toString();
 
-                User userId = AuthService.registerWithGoogle(token);
+                User user = AuthService.registerWithGoogle(token);
+                if (user == null) {
+                    sendError("LOGIN_WITH_GOOGLE failed");
+                    return;
+                }
 
-                System.out.println("✅ LOGIN_WITH_GOOGLE success, userId = " + userId.getId());
+                System.out.println("✅ LOGIN_WITH_GOOGLE success, userId = " + user.getId());
 
                 send(new ProtocolMessage(
                         ActionType.LOGIN_SUCCESS,

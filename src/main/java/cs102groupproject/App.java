@@ -63,6 +63,7 @@ public class App extends Application {
         scrollPane.hbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.NEVER);
         contentBox.setSpacing(10);
         scrollPane.setContent(contentBox);
+        loadView("Office1", contentBox);
         loadView("Planner", contentBox);
         loadView("Socialization", contentBox);
         scene.setRoot(scrollPane);

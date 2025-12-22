@@ -17,6 +17,7 @@ public class GroupSessionPlannerPopUpController {
     @FXML
     private Button createGroupSessionButton;
     
+    @FXML
     private void initialize()
     {
     }

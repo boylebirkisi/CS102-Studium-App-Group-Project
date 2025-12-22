@@ -10,19 +10,19 @@ public class SessionService {
 
     private static final Map<String, GroupSession> sessions = new ConcurrentHashMap<>();
 
-    public GroupSession createGroupSession(ClientConnection owner) {
-        GroupSession session = new GroupSession();
-        sessions.put(session.getId(), session);
-        session.addParticipant(owner);
-        return session;
-    }
+    // public GroupSession createGroupSession(ClientConnection owner) {
+    //     GroupSession session = new GroupSession();
+    //     sessions.put(session.getId(), session);
+    //     session.addParticipant(owner);
+    //     return session;
+    // }
 
-    public GroupSession joinGroupSession(String id, ClientConnection client) {
-        GroupSession session = sessions.get(id);
-        if (session == null) {
-            throw new IllegalArgumentException("Session not found");
-        }
-        session.addParticipant(client);
-        return session;
-    }
+    // public GroupSession joinGroupSession(String id, ClientConnection client) {
+    //     GroupSession session = sessions.get(id);
+    //     if (session == null) {
+    //         throw new IllegalArgumentException("Session not found");
+    //     }
+    //     session.addParticipant(client);
+    //     return session;
+    // }
 }

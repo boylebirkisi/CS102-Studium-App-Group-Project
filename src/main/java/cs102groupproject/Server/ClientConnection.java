@@ -56,27 +56,27 @@ public class ClientConnection {
                 break;
             }
             case START_GROUP_SESSION: {
-                GroupSession session =
-                        sessionService.createGroupSession(this);
+                // GroupSession session =
+                //         sessionService.createGroupSession(this);
 
-                send(new ProtocolMessage(
-                        ActionType.GROUP_SESSION_CREATED,
-                        Map.of("sessionId", session.getId())
-                ));
+                // send(new ProtocolMessage(
+                //         ActionType.GROUP_SESSION_CREATED,
+                //         Map.of("sessionId", session.getId())
+                // ));
 
                 break;
             }
 
             case JOIN_GROUP_SESSION: {
-                Map<?, ?> payload = (Map<?, ?>) message.getPayload();
-                String id = payload.get("sessionId").toString();
+                // Map<?, ?> payload = (Map<?, ?>) message.getPayload();
+                // String id = payload.get("sessionId").toString();
 
-                sessionService.joinGroupSession(id, this);
+                // sessionService.joinGroupSession(id, this);
 
-                send(new ProtocolMessage(
-                        ActionType.JOINED_GROUP_SESSION,
-                        Map.of("sessionId", id)
-                ));
+                // send(new ProtocolMessage(
+                //         ActionType.JOINED_GROUP_SESSION,
+                //         Map.of("sessionId", id)
+                // ));
 
                 break;
             }

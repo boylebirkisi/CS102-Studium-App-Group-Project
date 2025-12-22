@@ -1,5 +1,6 @@
 package cs102groupproject.Client;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -7,6 +8,9 @@ import cs102groupproject.SharedObjects.AppEvent;
 import cs102groupproject.SharedObjects.Habit;
 import cs102groupproject.SharedObjects.Task;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -18,6 +22,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class PlannerController {
     ClientSession manager;
@@ -25,6 +32,7 @@ public class PlannerController {
     ArrayList<AppEvent> events;
     ArrayList<Task> tasks;
     Habit selectedHabit;
+    Stage popUpStage;
     @FXML
     private Label donePercentTextField;
     @FXML
@@ -112,7 +120,7 @@ public class PlannerController {
     {
         String habitName = addHabitTextField.getText();
         if (habitName.isEmpty()) return;
-        Habit newHabit = new Habit(habitName, manager.getCurrentUser().getId());
+        Habit newHabit = new Habit(habitName, ClientSession.getUserId());
         habits.add(newHabit);
         habitTrackerComboBox.getItems().add(newHabit);
         habitTrackerComboBox.setDisable(false);
@@ -196,8 +204,29 @@ public class PlannerController {
     }
 
     @FXML
-    private void addEventButtonClicked()
+    private void addEventButtonClicked() throws IOException
     {
-        //Open event creation pop-up
+        showPopUp("EventPlannerPopUp");
+        popUpStage.setTitle("Add Event Pop-Up Menu");
+    }
+
+    public void showPopUp(String fxmlPath) throws IOException
+    {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/" + fxmlPath + ".fxml"));
+        Parent popUpRoot = loader.load();
+        Scene scene = new Scene(popUpRoot);
+        popUpStage = new Stage();
+        popUpStage.setScene(scene);
+        popUpStage.initStyle(StageStyle.UTILITY);
+        popUpStage.initModality(Modality.WINDOW_MODAL);
+        popUpStage.initOwner(eventsVBox.getScene().getWindow());
+        popUpStage.show();
+        popUpStage.setResizable(false);
+        popUpStage.centerOnScreen();
+    }
+
+    public void closePopUp()
+    {
+        popUpStage.close();
     }
 }

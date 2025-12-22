@@ -6,10 +6,10 @@ public class Habit extends TransferObject{
     private String name;
     private LocalDate creationDate;
     private String completionString;
-    private String id;
+    private int id;
     private String userId;
 
-    public Habit(String name, String id, String userId)
+    public Habit(String name, int id, String userId)
     {
         this.name = name;
         completionString = "000000000000000000000000000000";
@@ -21,7 +21,7 @@ public class Habit extends TransferObject{
     public String getName() {return name;}
     public LocalDate getCreationDate() {return creationDate;}
     public String getCompletionString() {return completionString;}
-    public String getId() {return id;}
+    public int getId() {return id;}
     public String getUserId() {return userId;}
 
     public int calculateCompletionCount()

@@ -1,15 +1,15 @@
 package cs102groupproject.SharedObjects;
 
 public class Task extends TransferObject{
-	private UserCredentials name;
-	private UserCredentials color;
+	private String name;
+	private String color;
 	private int importance;
-	private UserCredentials userId;
+	private int userId;
 	private boolean isCompleted;
-	private UserCredentials id;
-	private int googleCaldendarID;
+	private int id;
+	private String googleCaldendarID;
 
-    public Task(UserCredentials name, UserCredentials color, int importance, UserCredentials userId, UserCredentials id, int googleCaldendarID)
+    public Task(String name, String color, int importance, int userId, int id, String googleCaldendarID)
     {
         this.name = name;
         this.color = color;
@@ -21,17 +21,18 @@ public class Task extends TransferObject{
         this.objectType = "Task";
     }
 
-    public UserCredentials getName() {return name;}
-    public void setName(UserCredentials name) {this.name = name;}
-    public UserCredentials getColor() {return color;}
-    public void setColor(UserCredentials color) {this.color = color;}
+    public String getName() {return name;}
+    public void setName(String name) {this.name = name;}
+    public String getColor() {return color;}
+    public void setColor(String color) {this.color = color;}
     public int getImportance() {return importance;}
     public void setImportance(int importance) {this.importance = importance;}
-    public UserCredentials getUserId() {return userId;}
+    public int getUserId() {return userId;}
     public boolean getIsCompleted() {return isCompleted;}
-    public UserCredentials getId() {return id;}
-    public int getGoogleCaldendarID() {return googleCaldendarID;}
-    public void setGoogleCaldendarID(int googleCaldendarID) {this.googleCaldendarID = googleCaldendarID;}
+    public int getId() {return id;}
+    public String getGoogleCaldendarID() {return googleCaldendarID;}
+    public void setGoogleCaldendarID(String googleCaldendarID) {this.googleCaldendarID = googleCaldendarID;}
 
     public void completeTask() {isCompleted = true;}
-}
+    public void uncompleteTask() {isCompleted = false;}
+}   

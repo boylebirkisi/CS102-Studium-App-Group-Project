@@ -9,10 +9,10 @@ public class AppEvent extends TransferObject {
     private LocalDate finish;
     private String userId;
     private int importance;
-    private String id;
+    private int id;
     private int googleCaldendarID;
 
-    public AppEvent(String name, String color, LocalDate start, LocalDate finish, String userId, int importance, String id, int googleCaldendarID)
+    public AppEvent(String name, String color, LocalDate start, LocalDate finish, String userId, int importance, int id, int googleCaldendarID)
     {
         this.name = name;
         this.color = color;
@@ -35,7 +35,7 @@ public class AppEvent extends TransferObject {
     public void setFinish(LocalDate finish) {this.finish = finish;}
     public String getUserId() {return userId;}
     public int getImportance() {return importance;}
-    public String getId() {return id;}
+    public int getId() {return id;}
     public int getGoogleCaldendarID() {return googleCaldendarID;}
 
     public boolean getIsExpired() 

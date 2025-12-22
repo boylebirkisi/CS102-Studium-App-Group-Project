@@ -11,7 +11,8 @@ public final class ClientSession {
     private static User currentUser;
     private static int activeGroupId; // Group / Study session ID (business)
 
-    private ClientSession() {}
+    private ClientSession() {
+    }
 
     /* ===== AUTH ===== */
 

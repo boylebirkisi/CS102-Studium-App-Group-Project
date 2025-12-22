@@ -4,7 +4,7 @@ import cs102groupproject.SharedObjects.*;
 import javafx.scene.Group;
 
 import java.sql.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -428,7 +428,7 @@ public class DBManager {
      * @param googleCalendarID
      * @return the eventID.
      */
-    public int addEvent(String name, String color, LocalDate start, LocalDate finish, String userId, int importance, int googleCalendarID) {
+    public int addEvent(String name, String color, LocalDateTime start, LocalDateTime finish, String userId, int importance, int googleCalendarID) {
         String sqlCommand = "INSERT INTO events(name, color, start_date, finish_date, user_id, importance, google_calendar_id) VALUES(?, ?, ?, ?, ?, ?, ?)";
 
         return insertAndGetID(sqlCommand, name, color, start, finish, userId, importance, googleCalendarID);
@@ -452,7 +452,7 @@ public class DBManager {
      * @param newFinish
      * @return
      */
-    public boolean updateEventDates(int eventID, LocalDate newStart, LocalDate newFinish) {
+    public boolean updateEventDates(int eventID, LocalDateTime newStart, LocalDateTime newFinish) {
         String sqlCommand = "UPDATE events SET start_date = ?, finish_date = ? WHERE id = ?";
 
         return executeSqlCommand(sqlCommand, newStart, newFinish, eventID);
@@ -469,9 +469,16 @@ public class DBManager {
         ResultSet rs = getObject(sqlCommand);
         if (rs != null) {
             try {
-                return new AppEvent(rs.getString("name"), rs.getString("color"), rs.getDate("start_date").toLocalDate(),
-                    rs.getDate("finish_date").toLocalDate(), rs.getInt("user_id"), rs.getInt("importance"),
-                    rs.getInt("id"), rs.getString("google_calendar_id"));
+                return new AppEvent(
+                    rs.getString("name"),
+                    rs.getString("color"),
+                    rs.getTimestamp("start_date").toLocalDateTime(),  
+                    rs.getTimestamp("finish_date").toLocalDateTime(), 
+                    rs.getInt("user_id"),
+                    rs.getInt("importance"),
+                    rs.getInt("id"),
+                    rs.getString("google_calendar_id")
+                );
             } catch (SQLException e) {
                 System.err.println("Database operation failed: " + e.getMessage());
             }
@@ -494,9 +501,16 @@ public class DBManager {
             
             ResultSet rs = stmt.executeQuery(sqlCommand);
             while (rs.next()) {
-                AppEvent event = new AppEvent(rs.getString("name"), rs.getString("color"), rs.getDate("start_date").toLocalDate(),
-                    rs.getDate("finish_date").toLocalDate(), rs.getInt("user_id"), rs.getInt("importance"),
-                    rs.getInt("id"), rs.getString("google_calendar_id"));
+                AppEvent event = new AppEvent(
+                    rs.getString("name"),
+                    rs.getString("color"),
+                    rs.getTimestamp("start_date").toLocalDateTime(),  
+                    rs.getTimestamp("finish_date").toLocalDateTime(), 
+                    rs.getInt("user_id"),
+                    rs.getInt("importance"),
+                    rs.getInt("id"),
+                    rs.getString("google_calendar_id")
+                );
                 events.add(event);
             }
         } catch (SQLException e) {
@@ -622,7 +636,7 @@ public class DBManager {
     }
 
     public int insertVerificationCode(String email, String code, long expiryTime) {
-        String sqlCommand = "INSERT INTO verification_codes(email, code, expiry_time) VALUES(?, ?, ?)";
+        String sqlCommand = "INSERT INTO verification_code(email, code, expiry_time) VALUES(?, ?, ?)";
 
         return insertAndGetID(sqlCommand, email, code, expiryTime);
     }

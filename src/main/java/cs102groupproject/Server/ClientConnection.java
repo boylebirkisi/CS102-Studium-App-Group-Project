@@ -9,6 +9,7 @@ import cs102groupproject.SharedObjects.GroupSession;
 import cs102groupproject.SharedObjects.ProtocolMessage;
 import cs102groupproject.SharedObjects.User;
 import cs102groupproject.SharedObjects.UserCredentials;
+import cs102groupproject.SharedObjects.VerificationCode;
 import cs102groupproject.Server.AuthService;
 import cs102groupproject.Server.SessionService;
 
@@ -107,7 +108,7 @@ public class ClientConnection {
                 Map<?, ?> payload = (Map<?, ?>) message.getPayload();
                 UserCredentials credentials = (UserCredentials) payload.get("credentials");
 
-                User user = AuthService.register(credentials);
+                //User user = AuthService.register(credentials);
                 break;
             }
 
@@ -115,14 +116,17 @@ public class ClientConnection {
                 Map<?, ?> payload = (Map<?, ?>) message.getPayload();
                 String email = payload.get("email").toString();
 
-                boolean success = AuthService.sendVerificationCode(email);
-                if (!success) {
+                VerificationCode verificationCode = AuthService.sendVerificationCode(email);
+                if (verificationCode == null) {
                     sendError("Failed to send verification code");
                     return;
                 }
 
                 System.out.println("✅ Verification code sent to " + email);
 
+                send(new ProtocolMessage(ActionType.VERIFY_CODE, 
+                    verificationCode
+                ));
                 break;
             }
             default: sendError("Unknown action");

@@ -27,8 +27,9 @@ import javafx.stage.StageStyle;
 
 public class SocializationController {
     Stage popUpStage = null;
-    SessionManager manager;
+    ClientSession manager;
     ArrayList<User> friendsList;
+    ArrayList<User> onlineUsers;
     @FXML
     private Label currencyEarnedLabel;
     @FXML
@@ -70,8 +71,10 @@ public class SocializationController {
         friendsList = new ArrayList<>();
     }
 
-    public void setSessionManager(SessionManager manager) {
+    public void setFields(ClientSession manager, ArrayList<User> friendsList, ArrayList<User> onlineUsers) {
         this.manager = manager;
+        this.friendsList = friendsList;
+        this.onlineUsers = onlineUsers;
         refreshUI();
     }
 
@@ -294,15 +297,15 @@ public class SocializationController {
     @FXML
     private void displayOnlineFriends()
     {
-        ArrayList<User> onlineFriends = new ArrayList<>();
+        ArrayList<User> usersToDisplay = new ArrayList<>();
         for (User friend : friendsList)
         {
-            if (friend.isOnline())
+            if (onlineUsers.contains(friend))
             {
-                onlineFriends.add(friend);
+                usersToDisplay.add(friend);
             }
         }
-        for (User onlineFriend: onlineFriends)
+        for (User onlineFriend: usersToDisplay)
         {
             Label avatarLabel = new Label(onlineFriend.getAvatar());
             onlineFriendsHBox.getChildren().add(avatarLabel);

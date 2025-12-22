@@ -47,7 +47,6 @@ public class PlannerController {
     @FXML
     private void initialize()
     {
-
     }
 
     public void setFields(ClientSession manager, ArrayList<Habit> habits, ArrayList<AppEvent> events, ArrayList<Task> tasks) {
@@ -62,13 +61,13 @@ public class PlannerController {
     {
         updateHabitTracker(selectedHabit);
         populateEvents();
-            habitTrackerComboBox.getSelectionModel()
-        .selectedItemProperty()
-        .addListener((obs, oldVal, newVal) -> {
-            if (newVal != null) {
-                updateHabitTracker(newVal);
-            }
-        });
+        habitTrackerComboBox.getSelectionModel()
+            .selectedItemProperty()
+            .addListener((obs, oldVal, newVal) -> {
+                if (newVal != null) {
+                    updateHabitTracker(newVal);
+                }
+            });
     }
 
     private void updateHabitTracker(Habit habit)

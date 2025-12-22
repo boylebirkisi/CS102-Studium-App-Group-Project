@@ -397,12 +397,12 @@ public class DBManager {
      * Get all tasks.
      * @return
      */
-    public List<Task> getAllTasks() {
-        String sqlCommand = "SELECT * FROM tasks";
+    public List<Task> getAllTasks(int userId) {
+        String sqlCommand = "SELECT * FROM tasks WHERE user_id = ?";
         List<Task> tasks = new ArrayList<>();
 
-        try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
-
+        try (Connection conn = connect(); PreparedStatement stmt = conn.prepareStatement(sqlCommand)) {
+            stmt.setInt(1, userId);
             if (conn == null) return tasks; 
             
             ResultSet rs = stmt.executeQuery(sqlCommand);
@@ -483,12 +483,13 @@ public class DBManager {
      * Get all events.
      * @return
      */
-    public List<AppEvent> getAllEvents() {
-        String sqlCommand = "SELECT * FROM events";
+    public List<AppEvent> getAllEvents(int userId) {
+        String sqlCommand = "SELECT * FROM events WHERE user_id = ?";
         List<AppEvent> events = new ArrayList<>();
 
-        try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
+        try (Connection conn = connect(); PreparedStatement stmt = conn.prepareStatement(sqlCommand)) {
 
+            stmt.setInt(1, userId);
             if (conn == null) return events; 
             
             ResultSet rs = stmt.executeQuery(sqlCommand);
@@ -544,12 +545,13 @@ public class DBManager {
             session.getNo(), session.getLength(), session.getBreakLength(), session.getStartDate());
     }
 
-    public List<Session> getAllIndividualSessions() {
-        String sqlCommand = "SELECT * FROM sessions";
+    public List<Session> getAllIndividualSessions(int userId) {
+        String sqlCommand = "SELECT * FROM sessions WHERE owner_id = ?";
         List<Session> sessions = new ArrayList<>();
 
-        try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
+        try (Connection conn = connect(); PreparedStatement stmt = conn.prepareStatement(sqlCommand)) {
 
+            stmt.setInt(1, userId);
             if (conn == null) return sessions; 
             
             ResultSet rs = stmt.executeQuery(sqlCommand);
@@ -619,6 +621,11 @@ public class DBManager {
         return sessions;
     }
 
+    public int insertVerificationCode(String email, String code, long expiryTime) {
+        String sqlCommand = "INSERT INTO verification_codes(email, code, expiry_time) VALUES(?, ?, ?)";
+
+        return insertAndGetID(sqlCommand, email, code, expiryTime);
+    }
 
     /**
      * Get object by SQL command.

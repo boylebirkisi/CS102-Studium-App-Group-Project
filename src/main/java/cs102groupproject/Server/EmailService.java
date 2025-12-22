@@ -11,6 +11,8 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import cs102groupproject.SharedObjects.VerificationCode;
+
 public class EmailService {
     // 10 minute expiry duration
     private final static int EXPIRY_DURATION = 10 * 60 * 1000; 
@@ -45,7 +47,7 @@ public class EmailService {
     /**
      * Core method to set up and send the email.
      */
-    private static void sendMail(String recipient, String subject, String body) {
+    private static boolean sendMail(String recipient, String subject, String body) {
 
         // Set up connection properties
         Properties props = new Properties();
@@ -82,6 +84,7 @@ public class EmailService {
             Transport.send(message);
 
             System.out.println("Email sent successfully to " + recipient + "!");
+            return true;
 
         } catch (MessagingException e) {
             e.printStackTrace();
@@ -95,5 +98,14 @@ public class EmailService {
      */
     private static long calculateExpiryTime() {
         return System.currentTimeMillis() + EXPIRY_DURATION;
+    }
+
+    public VerificationCode createAndStoreVerificationCode(String email) {
+        VerificationCode code = new VerificationCode(email, generateRandomCode(6), calculateExpiryTime());
+        int codeID = db.insertVerificationCode(email, code.getStoredCode());
+        if (codeID == -1) {
+            throw new RuntimeException("Failed to store verification code in the database.");
+        }
+        return code;
     }
 }

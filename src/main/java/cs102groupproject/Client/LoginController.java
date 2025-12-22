@@ -5,6 +5,7 @@ import java.util.Map;
 import com.google.api.client.auth.oauth2.Credential;
 
 import cs102groupproject.App;
+import cs102groupproject.Server.AuthService;
 import cs102groupproject.SharedObjects.ActionType;
 import cs102groupproject.SharedObjects.ProtocolMessage;
 import cs102groupproject.SharedObjects.User;
@@ -18,37 +19,36 @@ public class LoginController{
     private TextField usernameField;
     @FXML
     private TextField passwordField;
+    @FXML
+    private TextField departmentField;
+    @FXML
+    private TextField emailField;
+    @FXML
+    private TextField codeField;
 
-    SessionManager manager;
-
-    // public String getCurrentUserID() {
-    //     if (manager.getCurrentUser() != null) {
-    //         return manager.getCurrentUser().getId();
-    //     }
-    //     return null;
-    // }
-
-    // public boolean isloggedin() {return manager.isLoggedIn();}
-    // public String getCurrentSessionID() {return manager.getSessionID();}
-    // public User getCurrentUser() {return manager.getCurrentUser();}
-
-    // public void logout() {
-    //     manager.logout();
-    // }
-
-    public boolean login(User user, int sessionID) {
-        manager.login(user, sessionID);
-        return manager.isLoggedIn();
-    }
+    private String accessToken;
+    private String email;
+    private static final AuthService manager = new AuthService();
 
     @FXML
     public void handleRegisterButton() { 
         try {
-            Scene registerScene = new Scene(App.loadFXML("RegisterPage"), 600, 400);
-            App.setScene(registerScene);
+            App.setRoot("VerificationPage");
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    private void handleSendCode() {
+        System.out.println("Send Code button clicked!");
+        email = emailField.getText();
+        System.out.println("Email: " + email);
+
+        WebSocketClient.send(new ProtocolMessage(
+            ActionType.SEND_VERIFICATION_CODE,
+            Map.of("email", email)
+        ));
     }
 
     @FXML
@@ -81,7 +81,14 @@ public class LoginController{
             return;
         }
 
-        ProtocolMessage msg = new ProtocolMessage(ActionType.DEV_LOGIN, new UserCredentials(username, password, false));
+        ProtocolMessage msg = new ProtocolMessage(ActionType.DEV_LOGIN, 
+            Map.of("credentials", new UserCredentials(
+                username,
+                password,
+                false,
+                "" // department is not needed for dev login
+            ))
+        );
 
         WebSocketClient.send(msg);
     }
@@ -108,27 +115,36 @@ public class LoginController{
                         Map.of("accessToken", accessToken)
                 );
                 System.out.println(accessToken);
+                User user = AuthService.registerWithGoogle(accessToken);
+                System.out.println("user info: " + user.getId());
 
                 WebSocketClient.send(msg);
-                //String userId = AuthService.registerWithGoogle(accessToken);
                 //GoogleCalendarAPI calendarAPI = new GoogleCalendarAPI(credential);
-
-                // Updates UI on JavaFX App Thread
-                //Platform.runLater(() -> {
-                    //System.out.println("Login successful, userId=" + userId); //CHECK THIS PART userID may be 
-                    //try {
-                        //App.setRoot("secondary");
-                   // } catch (Exception e) {
-                       // e.printStackTrace();
-                    //}
-               // });
-    
-    
+        
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }).start();
     }
+
+    @FXML
+    public void handleRegistration() {
+        String username = usernameField.getText();
+        String password = passwordField.getText();
+        String department = departmentField.getText();
+
+        ProtocolMessage msg = new ProtocolMessage(
+            ActionType.REGISTER,
+            Map.of("credentials", new UserCredentials(
+                username,
+                password,
+                false,
+                department
+            ))
+        );
+
+        WebSocketClient.send(msg);
+    }   
 
     @FXML
     public void returnMainLoginPage() {

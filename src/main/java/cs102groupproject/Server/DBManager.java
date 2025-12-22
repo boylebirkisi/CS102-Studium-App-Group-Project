@@ -63,9 +63,7 @@ public class DBManager {
 
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                return new User(rs.getString("id"), rs.getString("name"), rs.getString("email"),
-                    rs.getString("google_id"), rs.getInt("soloCurrency"), rs.getInt("groupCurrency"),
-                    rs.getBoolean("isVerified"), rs.getString("avatar"));
+                return null;
             } else {
                 return null; // No user found
             }
@@ -88,9 +86,10 @@ public class DBManager {
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 // Assuming User is a class with a constructor that takes id, name, email, password
-                return new User(rs.getString("id"), rs.getString("name"), rs.getString("email"),
-                    rs.getString("google_id"), rs.getInt("soloCurrency"), rs.getInt("groupCurrency"),
-                    rs.getBoolean("isVerified"), rs.getString("avatar"));
+                // return new User(rs.getString("id"), rs.getString("name"), rs.getString("email"),
+                //     rs.getString("google_id"), rs.getInt("soloCurrency"), rs.getInt("groupCurrency"),
+                //     rs.getBoolean("isVerified"), rs.getString("avatar"));
+                return null;
             } else {
                 return null; // No user found
             }
@@ -111,14 +110,14 @@ public class DBManager {
 
         ResultSet rs = getObject(sqlCommand);
         if (rs != null) {
-            try {
-                return new User(rs.getString("id"), rs.getString("name"), rs.getString("email"),
-                    rs.getString("google_id"), rs.getInt("soloCurrency"), rs.getInt("groupCurrency"),
-                    rs.getBoolean("isVerified"), rs.getString("avatar"));
-            } catch (SQLException e) {
-                System.err.println("Database operation failed: " + e.getMessage());
-                return null;
-            }
+            // try {
+            //     return new User(rs.getString("id"), rs.getString("name"), rs.getString("email"),
+            //         rs.getString("google_id"), , rs.getInt("soloCurrency"), rs.getInt("groupCurrency"),
+            //         rs.getBoolean("isVerified"), rs.getString("avatar"));
+            // } catch (SQLException e) {
+            //     System.err.println("Database operation failed: " + e.getMessage());
+            //     return null;
+            // }
         }
         return null;
     }

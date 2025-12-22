@@ -6,7 +6,6 @@ import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.*;
-
 import cs102groupproject.SharedObjects.AppEvent;
 import cs102groupproject.SharedObjects.TransferObject;
 

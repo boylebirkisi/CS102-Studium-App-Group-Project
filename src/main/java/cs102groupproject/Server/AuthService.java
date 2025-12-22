@@ -30,7 +30,6 @@ public class AuthService {
             Userinfo userInfo = oauth2.userinfo().get().execute();
             String googleId = userInfo.getId();
 
-
             return googleId;
         } catch (Exception e) {
             throw new RuntimeException("Google login failed", e);

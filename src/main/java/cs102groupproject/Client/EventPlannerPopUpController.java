@@ -51,7 +51,7 @@ public class EventPlannerPopUpController {
     {
         String eventName = eventNameTextField.getText();
         String color = colorPicker.getValue().toString();
-        for ()
+        //for ()
         String[] startTimeParts = startTimeTextField.getText().split(":");
         int startHour = Integer.parseInt(startTimeParts[0]);
         int startMinute = Integer.parseInt(startTimeParts[1]);
@@ -60,13 +60,13 @@ public class EventPlannerPopUpController {
         int endHour = Integer.parseInt(endTimeParts[0]);
         int endMinute = Integer.parseInt(endTimeParts[1]);
         LocalDateTime endDate = endDatePicker.getValue().atTime(endHour, endMinute);
-        AppEvent event = new AppEvent(eventName, color, startDate, endDate, ClientSession.getUserId(), 0, eventName)
-        ownerController.closePopUp();
+        AppEvent event = new AppEvent(eventName, color, startDate, endDate, ClientSession.getUserId(), 0, eventName);
+        //ownerController.closePopUp();
     }
 
     @FXML
     private void handleCancelButton()
     {
-        ownerController.closePopUp();
+        //ownerController.closePopUp();
     }
 }

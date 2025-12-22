@@ -3,7 +3,10 @@ package cs102groupproject.SharedObjects;
 public class Notification extends TransferObject{
     private String notificationText;
     private String heading;
-    private String id;
+    private int id;
+    private int userID;
+    // Either a UserID, SessionID, PDFID etc.
+    private int referenceID;
     private String png;
     private boolean isRemoved;
     private enum Status {Pending, Accepted, Declined};
@@ -11,7 +14,7 @@ public class Notification extends TransferObject{
     enum Type {FriendRequest, PDFRequest, SessionInvite, Informative};
     private Type type;
 
-    public Notification(String notificationText, String heading, String id, String png, Type type)
+    public Notification(String notificationText, String heading, int id, String png, Type type)
     {
         this.notificationText = notificationText;
         this.heading = heading;
@@ -25,7 +28,7 @@ public class Notification extends TransferObject{
 
     public String getNotificationText() {return notificationText;}
     public String getHeading() {return heading;}
-    public String getId() {return id;}
+    public int getId() {return id;}
     public String getPng() {return png;}
     public boolean getIsRemoved() {return isRemoved;}
     public void removeNotification() {isRemoved = true;}

@@ -3,7 +3,7 @@ package cs102groupproject.SharedObjects;
 import java.util.ArrayList;
 
 public class User {
-    private String id;
+    private int id;
     private String username;
     private String department;
     private String email;
@@ -33,7 +33,7 @@ public class User {
      * @param totalMinutesSpent
      * @param habitsCompleted
      */
-    public User(String id, String username, String department, String email, String googleID, int soloCurrency, int groupCurrency, boolean isVerified, String avatar, int individualSessionsCompleted, int groupSessionsCompleted, int totalMinutesSpent, ArrayList<Habit> habitsCompleted) {
+    public User(int id, String username, String department, String email, String googleID, int soloCurrency, int groupCurrency, boolean isVerified, String avatar, int individualSessionsCompleted, int groupSessionsCompleted, int totalMinutesSpent, ArrayList<Habit> habitsCompleted) {
         this.id = id;
         this.username = username;
         this.department = department;
@@ -61,7 +61,7 @@ public class User {
      * @param isVerified
      * @param avatar
      */
-    public User(String id, String username, String department, String email, String googleID, int soloCurrency, int groupCurrency, boolean isVerified, String avatar) {
+    public User(int id, String username, String department, String email, String googleID, int soloCurrency, int groupCurrency, boolean isVerified, String avatar) {
         this.id = id;
         this.username = username;
         this.department = department;
@@ -77,7 +77,35 @@ public class User {
         habitsCompleted = new ArrayList<>();
     }
 
-    public String getId() {
+    /**
+     * Constructor for new users that doesn't have an ID yet.
+     * @param id
+     * @param username
+     * @param department
+     * @param email
+     * @param googleID
+     * @param soloCurrency
+     * @param groupCurrency
+     * @param isVerified
+     * @param avatar
+     */
+    public User(String username, String department, String email, String googleID, int soloCurrency, int groupCurrency, boolean isVerified, String avatar) {
+        id = -1; //indicates that the user has not been assigned an ID yet
+        this.username = username;
+        this.department = department;
+        this.email = email;
+        this.googleID = googleID;
+        this.soloCurrency = soloCurrency;
+        this.groupCurrency = groupCurrency;
+        this.isVerified = isVerified;
+        this.avatar = avatar;
+        individualSessionsCompleted = 0;
+        groupSessionsCompleted = 0;
+        totalMinutesSpent = 0;
+        habitsCompleted = new ArrayList<>();
+    }
+
+    public int getId() {
         return id;
     }
     public String getUsername() {

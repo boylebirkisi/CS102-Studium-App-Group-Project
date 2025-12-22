@@ -12,7 +12,7 @@ public class GroupSession extends Session {
         chat = new GroupChat();
     }
 
-    // public GroupSession(User owner, ArrayList<User> participants, String name, String type, int no, String id, int length, int breakLength)
+    // public GroupSession(User owner, ArrayList<User> participants, String name, String type, int no, int id, int length, int breakLength)
     // {
     //     super(owner, name, type, no, id, length, breakLength);
     //     this.participants = participants;

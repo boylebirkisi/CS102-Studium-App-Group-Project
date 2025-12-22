@@ -7,7 +7,6 @@ import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.*;
 import cs102groupproject.SharedObjects.AppEvent;
-import cs102groupproject.SharedObjects.TransferObject;
 
 import java.io.IOException;
 import java.time.LocalDateTime;

@@ -5,9 +5,18 @@ public class OptionalNotification extends Notification{
     private String option2;	
     private String chosenOption;
 
-    public OptionalNotification(String notificationText, String heading, String id, String png, String option1, String option2, Notification.Type type)
+    public OptionalNotification(String notificationText, String heading, int id, String png, String option1, String option2, Notification.Type type)
     {
         super(notificationText, heading, id, png, type);
+        this.option1 = option1;
+        this.option2 = option2;
+        chosenOption = "";
+        setType(type);
+    }
+
+    public OptionalNotification(String notificationText, String heading, String png, String option1, String option2, Notification.Type type)
+    {
+        super(notificationText, heading, png, type);
         this.option1 = option1;
         this.option2 = option2;
         chosenOption = "";

@@ -2,12 +2,9 @@ package cs102groupproject.Client;
 
 import cs102groupproject.SharedObjects.User;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import cs102groupproject.SharedObjects.Habit;
@@ -29,7 +26,7 @@ public class UserController {
     }
 
     public User getCurrentUser() {return manager.getCurrentUser();}
-    public String getCurrentSessionID() {return manager.getSessionID();}
+    public int getCurrentSessionID() {return manager.getSessionID();}
 
     // @FXML
     // private void displayUserInfo()

@@ -53,7 +53,7 @@ public class WebSocketClient {
         switch (msg.getAction()) {
 
             case LOGIN_SUCCESS: {
-                String userId = msg.getPayload().toString();
+                int userId = Integer.parseInt(msg.getPayload().toString());
                 ClientSession.login(userId);
 
                 Platform.runLater(() -> {

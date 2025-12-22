@@ -4,11 +4,13 @@ public class UserCredentials {
     private String emailOrUsername;
     private String password;
     private boolean isEmail;
+    private String department;
 
-    public UserCredentials(String emailOrUsername, String password, boolean isEmail) {
+    public UserCredentials(String emailOrUsername, String password, boolean isEmail, String department) {
         this.emailOrUsername = emailOrUsername;
         this.password = password;
         this.isEmail = isEmail;
+        this.department = department;
     }
 
     public String getEmailOrUsername() {

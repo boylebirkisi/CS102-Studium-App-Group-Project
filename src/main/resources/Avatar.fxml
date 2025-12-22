@@ -17,9 +17,9 @@
    <children>
       <VBox alignment="CENTER" layoutX="216.0" layoutY="3.0" prefHeight="694.0" prefWidth="467.0" spacing="18.0">
          <children>
-            <TextField maxWidth="420.0" prefHeight="50.0" prefWidth="456.0" promptText="   Username" style="-fx-background-radius: 25; -fx-background-color: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 4);" />
-            <TextField maxWidth="420.0" prefHeight="50.0" prefWidth="146.0" promptText="   Password" style="-fx-background-radius: 25; -fx-background-color: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 4);" />
-            <TextField maxWidth="420.0" prefHeight="50.0" prefWidth="146.0" promptText="   Department" style="-fx-background-radius: 25; -fx-background-color: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 4);" onAction="#handleRegistration"/>
+            <TextField fx:id="usernameField" maxWidth="420.0" prefHeight="50.0" prefWidth="456.0" promptText="   Username" style="-fx-background-radius: 25; -fx-background-color: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 4);" />
+            <TextField fx:id="passwordField" maxWidth="420.0" prefHeight="50.0" prefWidth="146.0" promptText="   Password" style="-fx-background-radius: 25; -fx-background-color: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 4);" />
+            <TextField fx:id="departmentField" maxWidth="420.0" prefHeight="50.0" prefWidth="146.0" promptText="   Department" style="-fx-background-radius: 25; -fx-background-color: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 4);" onAction="#handleRegistration"/>
             <Label text="Select an Avatar:" textAlignment="CENTER">
                <font>
                   <Font name="System Bold" size="16.0" />

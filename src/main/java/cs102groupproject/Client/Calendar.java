@@ -8,9 +8,9 @@ public class Calendar {
 	private int currentYear;
 	private int currentMonth;
 	private DayCell[] days;
-	private String userId;
+	private int userId;
 
-    public Calendar(String userId) {
+    public Calendar(int userId) {
         currentYear = LocalDate.now().getYear();
         currentMonth = LocalDate.now().getMonthValue();
         this.userId = userId;
@@ -41,5 +41,5 @@ public class Calendar {
     public void setCurrentYear(int year) {this.currentYear = year;}
     public int getCurrentMonth() {return currentMonth;}
     public void setCurrentMonth(int month) {this.currentMonth = month;}
-    public String getUserId() {return userId;}
+    public int getUserId() {return userId;}
 }

@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 public class OfficeLayout {
     private ArrayList<OwnedFurniture> placedItems;
-    private String userId;
+    private int userId;
 
-    public OfficeLayout(String userId) {
+    public OfficeLayout(int userId) {
         this.userId = userId;
         this.placedItems = new ArrayList<>();
     }
@@ -14,7 +14,7 @@ public class OfficeLayout {
     public ArrayList<OwnedFurniture> getPlacedItems() {return placedItems;}
     public void addPlacedItem(OwnedFurniture item) {placedItems.add(item);}
     public void removePlacedItem(OwnedFurniture item) {placedItems.remove(item);}
-    public String getUserId() {return userId;}
+    public int getUserId() {return userId;}
 
     public boolean isSpaceEmpty(Furniture furniture, int x, int y) {
         for (OwnedFurniture item : placedItems) {

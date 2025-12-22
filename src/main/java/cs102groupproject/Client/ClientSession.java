@@ -1,15 +1,15 @@
 package cs102groupproject.Client;
 
 public class ClientSession {
-    private static String userId;
+    private static int userId;
     private static boolean loggedIn;
 
-    public static void login(String uid) {
+    public static void login(int uid) {
         userId = uid;
         loggedIn = true;
     }
 
-    public static String getUserId() {
+    public static int getUserId() {
         return userId;
     }
 
@@ -18,7 +18,7 @@ public class ClientSession {
     }
 
     public static void logout() {
-        userId = null;
+        userId = -1; //indicates no user is logged in
         loggedIn = false;
     } 
 }

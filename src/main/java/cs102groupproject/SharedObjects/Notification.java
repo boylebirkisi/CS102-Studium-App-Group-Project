@@ -8,7 +8,7 @@ public class Notification extends TransferObject{
     private boolean isRemoved;
     private enum Status {Pending, Accepted, Declined};
     private Status status;
-    private enum Type {FriendRequest, PDFRequest, SessionInvite, Informative};
+    enum Type {FriendRequest, PDFRequest, SessionInvite, Informative};
     private Type type;
 
     public Notification(String notificationText, String heading, String id, String png, Type type)
@@ -32,4 +32,5 @@ public class Notification extends TransferObject{
     public Status getStatus() {return status;}
     public void setStatus(Status status) {this.status = status;}
     public Type getType() {return type;}
+    public void setType(Type type) {this.type = type;}
 }

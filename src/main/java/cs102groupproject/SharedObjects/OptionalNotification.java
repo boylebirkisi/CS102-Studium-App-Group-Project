@@ -14,9 +14,9 @@ public class OptionalNotification extends Notification{
         setType(type);
     }
 
-    public OptionalNotification(String notificationText, String heading, String png, String option1, String option2, Notification.Type type)
+    public OptionalNotification(int userID, int referenceId, String notificationText, String heading, String png, String option1, String option2, Notification.Type type)
     {
-        super(notificationText, heading, png, type);
+        super(userID, referenceId, notificationText, heading, png, type);
         this.option1 = option1;
         this.option2 = option2;
         chosenOption = "";

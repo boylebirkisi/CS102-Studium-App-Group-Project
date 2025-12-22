@@ -4,7 +4,7 @@ import jakarta.websocket.Session;
 
 public class SessionManager {
     User currentUser;
-    String sessionID;
+    int sessionID;
     boolean isLoggedIn;
     Session client;
 
@@ -12,10 +12,10 @@ public class SessionManager {
         this.client = client;
         isLoggedIn = false;
         currentUser = null;
-        sessionID = null;
+        sessionID = -1; //indicates no session
     }
 
-    public void login(User user, String sessionID) {
+    public void login(User user, int sessionID) {
         this.currentUser = user;
         this.sessionID = sessionID;
         this.isLoggedIn = true;
@@ -23,11 +23,11 @@ public class SessionManager {
 
     public void logout() {
         this.currentUser = null;
-        this.sessionID = null;
+        this.sessionID = -1; //indicates no session
         this.isLoggedIn = false;
     }
 
     public boolean isLoggedIn() {return isLoggedIn;}
     public User getCurrentUser() {return currentUser;}
-    public String getSessionID() {return sessionID;}
+    public int getSessionID() {return sessionID;}
 }

@@ -1,15 +1,17 @@
 package cs102groupproject.SharedObjects;
 
-public class Task extends TransferObject{
-	private UserCredentials name;
-	private UserCredentials color;
-	private int importance;
-	private UserCredentials userId;
-	private boolean isCompleted;
-	private UserCredentials id;
-	private int googleCaldendarID;
+import javafx.scene.paint.Color;
 
-    public Task(UserCredentials name, UserCredentials color, int importance, UserCredentials userId, UserCredentials id, int googleCaldendarID)
+public class Task extends TransferObject{
+	private String name;
+	private Color color;
+	private int importance;
+	private int userId;
+	private boolean isCompleted;
+	private int id;
+	private String googleCaldendarID;
+
+    public Task(String name, Color color, int importance, int userId, int id, String googleCaldendarID)
     {
         this.name = name;
         this.color = color;
@@ -21,17 +23,29 @@ public class Task extends TransferObject{
         this.objectType = "Task";
     }
 
-    public UserCredentials getName() {return name;}
-    public void setName(UserCredentials name) {this.name = name;}
-    public UserCredentials getColor() {return color;}
-    public void setColor(UserCredentials color) {this.color = color;}
+    public Task(String name, Color color, int importance, int userId, String googleCaldendarID)
+    {
+        this.name = name;
+        this.color = color;
+        this.importance = importance;
+        this.userId = userId;
+        isCompleted = false;
+        id = -1; //indicates that the task has not been assigned an ID yet
+        this.googleCaldendarID = googleCaldendarID;
+        this.objectType = "Task";
+    }
+
+    public String getName() {return name;}
+    public void setName(String name) {this.name = name;}
+    public Color getColor() {return color;}
+    public void setColor(Color color) {this.color = color;}
     public int getImportance() {return importance;}
     public void setImportance(int importance) {this.importance = importance;}
-    public UserCredentials getUserId() {return userId;}
+    public int getUserId() {return userId;}
     public boolean getIsCompleted() {return isCompleted;}
-    public UserCredentials getId() {return id;}
-    public int getGoogleCaldendarID() {return googleCaldendarID;}
-    public void setGoogleCaldendarID(int googleCaldendarID) {this.googleCaldendarID = googleCaldendarID;}
+    public int getId() {return id;}
+    public String getGoogleCaldendarID() {return googleCaldendarID;}
+    public void setGoogleCaldendarID(String googleCaldendarID) {this.googleCaldendarID = googleCaldendarID;}
 
     public void completeTask() {isCompleted = true;}
 }

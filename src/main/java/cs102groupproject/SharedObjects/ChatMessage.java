@@ -3,18 +3,18 @@ package cs102groupproject.SharedObjects;
 import java.time.LocalDate;
 
 public class ChatMessage {
-    private String senderID;
+    private int senderID;
     private String message;
     private LocalDate timestamp;
 
-    public ChatMessage(String senderID, String message)
+    public ChatMessage(int senderID, String message)
     {
         this.senderID = senderID;
         this.message = message;
         this.timestamp = LocalDate.now();
     }
 
-    public String getSenderID() {return senderID;}
+    public int getSenderID() {return senderID;}
     public String getMessage() {return message;}
     public LocalDate getTimestamp() {return timestamp;}
 }

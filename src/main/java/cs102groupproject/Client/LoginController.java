@@ -36,7 +36,7 @@ public class LoginController{
     //     manager.logout();
     // }
 
-    public boolean login(User user, String sessionID) {
+    public boolean login(User user, int sessionID) {
         manager.login(user, sessionID);
         return manager.isLoggedIn();
     }

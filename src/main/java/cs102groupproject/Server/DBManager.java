@@ -38,7 +38,7 @@ public class DBManager {
      */
     public int insertUser(String name, String email, String password, String googleId) {
         // Use PreparedStatement for security (prevents SQL Injection)
-        String sqlQuery = "INSERT INTO users(name, email, password, google_id) VALUES(?, ?, ?, ?)"; 
+        String sqlQuery = "INSERT INTO users(username, email, password_hash, google_id) VALUES(?, ?, ?, ?)"; 
 
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sqlQuery)) {
 
@@ -157,7 +157,7 @@ public class DBManager {
 
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                return rs.getString("password");
+                return rs.getString("password_hash");
             } else {
                 return null; // No user found
             }
@@ -747,7 +747,8 @@ public class DBManager {
     }
 
     public static void main(String[] args) {
-
+        DBManager dbManager = new DBManager();
+        dbManager.insertUser("delfin", "delfin@example.com", "PASS", "GOOGLE_ID_123");
     
     }
 }

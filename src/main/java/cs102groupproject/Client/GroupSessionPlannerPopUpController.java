@@ -16,7 +16,7 @@ import javafx.scene.layout.VBox;
 
 public class GroupSessionPlannerPopUpController {
     SocializationController ownerController;
-    ClientSession manager;
+    SessionManager manager;
     @FXML
     private TextField sessionNameTextField;
     @FXML
@@ -39,7 +39,7 @@ public class GroupSessionPlannerPopUpController {
     {
     }
 
-    public void setFields(SocializationController ownerController, ClientSession manager)
+    public void setControllerAndManager(SocializationController ownerController, SessionManager manager)
     {
         this.ownerController = ownerController;
         this.manager = manager;

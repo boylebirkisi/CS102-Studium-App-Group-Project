@@ -10,18 +10,18 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="417.0" style="-fx-background-color: DFD5C3; -fx-background-radius: 20; -fx-border-radius: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 4);" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="400.0" style="-fx-background-color: DFD5C3; -fx-background-radius: 20; -fx-border-radius: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 4);" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox layoutX="14.0" layoutY="20.0" prefHeight="271.0" prefWidth="360.0" spacing="15.0" style="-fx-background-radius: 15; -fx-border-radius: 15;">
+      <VBox layoutX="20.0" layoutY="14.0" prefHeight="271.0" prefWidth="360.0" spacing="20.0" style="-fx-background-radius: 15; -fx-border-radius: 15;">
          <children>
-            <Label prefHeight="30.0" prefWidth="400.0" style="-fx-background-radius: 15; -fx-background-color: white;" text="   Event Planner" textAlignment="CENTER">
+            <Label prefHeight="30.0" prefWidth="400.0" style="-fx-background-radius: 15; -fx-background-color: white;" text="   Task Planner" textAlignment="CENTER">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
             </Label>
             <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                <children>
-                  <Label prefWidth="80.0" text="Event Name:">
+                  <Label prefWidth="80.0" text="Task Name:">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -41,26 +41,6 @@
                         <Color red="0.7490196228027344" green="0.125490203499794" blue="0.6352941393852234" />
                      </value>
                   </ColorPicker>
-               </children>
-            </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
-               <children>
-                  <Label prefWidth="80.0" text="Start:">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Label>
-                  <TextField prefWidth="180.0" promptText="__/__/____, __:__" />
-               </children>
-            </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
-               <children>
-                  <Label prefWidth="80.0" text="Finish:">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Label>
-                  <TextField prefWidth="180.0" promptText="__/__/____, __:__" />
                </children>
             </HBox>
             <Label text="Importance;">

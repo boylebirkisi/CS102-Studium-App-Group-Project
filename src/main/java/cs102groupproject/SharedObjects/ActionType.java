@@ -16,5 +16,6 @@ public enum ActionType {
     ERROR, 
     JOINED_GROUP_SESSION,
     LOGIN_SUCCESS,
-    DEV_LOGIN
+    DEV_LOGIN,
+    CREATE_GROUP_SESSION
 }

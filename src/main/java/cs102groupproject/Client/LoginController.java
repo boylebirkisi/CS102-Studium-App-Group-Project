@@ -107,6 +107,7 @@ public class LoginController{
                         ActionType.LOGIN_WITH_GOOGLE,
                         Map.of("accessToken", accessToken)
                 );
+                System.out.println(accessToken);
 
                 WebSocketClient.send(msg);
                 //String userId = AuthService.registerWithGoogle(accessToken);

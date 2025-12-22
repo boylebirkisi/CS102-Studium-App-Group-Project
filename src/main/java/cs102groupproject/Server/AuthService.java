@@ -14,7 +14,7 @@ import java.io.IOException;
 public class AuthService {
     private static DBManager dbManager = new DBManager();
     // Login with Google
-    public static String loginWithGoogle(String accessToken) {
+    public static User loginWithGoogle(String accessToken) {
 
         try {
             // Sets the access token
@@ -31,14 +31,19 @@ public class AuthService {
             Userinfo userInfo = oauth2.userinfo().get().execute();
             String googleId = userInfo.getId();
 
-            return googleId;
+            if (dbManager.getUserByGoogleID(googleId) == null) {
+                throw new RuntimeException("No user found with this Google ID");
+            } else {
+                return dbManager.getUserByGoogleID(googleId);
+            }
         } catch (Exception e) {
             throw new RuntimeException("Google login failed", e);
         }
     }
 
     // Google Register
-    public static String registerWithGoogle(String accessToken) {
+    public static User registerWithGoogle(String accessToken) {
+        System.out.println("Registering with Google, accessToken: " + accessToken);
 
         try {
             // Sets the access token
@@ -53,11 +58,20 @@ public class AuthService {
 
             // Gets the user info
             Userinfo userInfo = oauth2.userinfo().get().execute();
-
             String googleId = userInfo.getId();
             
             System.out.println("Google ID: " + googleId);
-            return googleId;
+            if (dbManager.getUserByGoogleID(googleId) != null) {
+                throw new RuntimeException("User with this Google ID already exists");
+            } else {
+                dbManager.insertUser(
+                    userInfo.getName(),
+                    userInfo.getEmail(),
+                    null,
+                    googleId
+                );
+            }
+            return dbManager.getUserByGoogleID(googleId);
 
         } catch (Exception e) {
             throw new RuntimeException("Google registration failed", e);

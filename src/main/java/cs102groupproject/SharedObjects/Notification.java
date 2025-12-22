@@ -4,12 +4,9 @@ public class Notification extends TransferObject{
     private String notificationText;
     private String heading;
     private int id;
-<<<<<<< HEAD
     private int userID;
     // Either a UserID, SessionID, PDFID etc.
     private int referenceID;
-=======
->>>>>>> main
     private String png;
     private boolean isRemoved;
     private enum Status {Pending, Accepted, Declined};

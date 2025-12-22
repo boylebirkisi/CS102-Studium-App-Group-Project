@@ -4,11 +4,14 @@ public class Notification extends TransferObject{
     private String notificationText;
     private String heading;
     private int id;
+    private int userID;
+    // Either a UserID, SessionID, PDFID etc.
+    private int referenceID;
     private String png;
     private boolean isRemoved;
-    private enum Status {Pending, Accepted, Declined};
+    public enum Status {Pending, Accepted, Declined};
     private Status status;
-    enum Type {FriendRequest, PDFRequest, SessionInvite, Informative};
+    public enum Type {FriendRequest, PDFRequest, SessionInvite, Informative, FRIEND_REQUEST};
     private Type type;
 
     public Notification(String notificationText, String heading, int id, String png, Type type)
@@ -23,11 +26,12 @@ public class Notification extends TransferObject{
         setStatus(Status.Pending);
     }
 
-    public Notification(String notificationText, String heading, String png, Type type)
+    public Notification(int userID, int referenceID, String notificationText, String heading, String png, Type type)
     {
         this.notificationText = notificationText;
         this.heading = heading;
-        id = -1; //indicates that the notification has not been assigned an ID yet
+        this.userID = userID;
+        this.referenceID = referenceID;
         this.png = png;
         this.type = type;
         isRemoved = false;

@@ -1,6 +1,12 @@
 package cs102groupproject.Server;
+import cs102groupproject.App;
 import cs102groupproject.SharedObjects.*;
+import javafx.scene.Group;
+
 import java.sql.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DBManager {
      // Connection Details
@@ -10,7 +16,7 @@ public class DBManager {
     
     /**
      * Establishes a database connection.
-     * @return A valid Connection object, or null on failure.
+     * @return A Connection object, or null on failure.
      */
     private static Connection connect() {
         Connection conn = null;
@@ -30,25 +36,54 @@ public class DBManager {
      * @param password The user's hashed password.
      * @return true if the insert was successful, false otherwise.
      */
-    public boolean insertUser(String name, String email, String password) {
+    public int insertUser(String name, String email, String password, String googleId) {
         // Use PreparedStatement for security (prevents SQL Injection)
-        String sqlQuery = "INSERT INTO users(name, email, password) VALUES(?, ?, ?)"; 
+        String sqlQuery = "INSERT INTO users(username, email, password_hash, google_id) VALUES(?, ?, ?, ?)"; 
 
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sqlQuery)) {
 
-            if (conn == null) return false; // Connection failed
+            if (conn == null) return -1; // Connection failed
             
             pstmt.setString(1, name);
             pstmt.setString(2, email);
             pstmt.setString(3, password);
+            pstmt.setString(4, googleId);
 
             int rowsAffected = pstmt.executeUpdate();
-            // If at least one row was affected, that means the insertion was successful.
-            return rowsAffected > 0;
+            if (rowsAffected > 0) {
+            try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    return generatedKeys.getInt(1); // Returns the new INT id
+                }
+            }
+        }
+        return -1;
             
         } catch (SQLException e) {
             System.err.println("Database operation failed: " + e.getMessage());
-            return false;
+            return -1;
+        }
+    }
+
+    public User getUserByUsername(String username) {
+        String sqlQuery = "SELECT * FROM users WHERE username = ?";
+
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sqlQuery)) {
+
+            if (conn == null) return null; // Connection failed
+            
+            pstmt.setString(1, username);
+
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return null;
+            } else {
+                return null; // No user found
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Database operation failed: " + e.getMessage());
+            return null;
         }
     }
 
@@ -77,27 +112,17 @@ public class DBManager {
     public User getUserByGoogleID(String googleId) {
         String sqlQuery = "SELECT * FROM users WHERE google_id = ?";
 
-        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sqlQuery)) {
-
-            if (conn == null) return null; // Connection failed
-            
-            pstmt.setString(1, googleId);
-
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                // Assuming User is a class with a constructor that takes id, name, email, password
-                // return new User(rs.getString("id"), rs.getString("name"), rs.getString("email"),
-                //     rs.getString("google_id"), rs.getInt("soloCurrency"), rs.getInt("groupCurrency"),
-                //     rs.getBoolean("isVerified"), rs.getString("avatar"));
-                return null;
-            } else {
-                return null; // No user found
+        ResultSet rs = getObject(sqlQuery);
+        if (rs != null) {
+            try {
+                return new User(rs.getInt("id"), rs.getString("name"), rs.getString("department"),
+                    rs.getString("email"), rs.getString("google_id"), rs.getInt("solo_currency"),
+                    rs.getInt("group_currency"), rs.getBoolean("is_verified"), rs.getString("avatar"));
+            } catch (SQLException e) {
+                System.err.println("Database operation failed: " + e.getMessage()); 
             }
-            
-        } catch (SQLException e) {
-            System.err.println("Database operation failed: " + e.getMessage());
-            return null;
         }
+        return null;
     }
 
     /**
@@ -110,16 +135,49 @@ public class DBManager {
 
         ResultSet rs = getObject(sqlCommand);
         if (rs != null) {
-            // try {
-            //     return new User(rs.getString("id"), rs.getString("name"), rs.getString("email"),
-            //         rs.getString("google_id"), , rs.getInt("soloCurrency"), rs.getInt("groupCurrency"),
-            //         rs.getBoolean("isVerified"), rs.getString("avatar"));
-            // } catch (SQLException e) {
-            //     System.err.println("Database operation failed: " + e.getMessage());
-            //     return null;
-            // }
+            try {
+                return new User(rs.getInt("id"), rs.getString("name"), rs.getString("department"),
+                    rs.getString("email"), rs.getString("google_id"), rs.getInt("solo_currency"),
+                    rs.getInt("group_currency"), rs.getBoolean("is_verified"), rs.getString("avatar"));
+            } catch (SQLException e) {
+                System.err.println("Database operation failed: " + e.getMessage());
+            }
         }
         return null;
+    }
+
+    public String getPasswordByUsername(String username) {
+        String sqlQuery = "SELECT password FROM users WHERE username = ?";
+
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sqlQuery)) {
+
+            if (conn == null) return null; // Connection failed
+            
+            pstmt.setString(1, username);
+
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getString("password_hash");
+            } else {
+                return null; // No user found
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Database operation failed: " + e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Update user avatar path.
+     * @param userID
+     * @param avatarPath
+     * @return
+     */
+    public boolean updateUserAvatar(int userID, String avatarPath) {
+        String sqlCommand = "UPDATE users SET avatar = ? WHERE id = ?";
+
+        return executeSqlCommand(sqlCommand, avatarPath, userID);
     }
 
     /**
@@ -131,16 +189,442 @@ public class DBManager {
     public boolean addFriend(int userID, int friendID) {        
         String sqlCommand = "INSERT INTO friends(user_id, friend_id) VALUES(?, ?)";
 
-        return executeOneSqlCommand(sqlCommand, userID, friendID);
+        return executeSqlCommand(sqlCommand, userID, friendID);
     }   
 
+    /**
+     * Remove a friendship between two users.
+     * @param userID
+     * @param friendID
+     * @return
+     */
     public boolean removeFriend(int userID, int friendID) {
-        String sqlCommand = "DELETE FROM friends WHERE user_id = ? AND friend_id = ?";
+        String sqlCommand = "DELETE FROM friends WHERE (user_id = ? AND friend_id = ?) OR (user_id = ? AND friend_id = ?)";
 
-        return executeOneSqlCommand(sqlCommand, userID, friendID);
+        return executeSqlCommand(sqlCommand, userID, friendID, userID, friendID);
     }
 
-    // Helper method to get specific object
+    /**
+     * Get friends of a user.
+     * @param currentUserID
+     * @return
+     */
+    public List<User> getFriends(int currentUserID) {
+        List<User> friends = new ArrayList<>();
+        // This query finds friends regardless of who initiated the request
+        String sql = "SELECT u.* FROM users u " +
+                    "JOIN friends f ON (u.id = f.friend_id OR u.id = f.user_id) " +
+                    "WHERE (f.user_id = ? OR f.friend_id = ?) " +
+                    "AND u.id != ?";
+        
+        try (Connection conn = connect(); 
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, currentUserID);
+            pstmt.setInt(2, currentUserID);
+            pstmt.setInt(3, currentUserID);
+            
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                friends.add(new User(rs.getString("id"), rs.getString("name"), rs.getString("department"),
+                    rs.getString("email"), rs.getInt("solo_currency"),
+                    rs.getInt("group_currency"), rs.getBoolean("is_verified"), rs.getString("avatar")));
+            }
+        } catch (SQLException e) {
+            System.err.println("Failed to fetch bidirectional friends: " + e.getMessage());
+        }
+        return friends;
+    }
+
+    public List<User> getAllUsers() {
+        String sqlCommand = "SELECT * FROM users";
+        List<User> users = new ArrayList<>();
+
+        try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
+
+            if (conn == null) return users; 
+            
+            ResultSet rs = stmt.executeQuery(sqlCommand);
+            while (rs.next()) {
+                User user = new User(rs.getInt("id"), rs.getString("name"), rs.getString("department"),
+                    rs.getString("email"), rs.getString("google_id"), rs.getInt("solo_currency"),
+                    rs.getInt("group_currency"), rs.getBoolean("is_verified"), rs.getString("avatar"));
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            System.err.println("Database operation failed: " + e.getMessage());
+        }
+        return users;
+    }
+
+    //! Habit, Task, Event Operations
+
+    /**
+     * Adds a habit for a user.
+     * @param name
+     * @param userID
+     * @return
+     */
+    public boolean addHabit(String name, int userID) {
+        String sqlCommand = "INSERT INTO habits(name, user_id) VALUES(?, ?)";
+
+        return executeSqlCommand(sqlCommand, name, userID);
+    }
+
+    /**
+     * Removes a habit by its ID.
+     * @param habitID
+     * @return
+     */
+    public boolean removeHabit(int habitID) {
+        String sqlCommand = "DELETE FROM habits WHERE id = ?";
+
+        return executeSqlCommand(sqlCommand, habitID);
+    }
+
+    /**
+     * Updates the habit completion string and compeletence status.
+     * @param habitID
+     * @param completed_arr_data
+     * @param isCompleted
+     * @return
+     */
+    public boolean updateHabitCompletionString(int habitID, String completed_arr_data, boolean isCompleted) {
+        String sqlCommand = "UPDATE habits SET completed_arr_data = ?, is_completed = ? WHERE id = ?";
+
+        return executeSqlCommand(sqlCommand, completed_arr_data, isCompleted, habitID);
+    }
+
+    /**
+     * Get habit by ID.
+     * @param habitID
+     * @return
+     */
+    public Habit getHabitByID(int habitID) {
+        String sqlCommand = "SELECT * FROM habits WHERE id = ?";
+
+        ResultSet rs = getObject(sqlCommand);
+        if (rs != null) {
+            try {
+                return new Habit(rs.getString("name"), rs.getInt("id"), rs.getInt("user_id"));
+            } catch (SQLException e) {
+                System.err.println("Database operation failed: " + e.getMessage());
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Get all habits.
+     * @return
+     */
+    public List<Habit> getAllHabits() {
+        String sqlCommand = "SELECT * FROM habits";
+        List<Habit> habits = new ArrayList<>();
+
+        try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
+
+            ResultSet rs = stmt.executeQuery(sqlCommand);
+            while (rs.next()) {
+                Habit habit = new Habit(rs.getString("name"), rs.getInt("id"), rs.getInt("user_id"));
+                habits.add(habit);
+            }
+        } catch (SQLException e) {
+            System.err.println("Database operation failed: " + e.getMessage());
+        }
+        return habits;
+    }
+
+    /**
+     * Inserts a task for a user.
+     * @param name
+     * @param color
+     * @param importance
+     * @param userId
+     * @param googleCalendarID
+     * @return
+     */
+    public int addTask(String name, String color, int importance, int userId, String googleCalendarID) {
+        String sqlCommand = "INSERT INTO tasks(name, color, importance, user_id, google_calendar_id) VALUES(?, ?, ?, ?, ?)";
+
+        return insertAndGetID(sqlCommand, name, color, importance, userId, googleCalendarID);
+    }
+
+    /**
+     * Deletes a task by its ID.
+     * @param taskID
+     * @return
+     */
+    public boolean deleteTask(int taskID) {
+        String sqlCommand = "DELETE FROM tasks WHERE id = ?";
+
+        return executeSqlCommand(sqlCommand, taskID);
+    }
+
+    /**
+     * Updates the completion status of a task.
+     * @param taskID
+     * @param isCompleted
+     * @return
+     */
+    public boolean updateTaskStatus(int taskID, boolean isCompleted) {
+        String sqlCommand = "UPDATE tasks SET is_completed = ? WHERE id = ?";
+
+        return executeSqlCommand(sqlCommand, isCompleted, taskID);
+    }
+
+    /**
+     * Get task by ID.
+     * @param taskID
+     * @return
+     */
+    public Task getTaskByID(int taskID) {
+        String sqlCommand = "SELECT * FROM tasks WHERE id = ?";
+
+        ResultSet rs = getObject(sqlCommand);
+        if (rs != null) {
+            try {
+                return new Task(rs.getString("name"), rs.getString("color"), rs.getInt("importance"),
+                    rs.getInt("user_id"), rs.getInt("id"), rs.getString("google_calendar_id"));
+            } catch (SQLException e) {
+                System.err.println("Database operation failed: " + e.getMessage());
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Get all tasks.
+     * @return
+     */
+    public List<Task> getAllTasks() {
+        String sqlCommand = "SELECT * FROM tasks";
+        List<Task> tasks = new ArrayList<>();
+
+        try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
+
+            if (conn == null) return tasks; 
+            
+            ResultSet rs = stmt.executeQuery(sqlCommand);
+            while (rs.next()) {
+                Task task = new Task(rs.getString("name"), rs.getString("color"), rs.getInt("importance"),
+                    rs.getInt("user_id"), rs.getInt("id"), rs.getString("google_calendar_id"));
+                tasks.add(task);
+            }
+        } catch (SQLException e) {
+            System.err.println("Database operation failed: " + e.getMessage());
+        }
+        return tasks;
+    }
+
+    /**
+     * Inserts an event for a user.
+     * @param name
+     * @param color
+     * @param start
+     * @param finish
+     * @param userId
+     * @param importance
+     * @param googleCalendarID
+     * @return the eventID.
+     */
+    public int addEvent(String name, String color, LocalDate start, LocalDate finish, String userId, int importance, int googleCalendarID) {
+        String sqlCommand = "INSERT INTO events(name, color, start_date, finish_date, user_id, importance, google_calendar_id) VALUES(?, ?, ?, ?, ?, ?, ?)";
+
+        return insertAndGetID(sqlCommand, name, color, start, finish, userId, importance, googleCalendarID);
+    }
+
+    /**
+     * Deletes an event by its ID.
+     * @param eventID
+     * @return
+     */
+    public boolean deleteEvent(int eventID) {
+        String sqlCommand = "DELETE FROM events WHERE id = ?";
+
+        return executeSqlCommand(sqlCommand, eventID);
+    }
+
+    /**
+     * Updates dates of an event.
+     * @param eventID
+     * @param newStart
+     * @param newFinish
+     * @return
+     */
+    public boolean updateEventDates(int eventID, LocalDate newStart, LocalDate newFinish) {
+        String sqlCommand = "UPDATE events SET start_date = ?, finish_date = ? WHERE id = ?";
+
+        return executeSqlCommand(sqlCommand, newStart, newFinish, eventID);
+    }
+
+    /**
+     * Get event by ID.
+     * @param eventID
+     * @return
+     */
+    public AppEvent getEventByID(int eventID) {
+        String sqlCommand = "SELECT * FROM events WHERE id = ?";
+
+        ResultSet rs = getObject(sqlCommand);
+        if (rs != null) {
+            try {
+                return new AppEvent(rs.getString("name"), rs.getString("color"), rs.getDate("start_date").toLocalDate(),
+                    rs.getDate("finish_date").toLocalDate(), rs.getInt("user_id"), rs.getInt("importance"),
+                    rs.getInt("id"), rs.getString("google_calendar_id"));
+            } catch (SQLException e) {
+                System.err.println("Database operation failed: " + e.getMessage());
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Get all events.
+     * @return
+     */
+    public List<AppEvent> getAllEvents() {
+        String sqlCommand = "SELECT * FROM events";
+        List<AppEvent> events = new ArrayList<>();
+
+        try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
+
+            if (conn == null) return events; 
+            
+            ResultSet rs = stmt.executeQuery(sqlCommand);
+            while (rs.next()) {
+                AppEvent event = new AppEvent(rs.getString("name"), rs.getString("color"), rs.getDate("start_date").toLocalDate(),
+                    rs.getDate("finish_date").toLocalDate(), rs.getInt("user_id"), rs.getInt("importance"),
+                    rs.getInt("id"), rs.getString("google_calendar_id"));
+                events.add(event);
+            }
+        } catch (SQLException e) {
+            System.err.println("Database operation failed: " + e.getMessage());
+        }
+        return events;
+    }
+
+    //! Notification and Session Operations
+
+    public int addNotification(String title, String message, int userId) {
+        String sqlCommand = "INSERT INTO notifications(title, message, user_id) VALUES(?, ?, ?)";
+
+        return insertAndGetID(sqlCommand, title, message, userId);
+    }
+    
+    public List<Notification> getAllNotifications() {
+        String sqlCommand = "SELECT * FROM notifications";
+        List<Notification> notifications = new ArrayList<>();
+
+        try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
+
+            if (conn == null) return notifications; 
+            
+            ResultSet rs = stmt.executeQuery(sqlCommand);
+            while (rs.next()) {
+                Notification notification = new Notification(
+                    rs.getInt("user_id"),
+                    rs.getInt("reference_id"),
+                    rs.getString("message"),
+                    rs.getString("title"),
+                    rs.getString("png"),
+                    Notification.Type.valueOf(rs.getString("type"))
+                ); 
+                notifications.add(notification);
+            }
+        } catch (SQLException e) {
+            System.err.println("Database operation failed: " + e.getMessage());
+        }
+        return notifications;
+    }
+    public int addSession(Session session) {
+        String sqlCommand = "INSERT INTO sessions(owner_id, name, type, no, length, break_length, start_date) VALUES(?, ?, ?, ?, ?, ?, ?)";
+
+        return insertAndGetID(sqlCommand, session.getOwner().getId(), session.getName(), session.getType(),
+            session.getNo(), session.getLength(), session.getBreakLength(), session.getStartDate());
+    }
+
+    public List<Session> getAllIndividualSessions() {
+        String sqlCommand = "SELECT * FROM sessions";
+        List<Session> sessions = new ArrayList<>();
+
+        try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
+
+            if (conn == null) return sessions; 
+            
+            ResultSet rs = stmt.executeQuery(sqlCommand);
+            while (rs.next()) {
+                Session session = new Session(
+                    getUserByID(rs.getInt("owner_id")),
+                    rs.getString("name"),
+                    rs.getString("type"),
+                    rs.getInt("no"),
+                    rs.getInt("length"),
+                    rs.getInt("break_length"),
+                    rs.getTimestamp("start_date").toLocalDateTime()
+                ); 
+                sessions.add(session);
+            }
+        } catch (SQLException e) {
+            System.err.println("Database operation failed: " + e.getMessage());
+        }
+        return sessions;
+    }
+
+    public Session getIndividualSessionByID(int sessionID) {
+        String sqlCommand = "SELECT * FROM sessions WHERE id = ?";
+
+        ResultSet rs = getObject(sqlCommand);
+        if (rs != null) {
+            try {
+                return new Session(
+                    getUserByID(rs.getInt("owner_id")),
+                    rs.getString("name"),
+                    rs.getString("type"),
+                    rs.getInt("no"),
+                    rs.getInt("length"),
+                    rs.getInt("break_length"),
+                    rs.getTimestamp("start_date").toLocalDateTime()
+                );
+            } catch (SQLException e) {
+                System.err.println("Database operation failed: " + e.getMessage());
+            }
+        }
+        return null;
+    }
+
+    public List<GroupSession> getAllGroupSessions() {
+        String sqlCommand = "SELECT * FROM group_sessions";
+        List<GroupSession> sessions = new ArrayList<>();
+
+        try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
+
+            if (conn == null) return sessions; 
+            
+            ResultSet rs = stmt.executeQuery(sqlCommand);
+            while (rs.next()) {
+                Session session = getIndividualSessionByID(rs.getInt("session_id"));
+
+                ResultSet participantRS = getObject("SELECT * FROM session_participants WHERE session_id = " + rs.getInt("session_id"));
+                ArrayList<User> participants = new ArrayList<>();
+                while (participantRS.next()) {
+                    participants.add(getUserByID(participantRS.getInt("user_id")));
+                }
+                GroupSession groupSession = new GroupSession(session, participants, rs.getBoolean("is_public"));
+                sessions.add(groupSession);
+            }
+        } catch (SQLException e) {
+            System.err.println("Database operation failed: " + e.getMessage());
+        }
+        return sessions;
+    }
+
+
+    /**
+     * Get object by SQL command.
+     * @param sqlCommand
+     * @return
+     */
     private ResultSet getObject(String sqlCommand) {
         try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
 
@@ -160,65 +644,66 @@ public class DBManager {
         }
     }
 
-    private boolean executeTransaction(String[] sqlCommands, Object[][] parameters) {
-        Connection connection = null;
-        PreparedStatement pstmt = null;
+    /**
+     * Inserts a new object and returns the generated ID.
+     * @param sqlCommand
+     * @param parameters
+     * @return
+     */
+    private int insertAndGetID(String sqlCommand, Object... parameters) {
+        try (Connection connection = connect()) {
+            if (connection == null) return -1;
 
-        try {
-            connection = connect();
+            try (PreparedStatement pstmt = connection.prepareStatement(sqlCommand, Statement.RETURN_GENERATED_KEYS)) {
+                for (int i = 0; i < parameters.length; i++) {
+                    pstmt.setObject(i + 1, parameters[i]);
+                }
+
+                int rowsAffected = pstmt.executeUpdate();
+                if (rowsAffected > 0) {
+                    try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
+                        if (generatedKeys.next()) {
+                            return generatedKeys.getInt(1); 
+                        }
+                    }
+                }
+                return -1;
+            }
+        } catch (SQLException e) {
+            System.err.println("Database operation failed: " + e.getMessage());
+            return -1;
+        }
+    }
+
+    private boolean executeTransaction(String[] sqlCommands, Object[][] parameters) {
+        try (Connection connection = connect()) {
             if (connection == null) return false;
 
-            // Starts transaction
             connection.setAutoCommit(false);
-
-            for (int i = 0; i < sqlCommands.length; i++) {
-                String sqlCommand = sqlCommands[i];
-                Object[] params = parameters[i];
-
-                pstmt = connection.prepareStatement(sqlCommand);
-
-                // Passing the parameters
-                for (int j = 0; j < params.length; j++) {
-                    pstmt.setObject(j + 1, params[j]);
-                }
-
-                pstmt.executeUpdate();
-            }
-
-            // Commits the transaction to database
-            connection.commit();
-            return true;
-
-        } catch (SQLException e) {
-            System.err.println("Transaction failed: " + e.getMessage());
             try {
-                if (connection != null) {
-                    connection.rollback();
-                    System.out.println("Transaction rolled back.");
+                for (int i = 0; i < sqlCommands.length; i++) {
+                    executeCoreLogic(connection, sqlCommands[i], parameters[i]);
                 }
-            } catch (SQLException rollbackEx) {
-                System.err.println("Failed to rollback transaction: " + rollbackEx.getMessage());
-            }
-            return false;
-        } finally {
-            try {
-                if (pstmt != null) pstmt.close();
-                if (connection != null) connection.setAutoCommit(true); 
-                if (connection != null) connection.close();
-
+                connection.commit();
+                return true;
             } catch (SQLException e) {
-                System.err.println("Failed to close resources: " + e.getMessage());
+                connection.rollback();
+                System.err.println("Transaction failed, rolled back: " + e.getMessage());
+                return false;
             }
+        } catch (SQLException e) {
+            System.err.println("Connection error: " + e.getMessage());
+            return false;
         }
     }
 
     /**
-     * Executes a single SQL command.
+     * Executes a single SQL command for updating, deleting.
      * @param sqlCommand
      * @param paramaters
      * @return true if operation is successful.
      */
-    private boolean executeOneSqlCommand(String sqlCommand, Object... paramaters) {
+    private boolean executeSqlCommand(String sqlCommand, Object... paramaters) {
         Connection connection = null;
         PreparedStatement pstmt = null;
 
@@ -252,27 +737,18 @@ public class DBManager {
      * @throws SQLException
      */
     private boolean executeCoreLogic(Connection connection, String sqlCommand, Object... parameters) throws SQLException {
-        try {
-            PreparedStatement pstmt = connection.prepareStatement(sqlCommand);
-
-            // Passing the parameters
-            for (int i = 0; i < parameters.length; i++) {
-                pstmt.setObject(i + 1, parameters[i]);
-            }
-
-            int rowsAffected = pstmt.executeUpdate();
-            return rowsAffected > 0;
-
-        } catch (SQLException e) {
-            System.err.println("Database operation failed: " + e.getMessage());
-            throw e; 
+        try (PreparedStatement pstmt = connection.prepareStatement(sqlCommand)) {
+        for (int i = 0; i < parameters.length; i++) {
+            pstmt.setObject(i + 1, parameters[i]);
+        }
+        int rowsAffected = pstmt.executeUpdate();
+        return rowsAffected > 0;
         }
     }
 
     public static void main(String[] args) {
-        DBManager db = new DBManager();
-        String hashedPassword = new PasswordHasher().hashPassword("password123");
-        boolean success = db.insertUser("delffafin", "deryilmaz06@gmail.com", hashedPassword);
-        if (success) System.out.println("Insert successful.");
+        DBManager dbManager = new DBManager();
+        dbManager.insertUser("delfin", "delfin@example.com", "PASS", "GOOGLE_ID_123");
+    
     }
 }

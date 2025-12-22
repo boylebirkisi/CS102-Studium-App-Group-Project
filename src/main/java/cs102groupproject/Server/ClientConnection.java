@@ -16,6 +16,7 @@ public class ClientConnection {
 
     /** WebSocket session associated with the client */
     private final Session socketSession;
+    private final SessionManager sessionManager;
 
 
     /** Services handling business logic */
@@ -23,11 +24,11 @@ public class ClientConnection {
     private static final SessionService sessionService = new SessionService();
 
     /** Logged-in user ID (null if not authenticated) */
-    private String userId;
+    private int userId;
 
-    public ClientConnection(Session session) {
+    public ClientConnection(Session session, SessionManager sessionManager) {
         this.socketSession = session;
-        userId = null;
+        this.sessionManager = sessionManager;
     }
 
     public void onMessage(String json) {
@@ -46,14 +47,14 @@ public class ClientConnection {
                 Map<?, ?> payload = (Map<?, ?>) message.getPayload();
                 String username = (String) payload.get("username");
 
-                // Fake auth (TEST AMAÇLI)
-                this.userId = "dev-" + username;
+                // Fake auth (TEST AMAÇLI)  eskiden this.userId = "dev-" + username;  idi ama int e çevirdik böyle bırakıyorum o yüzden 
+                int uId = 123;
 
-                System.out.println("✅ DEV_LOGIN success, userId = " + this.userId);
+                System.out.println("✅ DEV_LOGIN success, userId = " + uId);
 
                 send(new ProtocolMessage(
                         ActionType.LOGIN_SUCCESS,
-                        this.userId
+                        uId
                 ));
                 break;
             }
@@ -97,7 +98,7 @@ public class ClientConnection {
 
                 send(new ProtocolMessage(
                         ActionType.LOGIN_SUCCESS,
-                        userId
+                        user
                 ));
                 break;
             }

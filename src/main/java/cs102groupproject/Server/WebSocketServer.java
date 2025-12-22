@@ -12,9 +12,11 @@ import jakarta.websocket.server.ServerEndpoint;
 @ServerEndpoint("/ws")
 public class WebSocketServer {
 
+    private static final SessionManager sessionManager = new SessionManager();
+
     @OnOpen
     public void onOpen(Session session) {
-        ClientConnection connection = new ClientConnection(session);
+        ClientConnection connection = new ClientConnection(session, sessionManager);        
         session.getUserProperties().put("connection", connection);
         System.out.println("Client connected: " + session.getId());
     }

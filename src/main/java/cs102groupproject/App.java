@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
 import cs102groupproject.Client.WebSocketClient;
 import java.io.IOException;
@@ -50,5 +51,10 @@ public class App extends Application {
 
     public static void setScene(Scene newScene) {
         scene = newScene;
+    }
+
+    public static void loadScrollableScene()
+    {
+        ScrollPane 
     }
 }

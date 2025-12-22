@@ -4,6 +4,7 @@ import java.net.URI;
 
 import cs102groupproject.App;
 import cs102groupproject.SharedObjects.ProtocolMessage;
+import cs102groupproject.SharedObjects.User;
 import jakarta.websocket.Session;
 import jakarta.websocket.ClientEndpoint;
 import jakarta.websocket.ContainerProvider;
@@ -53,8 +54,8 @@ public class WebSocketClient {
         switch (msg.getAction()) {
 
             case LOGIN_SUCCESS: {
-                int userId = Integer.parseInt(msg.getPayload().toString());
-                ClientSession.login(userId);
+                User user = (User) msg.getPayload();
+                ClientSession.login(user);
 
                 Platform.runLater(() -> {
                     try {

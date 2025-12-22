@@ -1,21 +1,14 @@
 package cs102groupproject.Client;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 import cs102groupproject.SharedObjects.AppEvent;
-import cs102groupproject.SharedObjects.GroupSession;
-import cs102groupproject.SharedObjects.User;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.TilePane;
-import javafx.scene.layout.VBox;
 
 public class EventPlannerPopUpController {
     PlannerController ownerController;
@@ -51,7 +44,15 @@ public class EventPlannerPopUpController {
     {
         String eventName = eventNameTextField.getText();
         String color = colorPicker.getValue().toString();
-        //for ()
+        int importance = 1;
+        for (int i = 0; i < importanceButtonsHBox.getChildren().size(); i++)
+        {
+            RadioButton rb = (RadioButton) importanceButtonsHBox.getChildren().get(i);
+            if (rb.isSelected())
+            {
+                importance = Integer.parseInt(rb.getText().charAt(0) + "");
+            }
+        }
         String[] startTimeParts = startTimeTextField.getText().split(":");
         int startHour = Integer.parseInt(startTimeParts[0]);
         int startMinute = Integer.parseInt(startTimeParts[1]);
@@ -60,13 +61,14 @@ public class EventPlannerPopUpController {
         int endHour = Integer.parseInt(endTimeParts[0]);
         int endMinute = Integer.parseInt(endTimeParts[1]);
         LocalDateTime endDate = endDatePicker.getValue().atTime(endHour, endMinute);
-        AppEvent event = new AppEvent(eventName, color, startDate, endDate, ClientSession.getUserId(), 0, eventName);
-        //ownerController.closePopUp();
+        AppEvent event = new AppEvent(eventName, color, startDate, endDate,
+            ClientSession.getUserId(), importance, null);
+        ownerController.closePopUp();
     }
 
     @FXML
     private void handleCancelButton()
     {
-        //ownerController.closePopUp();
+        ownerController.closePopUp();
     }
 }

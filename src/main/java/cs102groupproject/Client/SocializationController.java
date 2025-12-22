@@ -38,8 +38,6 @@ public class SocializationController {
     @FXML
     private Button searchSessionsButton;
     @FXML
-    private Button createGroupSessionButton;
-    @FXML
     private TextField userNameTextField;
     @FXML
     private TextField departmentTextField;
@@ -322,10 +320,9 @@ public class SocializationController {
         popUpStage = new Stage();
         popUpStage.setScene(scene);
         popUpStage.setTitle("Group Session Planner");
-        popUpStage.setScene(new Scene(popUpRoot));
         popUpStage.initStyle(StageStyle.UTILITY);
         popUpStage.initModality(Modality.WINDOW_MODAL);
-        popUpStage.initOwner(createGroupSessionButton.getScene().getWindow());
+        popUpStage.initOwner(searchSessionsButton.getScene().getWindow());
         popUpStage.show();
         popUpStage.setResizable(false);
         popUpStage.centerOnScreen();

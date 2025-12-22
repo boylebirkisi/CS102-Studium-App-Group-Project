@@ -27,7 +27,7 @@
             <AnchorPane prefHeight="214.0" prefWidth="250.0" style="-fx-background-color: #E7D3A8; -fx-background-radius: 20;">
                <children>
                   <Label fx:id="calendarMonthLabel" layoutX="20.0" layoutY="15.0" text="December 2025" />
-                  <GridPane fx:id="calendarGridPane" layoutX="4.8" layoutY="56.0" prefHeight="150.0" prefWidth="242.0" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="56.0">
+                  <GridPane fx:id="calendarGridPane" layoutX="4.8" layoutY="56.0" prefHeight="150.0" prefWidth="242.0" visible="false" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="56.0">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -218,7 +218,7 @@
             <Font size="14.0" />
          </font>
       </Button>
-      <Button layoutX="443.0" layoutY="24.0" mnemonicParsing="false" onAction="#handleSwitch" prefHeight="0.0" prefWidth="110.0" text="Weekly" />
+      <Button layoutX="443.0" layoutY="24.0" mnemonicParsing="false" prefHeight="0.0" prefWidth="110.0" text="Weekly" />
       <AnchorPane layoutX="29.0" layoutY="309.0" prefHeight="376.0" prefWidth="260.0" style="-fx-background-color: #E7D3A8; -fx-background-radius: 20;">
          <children>
             <Button layoutX="175.0" layoutY="336.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="70.0" text="Add Event" />

@@ -1,7 +1,7 @@
 package cs102groupproject.SharedObjects;
 
 public class Furniture {
-    private int id;
+    private int ID;
     private String name;
     private String description;
     private int height;
@@ -11,8 +11,8 @@ public class Furniture {
     private String category;
     private String imagePath;
 
-    public Furniture(int id, String name, String description, int height, int width, int soloPrice, int groupPrice, String category, String imagePath) {
-        this.id = id;
+    public Furniture(int ID, String name, String description, int height, int width, int soloPrice, int groupPrice, String category, String imagePath) {
+        this.ID = ID;
         this.name = name;
         this.description = description;
         this.height = height;
@@ -23,20 +23,8 @@ public class Furniture {
         this.imagePath = imagePath;
     }
 
-    public Furniture(String name, String description, int height, int width, int soloPrice, int groupPrice, String category, String imagePath) {
-        id = -1; // Indicates that the furniture has not been assigned an ID yet
-        this.name = name;
-        this.description = description;
-        this.height = height;
-        this.width = width;
-        this.soloPrice = soloPrice;
-        this.groupPrice = groupPrice;
-        this.category = category;
-        this.imagePath = imagePath;
-    }
-
-    public int getId() {
-        return id;
+    public int getID() {
+        return ID;
     }
     
     public String getName() {

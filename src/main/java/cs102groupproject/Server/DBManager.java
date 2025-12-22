@@ -63,6 +63,28 @@ public class DBManager {
         }
     }
 
+    public User getUserByUsername(String username) {
+        String sqlQuery = "SELECT * FROM users WHERE username = ?";
+
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sqlQuery)) {
+
+            if (conn == null) return null; // Connection failed
+            
+            pstmt.setString(1, username);
+
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return null;
+            } else {
+                return null; // No user found
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Database operation failed: " + e.getMessage());
+            return null;
+        }
+    }
+
     public User getUserByEmail(String email) {
         String sqlQuery = "SELECT * FROM users WHERE email = ?";
 
@@ -91,11 +113,9 @@ public class DBManager {
         ResultSet rs = getObject(sqlQuery);
         if (rs != null) {
             try {
-                return new User(rs.getString("id"), rs.getString("name"), rs.getString("department"),
-                    rs.getString("email"), rs.getString("google_id"), rs.getInt("soloCurrency"),
-                    rs.getInt("groupCurrency"), rs.getBoolean("isVerified"), rs.getString("avatar"),
-                    rs.getInt("individualSessionsCompleted"), rs.getInt("groupSessionsCompleted"),
-                    rs.getInt("totalMinutesSpent"), null);
+                return new User(rs.getInt("id"), rs.getString("name"), rs.getString("department"),
+                    rs.getString("email"), rs.getString("google_id"), rs.getInt("solo_currency"),
+                    rs.getInt("group_currency"), rs.getBoolean("is_verified"), rs.getString("avatar"));
             } catch (SQLException e) {
                 System.err.println("Database operation failed: " + e.getMessage()); 
             }
@@ -114,16 +134,36 @@ public class DBManager {
         ResultSet rs = getObject(sqlCommand);
         if (rs != null) {
             try {
-                return new User(rs.getString("id"), rs.getString("name"), rs.getString("department"),
-                    rs.getString("email"), rs.getString("google_id"), rs.getInt("soloCurrency"),
-                    rs.getInt("groupCurrency"), rs.getBoolean("isVerified"), rs.getString("avatar"),
-                    rs.getInt("individualSessionsCompleted"), rs.getInt("groupSessionsCompleted"),
-                    rs.getInt("totalMinutesSpent"), null);
+                return new User(rs.getInt("id"), rs.getString("name"), rs.getString("department"),
+                    rs.getString("email"), rs.getString("google_id"), rs.getInt("solo_currency"),
+                    rs.getInt("group_currency"), rs.getBoolean("is_verified"), rs.getString("avatar"));
             } catch (SQLException e) {
                 System.err.println("Database operation failed: " + e.getMessage());
             }
         }
         return null;
+    }
+
+    public String getPasswordByUsername(String username) {
+        String sqlQuery = "SELECT password FROM users WHERE username = ?";
+
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sqlQuery)) {
+
+            if (conn == null) return null; // Connection failed
+            
+            pstmt.setString(1, username);
+
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getString("password");
+            } else {
+                return null; // No user found
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Database operation failed: " + e.getMessage());
+            return null;
+        }
     }
 
     /**
@@ -185,10 +225,8 @@ public class DBManager {
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 friends.add(new User(rs.getString("id"), rs.getString("name"), rs.getString("department"),
-                    rs.getString("email"), rs.getString("google_id"), rs.getInt("soloCurrency"),
-                    rs.getInt("groupCurrency"), rs.getBoolean("isVerified"), rs.getString("avatar"),
-                    rs.getInt("individualSessionsCompleted"), rs.getInt("groupSessionsCompleted"),
-                    rs.getInt("totalMinutesSpent"), null));
+                    rs.getString("email"), rs.getInt("solo_currency"),
+                    rs.getInt("group_currency"), rs.getBoolean("is_verified"), rs.getString("avatar")));
             }
         } catch (SQLException e) {
             System.err.println("Failed to fetch bidirectional friends: " + e.getMessage());
@@ -206,11 +244,9 @@ public class DBManager {
             
             ResultSet rs = stmt.executeQuery(sqlCommand);
             while (rs.next()) {
-                User user = new User(rs.getString("id"), rs.getString("name"), rs.getString("department"),
-                    rs.getString("email"), rs.getString("google_id"), rs.getInt("soloCurrency"),
-                    rs.getInt("groupCurrency"), rs.getBoolean("isVerified"), rs.getString("avatar"),
-                    rs.getInt("individualSessionsCompleted"), rs.getInt("groupSessionsCompleted"),
-                    rs.getInt("totalMinutesSpent"), null);
+                User user = new User(rs.getInt("id"), rs.getString("name"), rs.getString("department"),
+                    rs.getString("email"), rs.getString("google_id"), rs.getInt("solo_currency"),
+                    rs.getInt("group_currency"), rs.getBoolean("is_verified"), rs.getString("avatar"));
                 users.add(user);
             }
         } catch (SQLException e) {
@@ -268,7 +304,7 @@ public class DBManager {
         ResultSet rs = getObject(sqlCommand);
         if (rs != null) {
             try {
-                return new Habit(rs.getString("name"), rs.getInt("id"), rs.getString("user_id"));
+                return new Habit(rs.getString("name"), rs.getInt("id"), rs.getInt("user_id"));
             } catch (SQLException e) {
                 System.err.println("Database operation failed: " + e.getMessage());
             }
@@ -288,7 +324,7 @@ public class DBManager {
 
             ResultSet rs = stmt.executeQuery(sqlCommand);
             while (rs.next()) {
-                Habit habit = new Habit(rs.getString("name"), rs.getInt("id"), rs.getString("user_id"));
+                Habit habit = new Habit(rs.getString("name"), rs.getInt("id"), rs.getInt("user_id"));
                 habits.add(habit);
             }
         } catch (SQLException e) {
@@ -432,8 +468,8 @@ public class DBManager {
         if (rs != null) {
             try {
                 return new AppEvent(rs.getString("name"), rs.getString("color"), rs.getDate("start_date").toLocalDate(),
-                    rs.getDate("finish_date").toLocalDate(), rs.getString("user_id"), rs.getInt("importance"),
-                    rs.getInt("id"), rs.getInt("google_calendar_id"));
+                    rs.getDate("finish_date").toLocalDate(), rs.getInt("user_id"), rs.getInt("importance"),
+                    rs.getInt("id"), rs.getString("google_calendar_id"));
             } catch (SQLException e) {
                 System.err.println("Database operation failed: " + e.getMessage());
             }
@@ -456,8 +492,8 @@ public class DBManager {
             ResultSet rs = stmt.executeQuery(sqlCommand);
             while (rs.next()) {
                 AppEvent event = new AppEvent(rs.getString("name"), rs.getString("color"), rs.getDate("start_date").toLocalDate(),
-                    rs.getDate("finish_date").toLocalDate(), rs.getString("user_id"), rs.getInt("importance"),
-                    rs.getInt("id"), rs.getInt("google_calendar_id"));
+                    rs.getDate("finish_date").toLocalDate(), rs.getInt("user_id"), rs.getInt("importance"),
+                    rs.getInt("id"), rs.getString("google_calendar_id"));
                 events.add(event);
             }
         } catch (SQLException e) {
@@ -599,6 +635,7 @@ public class DBManager {
     }
 
     public static void main(String[] args) {
-        
+
+    
     }
 }

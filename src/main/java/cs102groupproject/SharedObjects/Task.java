@@ -9,13 +9,13 @@ public class Task extends TransferObject{
 	private int id;
 	private String googleCaldendarID;
 
-    public Task(String name, String color, int importance, int userId, int id, String googleCaldendarID)
+    public Task(String name, String color, int importance, int userId, int id, String googleCaldendarID, boolean isCompleted)
     {
         this.name = name;
         this.color = color;
         this.importance = importance;
         this.userId = userId;
-        isCompleted = false;
+        this.isCompleted = isCompleted;
         this.id = id;
         this.googleCaldendarID = googleCaldendarID;
         this.objectType = "Task";

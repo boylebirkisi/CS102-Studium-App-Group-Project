@@ -5,6 +5,7 @@ import java.util.Map;
 import com.google.api.client.auth.oauth2.Credential;
 
 import cs102groupproject.App;
+import cs102groupproject.Server.AuthService;
 import cs102groupproject.SharedObjects.ActionType;
 import cs102groupproject.SharedObjects.ProtocolMessage;
 import cs102groupproject.SharedObjects.User;
@@ -44,8 +45,7 @@ public class LoginController{
     @FXML
     public void handleRegisterButton() { 
         try {
-            Scene registerScene = new Scene(App.loadFXML("RegisterPage"), 600, 400);
-            App.setScene(registerScene);
+            App.setRoot("Avatar");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -108,27 +108,22 @@ public class LoginController{
                         Map.of("accessToken", accessToken)
                 );
                 System.out.println(accessToken);
+                User user = AuthService.registerWithGoogle(accessToken);
+                System.out.println("user info: " + user.getId());
 
                 WebSocketClient.send(msg);
-                //String userId = AuthService.registerWithGoogle(accessToken);
                 //GoogleCalendarAPI calendarAPI = new GoogleCalendarAPI(credential);
-
-                // Updates UI on JavaFX App Thread
-                //Platform.runLater(() -> {
-                    //System.out.println("Login successful, userId=" + userId); //CHECK THIS PART userID may be 
-                    //try {
-                        //App.setRoot("secondary");
-                   // } catch (Exception e) {
-                       // e.printStackTrace();
-                    //}
-               // });
-    
-    
+        
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }).start();
     }
+
+    @FXML
+    public void handleRegistration() {
+        
+    }   
 
     @FXML
     public void returnMainLoginPage() {

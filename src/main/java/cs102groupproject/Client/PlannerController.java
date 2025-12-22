@@ -6,6 +6,4 @@ public class PlannerController {
     public PlannerController(SessionManager manager) {
         this.manager = manager;
     }
-
-    
 }

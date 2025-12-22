@@ -43,7 +43,7 @@ public class AuthService {
 
     // Google Register
     public static User registerWithGoogle(String accessToken) {
-        System.out.println("Registering with Google, accessToken: " + accessToken);
+        System.out.println("Registering with Google, accessToken: ");
 
         try {
             // Sets the access token

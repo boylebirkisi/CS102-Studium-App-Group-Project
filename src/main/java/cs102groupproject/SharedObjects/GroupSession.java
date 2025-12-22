@@ -14,6 +14,14 @@ public class GroupSession extends Session {
         chat = new GroupChat();
     }
 
+    public GroupSession(Session session, ArrayList<User> participants, boolean isPublic)
+    {
+        super(session.getOwner(), session.getName(), session.getType(), session.getNo(), session.getId(), session.getLength(), session.getBreakLength(), session.getStartDate());
+        this.participants = participants;
+        chat = new GroupChat();
+        this.isPublic = isPublic;
+    }
+
     public GroupSession(User owner, ArrayList<User> participants, String name, String type, int no, int id, int length, int breakLength, LocalDateTime startDate, boolean isPublic)
     {
         super(owner, name, type, no, id, length, breakLength, startDate);

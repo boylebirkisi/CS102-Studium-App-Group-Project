@@ -1,6 +1,8 @@
 package cs102groupproject.Server;
 import cs102groupproject.App;
 import cs102groupproject.SharedObjects.*;
+import javafx.scene.Group;
+
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -502,11 +504,121 @@ public class DBManager {
         return events;
     }
 
+    //! Notification and Session Operations
+
     public int addNotification(String title, String message, int userId) {
         String sqlCommand = "INSERT INTO notifications(title, message, user_id) VALUES(?, ?, ?)";
 
         return insertAndGetID(sqlCommand, title, message, userId);
     }
+    
+    public List<Notification> getAllNotifications() {
+        String sqlCommand = "SELECT * FROM notifications";
+        List<Notification> notifications = new ArrayList<>();
+
+        try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
+
+            if (conn == null) return notifications; 
+            
+            ResultSet rs = stmt.executeQuery(sqlCommand);
+            while (rs.next()) {
+                Notification notification = new Notification(
+                    rs.getInt("user_id"),
+                    rs.getInt("reference_id"),
+                    rs.getString("message"),
+                    rs.getString("title"),
+                    rs.getString("png"),
+                    Notification.Type.valueOf(rs.getString("type"))
+                ); 
+                notifications.add(notification);
+            }
+        } catch (SQLException e) {
+            System.err.println("Database operation failed: " + e.getMessage());
+        }
+        return notifications;
+    }
+    public int addSession(Session session) {
+        String sqlCommand = "INSERT INTO sessions(owner_id, name, type, no, length, break_length, start_date) VALUES(?, ?, ?, ?, ?, ?, ?)";
+
+        return insertAndGetID(sqlCommand, session.getOwner().getId(), session.getName(), session.getType(),
+            session.getNo(), session.getLength(), session.getBreakLength(), session.getStartDate());
+    }
+
+    public List<Session> getAllIndividualSessions() {
+        String sqlCommand = "SELECT * FROM sessions";
+        List<Session> sessions = new ArrayList<>();
+
+        try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
+
+            if (conn == null) return sessions; 
+            
+            ResultSet rs = stmt.executeQuery(sqlCommand);
+            while (rs.next()) {
+                Session session = new Session(
+                    getUserByID(rs.getInt("owner_id")),
+                    rs.getString("name"),
+                    rs.getString("type"),
+                    rs.getInt("no"),
+                    rs.getInt("length"),
+                    rs.getInt("break_length"),
+                    rs.getTimestamp("start_date").toLocalDateTime()
+                ); 
+                sessions.add(session);
+            }
+        } catch (SQLException e) {
+            System.err.println("Database operation failed: " + e.getMessage());
+        }
+        return sessions;
+    }
+
+    public Session getIndividualSessionByID(int sessionID) {
+        String sqlCommand = "SELECT * FROM sessions WHERE id = ?";
+
+        ResultSet rs = getObject(sqlCommand);
+        if (rs != null) {
+            try {
+                return new Session(
+                    getUserByID(rs.getInt("owner_id")),
+                    rs.getString("name"),
+                    rs.getString("type"),
+                    rs.getInt("no"),
+                    rs.getInt("length"),
+                    rs.getInt("break_length"),
+                    rs.getTimestamp("start_date").toLocalDateTime()
+                );
+            } catch (SQLException e) {
+                System.err.println("Database operation failed: " + e.getMessage());
+            }
+        }
+        return null;
+    }
+
+    public List<GroupSession> getAllGroupSessions() {
+        String sqlCommand = "SELECT * FROM group_sessions";
+        List<GroupSession> sessions = new ArrayList<>();
+
+        try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
+
+            if (conn == null) return sessions; 
+            
+            ResultSet rs = stmt.executeQuery(sqlCommand);
+            while (rs.next()) {
+                Session session = getIndividualSessionByID(rs.getInt("session_id"));
+
+                ResultSet participantRS = getObject("SELECT * FROM session_participants WHERE session_id = " + rs.getInt("session_id"));
+                ArrayList<User> participants = new ArrayList<>();
+                while (participantRS.next()) {
+                    participants.add(getUserByID(participantRS.getInt("user_id")));
+                }
+                GroupSession groupSession = new GroupSession(session, participants, rs.getBoolean("is_public"));
+                sessions.add(groupSession);
+            }
+        } catch (SQLException e) {
+            System.err.println("Database operation failed: " + e.getMessage());
+        }
+        return sessions;
+    }
+
 
     /**
      * Get object by SQL command.

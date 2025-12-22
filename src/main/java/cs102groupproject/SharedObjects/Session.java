@@ -72,6 +72,9 @@ public class Session {
     public String getType() {return type;}
     public void setType(String type) {this.type = type;}
     public int getNo() {return no;}
+    public User getOwner() {return owner;}
+    public void setOwner(User owner) {this.owner = owner;}
+    public LocalDateTime getStartDate() {return startDate;}
 
     public void setNo(int no)
     {

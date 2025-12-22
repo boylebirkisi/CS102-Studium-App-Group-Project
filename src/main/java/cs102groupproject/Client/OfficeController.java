@@ -73,6 +73,8 @@ import javafx.fxml.FXML;
 import javafx.scene.input.MouseEvent;
 import java.io.IOException;
 
+import cs102groupproject.App;
+
 public class OfficeController {
 
     @FXML

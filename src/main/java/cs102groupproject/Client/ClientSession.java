@@ -1,24 +1,52 @@
 package cs102groupproject.Client;
 
-public class ClientSession {
-    private static int userId;
-    private static boolean loggedIn;
+import cs102groupproject.SharedObjects.User;
 
-    public static void login(int uid) {
-        userId = uid;
-        loggedIn = true;
-    }
+/**
+ * Client-side application context.
+ * UI needs this, server does NOT.
+ */
+public final class ClientSession {
+    //controllers will be added
+    private static User currentUser;
+    private static int activeGroupId; // Group / Study session ID (business)
 
-    public static int getUserId() {
-        return userId;
-    }
+    private ClientSession() {}
 
-    public static boolean isLoggedIn() {
-        return loggedIn;
+    /* ===== AUTH ===== */
+
+    public static void login(User user) {
+        currentUser = user;
     }
 
     public static void logout() {
-        userId = -1; //indicates no user is logged in
-        loggedIn = false;
-    } 
+        currentUser = null;
+        activeGroupId = -1;
+    }
+
+    public static boolean isLoggedIn() {
+        return currentUser != null;
+    }
+
+    public static User getCurrentUser() {
+        return currentUser;
+    }
+
+    public static int getUserId(){
+        return getCurrentUser().getId();
+    }
+    
+    /* ===== GROUP SESSION ===== */
+
+    public static void setActiveGroupId(int groupId) {
+        activeGroupId = groupId;
+    }
+
+    public static int getActiveGroupId() {
+        return activeGroupId;
+    }
+
+    public static boolean isInGroup() {
+        return activeGroupId != -1;
+    }
 }

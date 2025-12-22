@@ -5,6 +5,7 @@ import java.net.URI;
 import cs102groupproject.App;
 import cs102groupproject.SharedObjects.ProtocolMessage;
 import cs102groupproject.SharedObjects.User;
+import cs102groupproject.SharedObjects.VerificationCode;
 import jakarta.websocket.Session;
 import jakarta.websocket.ClientEndpoint;
 import jakarta.websocket.ContainerProvider;
@@ -15,7 +16,7 @@ import javafx.application.Platform;
 
 @ClientEndpoint
 public class WebSocketClient {
-     private static Session session;
+    private static Session session;
 
     public static void connect() throws Exception {
         WebSocketContainer container =
@@ -66,6 +67,11 @@ public class WebSocketClient {
                 });
 
                 break;
+            }
+
+            case VERIFY_CODE: {
+                VerificationCode code = (VerificationCode) msg.getPayload();
+
             }
 
             case ERROR: {

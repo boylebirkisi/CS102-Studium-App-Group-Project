@@ -64,8 +64,12 @@ public class GoogleCalendarAPI {
     // Creates a new event in the user's google calendar
     public Event createEvent(AppEvent event) throws IOException {
         // Converts LocalDate to DateTime
-        DateTime start = new DateTime((event.getStart().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()));
-        DateTime end = new DateTime((event.getFinish().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()));
+        long startMillis = event.getStart().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        long endMillis = event.getFinish().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+
+        // 2. Create the Google DateTime objects
+        DateTime start = new DateTime(startMillis);
+        DateTime end = new DateTime(endMillis);
 
         Event googleEvent = new Event()
             .setDescription(event.getName())

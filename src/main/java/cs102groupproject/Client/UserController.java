@@ -45,7 +45,7 @@ public class UserController {
     }
 
     public User getCurrentUser() {return manager.getCurrentUser();}
-    public int getCurrentSessionID() {return manager.getSessionID();}
+    //public int getCurrentSessionID() {return manager.getSessionID();}
 
     // @FXML
     // private void displayUserInfo()

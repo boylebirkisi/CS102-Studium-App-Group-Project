@@ -97,37 +97,36 @@ public class AuthService {
         return null;
     }
 
-    /**
-     * Registers a new user with given details.
-     * @return
-     */
-    public static User register(UserCredentials credentials) {
-        if (credentials == null) {
-            throw new IllegalArgumentException("Credentials cannot be null");
-        } else {
-            PasswordHasher hasher = new PasswordHasher();
-            String hashedPassword = hasher.hashPassword(credentials.getPassword());
-            // int userID = dbManager.insertUser(credentials.getUsernameOrEmail(), credentials.getEmail(), hashedPassword, credentials.getGoogleID());
-            // if (userID != -1) {
-            //     return dbManager.getUserByID(userID);
-            // } else {
-            //     return null;
-            // }
-        }
-    }
+    // /**
+    //  * Registers a new user with given details.
+    //  * @return
+    //  */
+    // public static User register(UserCredentials credentials) {
+    //     if (credentials == null) {
+    //         throw new IllegalArgumentException("Credentials cannot be null");
+    //     } else {
+    //         PasswordHasher hasher = new PasswordHasher();
+    //         String hashedPassword = hasher.hashPassword(credentials.getPassword());
+    //         // int userID = dbManager.insertUser(credentials.getUsernameOrEmail(), credentials.getEmail(), hashedPassword, credentials.getGoogleID());
+    //         // if (userID != -1) {
+    //         //     return dbManager.getUserByID(userID);
+    //         // } else {
+    //         //     return null;
+    //         // }
+    //     }
+    // }
 
-    public static boolean sendVerificationCode(String email) {
+    public static VerificationCode sendVerificationCode(String email) {
         // Send the code via email
         EmailService emailService = new EmailService();
         VerificationCode code = emailService.createAndStoreVerificationCode(email);
         boolean emailSent = EmailService.sendMail(email, "Your Verification Code", "Your verification code is: " + code.getStoredCode());
 
         if (emailSent) {
-            // Store the code in the database or in-memory store associated with the email
             dbManager.insertVerificationCode(email, code.getStoredCode(), code.getExpiryTime());
-            return true;
+            return code;
         } else {
-            return false;
+            return null;
         }
     }
 }

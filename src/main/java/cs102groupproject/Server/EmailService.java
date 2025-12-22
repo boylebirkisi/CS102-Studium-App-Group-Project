@@ -47,7 +47,7 @@ public class EmailService {
     /**
      * Core method to set up and send the email.
      */
-    private static boolean sendMail(String recipient, String subject, String body) {
+    public static boolean sendMail(String recipient, String subject, String body) {
 
         // Set up connection properties
         Properties props = new Properties();
@@ -102,7 +102,7 @@ public class EmailService {
 
     public VerificationCode createAndStoreVerificationCode(String email) {
         VerificationCode code = new VerificationCode(email, generateRandomCode(6), calculateExpiryTime());
-        int codeID = db.insertVerificationCode(email, code.getStoredCode());
+        int codeID = db.insertVerificationCode(email, code.getStoredCode(), code.getExpiryTime());
         if (codeID == -1) {
             throw new RuntimeException("Failed to store verification code in the database.");
         }

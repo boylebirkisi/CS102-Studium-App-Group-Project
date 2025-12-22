@@ -10,6 +10,7 @@ import cs102groupproject.SharedObjects.ActionType;
 import cs102groupproject.SharedObjects.ProtocolMessage;
 import cs102groupproject.SharedObjects.User;
 import cs102groupproject.SharedObjects.UserCredentials;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
@@ -29,6 +30,9 @@ public class LoginController{
     private String accessToken;
     private String email;
     private static final AuthService manager = new AuthService();
+
+    @FXML
+    public void initialize() {}
 
     @FXML
     public void handleRegisterButton() { 
@@ -55,6 +59,13 @@ public class LoginController{
     private void handleForgetPassword() {
         System.out.println("Forget Password clicked!");
         // Add your logic here (e.g., opening a new window)
+        Platform.runLater(() -> {
+                    try {
+                        App.setRoot("Planner");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
     }
 
     @FXML

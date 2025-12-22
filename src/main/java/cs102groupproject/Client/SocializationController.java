@@ -21,6 +21,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -31,7 +32,7 @@ public class SocializationController {
     ArrayList<User> friendsList;
     ArrayList<User> onlineUsers;
     @FXML
-    private Label currencyEarnedLabel;
+    private Text currencyEarnedLabel;
     @FXML
     private Button searchUsersButton;
     @FXML

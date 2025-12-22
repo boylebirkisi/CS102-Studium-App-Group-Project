@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import cs102groupproject.SharedObjects.GroupSession;
 import cs102groupproject.SharedObjects.User;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -17,7 +16,7 @@ import javafx.scene.layout.VBox;
 
 public class GroupSessionPlannerPopUpController {
     SocializationController ownerController;
-    SessionManager manager;
+    ClientSession manager;
     @FXML
     private TextField sessionNameTextField;
     @FXML
@@ -40,7 +39,7 @@ public class GroupSessionPlannerPopUpController {
     {
     }
 
-    public void setControllerAndManager(SocializationController ownerController, SessionManager manager)
+    public void setFields(SocializationController ownerController, ClientSession manager)
     {
         this.ownerController = ownerController;
         this.manager = manager;

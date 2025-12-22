@@ -22,4 +22,8 @@ public class VerificationCode {
     public String getStoredCode() {
         return storedCode;
     }
+
+    public long getExpiryTime() {
+        return expiryTime;
+    }
 }

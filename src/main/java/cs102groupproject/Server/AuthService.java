@@ -8,6 +8,7 @@ import com.google.api.services.oauth2.model.Userinfo;
 
 import cs102groupproject.SharedObjects.User;
 import cs102groupproject.SharedObjects.UserCredentials;
+import cs102groupproject.SharedObjects.VerificationCode;
 
 import java.io.IOException;
 
@@ -100,18 +101,33 @@ public class AuthService {
      * Registers a new user with given details.
      * @return
      */
-    public static User register(User user, UserCredentials credentials) {
-        if (user == null || credentials == null) {
-            throw new IllegalArgumentException("User and credentials cannot be null");
+    public static User register(UserCredentials credentials) {
+        if (credentials == null) {
+            throw new IllegalArgumentException("Credentials cannot be null");
         } else {
             PasswordHasher hasher = new PasswordHasher();
             String hashedPassword = hasher.hashPassword(credentials.getPassword());
-            int userID = dbManager.insertUser(user.getUsername(), user.getEmail(), hashedPassword, user.getGoogleID());
-            if (userID != -1) {
-                return dbManager.getUserByID(userID);
-            } else {
-                return null;
-            }
+            // int userID = dbManager.insertUser(credentials.getUsernameOrEmail(), credentials.getEmail(), hashedPassword, credentials.getGoogleID());
+            // if (userID != -1) {
+            //     return dbManager.getUserByID(userID);
+            // } else {
+            //     return null;
+            // }
+        }
+    }
+
+    public static boolean sendVerificationCode(String email) {
+        // Send the code via email
+        EmailService emailService = new EmailService();
+        VerificationCode code = emailService.createAndStoreVerificationCode(email);
+        boolean emailSent = EmailService.sendMail(email, "Your Verification Code", "Your verification code is: " + code.getStoredCode());
+
+        if (emailSent) {
+            // Store the code in the database or in-memory store associated with the email
+            dbManager.insertVerificationCode(email, code.getStoredCode(), code.getExpiryTime());
+            return true;
+        } else {
+            return false;
         }
     }
 }

@@ -4,6 +4,8 @@ public enum ActionType {
     REGISTER,
     LOGIN_WITH_GOOGLE,
     LOGOUT,
+    SEND_VERIFICATION_CODE,
+    VERIFY_CODE,
     FETCH_DATA,
     UPDATE_DATA,
     DELETE_DATA,

@@ -621,6 +621,11 @@ public class DBManager {
         return sessions;
     }
 
+    public int insertVerificationCode(String email, String code, long expiryTime) {
+        String sqlCommand = "INSERT INTO verification_codes(email, code, expiry_time) VALUES(?, ?, ?)";
+
+        return insertAndGetID(sqlCommand, email, code, expiryTime);
+    }
 
     /**
      * Get object by SQL command.

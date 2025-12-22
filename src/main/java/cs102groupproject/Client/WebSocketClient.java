@@ -4,6 +4,7 @@ import java.net.URI;
 
 import cs102groupproject.App;
 import cs102groupproject.SharedObjects.ProtocolMessage;
+import cs102groupproject.SharedObjects.User;
 import jakarta.websocket.Session;
 import jakarta.websocket.ClientEndpoint;
 import jakarta.websocket.ContainerProvider;

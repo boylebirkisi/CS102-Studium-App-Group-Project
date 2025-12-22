@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+
+<AnchorPane fx:id="root"
+            prefWidth="600" prefHeight="400"
+            xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="cs102groupproject.OfficeController">
+
+    <!-- Background -->
+    <ImageView fx:id="backgroundView"
+               fitWidth="600" fitHeight="400"
+               preserveRatio="false"
+               AnchorPane.topAnchor="0"
+               AnchorPane.leftAnchor="0"
+               AnchorPane.rightAnchor="0"
+               AnchorPane.bottomAnchor="0">
+        <image>
+            <Image url="@/cs102groupproject/Untitled_Artwork.png"/>
+        </image>
+    </ImageView>
+
+    <!-- Desk -->
+    <Pane fx:id="deskZonePane"
+          prefWidth="80" prefHeight="80"
+          style="-fx-background-color: rgba(162, 170, 69, 0.3);"
+          onMouseClicked="#deskClicked"
+          AnchorPane.topAnchor="180"
+          AnchorPane.leftAnchor="260"/>
+
+    <!-- Storage / Floor -->
+    <Pane fx:id="floorPane"
+          prefWidth="225" prefHeight="45"
+          style="-fx-background-color: rgba(38, 99, 48, 0.3);"
+          onMouseClicked="#floorClicked"
+          AnchorPane.bottomAnchor="10"
+          AnchorPane.leftAnchor="120"/>
+
+    <!-- Wall Left -->
+    <Pane fx:id="wallLeftPane"
+          prefWidth="125" prefHeight="125"
+          style="-fx-background-color: rgba(193, 64, 64, 0.3);"
+          onMouseClicked="#wallLeftClicked"
+          AnchorPane.topAnchor="60"
+          AnchorPane.leftAnchor="120"/>
+
+    <!-- Wall Right -->
+    <Pane fx:id="wallRightPane"
+          prefWidth="80" prefHeight="80"
+          style="-fx-background-color: rgba(96, 68, 136, 0.3);"
+          onMouseClicked="#wallRightClicked"
+          AnchorPane.topAnchor="50"
+          AnchorPane.rightAnchor="20"/>
+
+    <!-- Window -->
+    <Pane fx:id="windowPane"
+          prefWidth="85" prefHeight="160"
+          style="-fx-background-color: rgba(227, 23, 217, 0.3);"
+          onMouseClicked="#windowClicked"
+          AnchorPane.topAnchor="70"
+          AnchorPane.leftAnchor="10"/>
+
+    <!-- Door -->
+    <Pane fx:id="doorPane"
+          prefWidth="92" prefHeight="170"
+          style="-fx-background-color: rgba(38, 147, 78, 0.3);"
+          onMouseClicked="#doorClicked"
+          AnchorPane.topAnchor="145"
+          AnchorPane.rightAnchor="10"/>
+
+</AnchorPane>

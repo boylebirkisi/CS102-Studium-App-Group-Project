@@ -97,8 +97,8 @@
                      <children>
                         <HBox alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="312.0" spacing="10.0">
                            <children>
-                              <Button fx:id="searchUsersButton" mnemonicParsing="false" text="Users" />
-                              <Button fx:id="searchSessionsButton" mnemonicParsing="false" text="Sessions" />
+                              <Button fx:id="searchUsersButton" mnemonicParsing="false" onAction="#searchUsers" text="Users" />
+                              <Button fx:id="searchSessionsButton" mnemonicParsing="false" onAction="#searchSessions" text="Sessions" />
                            </children>
                            <padding>
                               <Insets right="10.0" />

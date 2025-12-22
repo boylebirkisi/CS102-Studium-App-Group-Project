@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import cs102groupproject.Client.WebSocketClient;
 import java.io.IOException;
@@ -55,6 +56,29 @@ public class App extends Application {
 
     public static void loadScrollableScene()
     {
-        ScrollPane 
+        ScrollPane scrollPane = new ScrollPane();
+        VBox contentBox = new VBox();
+        scrollPane.fitToWidthProperty().set(true);
+        scrollPane.vbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane.hbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.NEVER);
+        contentBox.setSpacing(10);
+        scrollPane.setContent(contentBox);
+        loadView("Office1", contentBox);
+        loadView("Planner", contentBox);
+        loadView("Socialization", contentBox);
+        scene.setRoot(scrollPane);
+    }
+
+    public static void loadView(String fxml, VBox contentBox)
+    {
+        try 
+        {
+            Parent view = loadFXML(fxml);
+            contentBox.getChildren().add(view);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 }

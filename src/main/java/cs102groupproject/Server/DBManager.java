@@ -65,6 +65,11 @@ public class DBManager {
         }
     }
 
+    /**
+     * Gets user by its username.
+     * @param username
+     * @return
+     */
     public User getUserByUsername(String username) {
         String sqlQuery = "SELECT * FROM users WHERE username = ?";
 
@@ -76,7 +81,9 @@ public class DBManager {
 
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                return null;
+                return new User(rs.getInt("id"), rs.getString("username"), rs.getString("department"),
+                    rs.getString("email"), rs.getString("google_id"), rs.getInt("solo_currency"),
+                    rs.getInt("group_currency"), rs.getBoolean("is_verified"), rs.getString("avatar"));
             } else {
                 return null; // No user found
             }
@@ -87,6 +94,11 @@ public class DBManager {
         }
     }
 
+    /**
+     * Gets user by its email.
+     * @param email
+     * @return
+     */
     public User getUserByEmail(String email) {
         String sqlQuery = "SELECT * FROM users WHERE email = ?";
 
@@ -98,7 +110,9 @@ public class DBManager {
 
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                return null;
+                return new User(rs.getInt("id"), rs.getString("username"), rs.getString("department"),
+                    rs.getString("email"), rs.getString("google_id"), rs.getInt("solo_currency"),
+                    rs.getInt("group_currency"), rs.getBoolean("is_verified"), rs.getString("avatar"));
             } else {
                 return null; // No user found
             }
@@ -109,20 +123,38 @@ public class DBManager {
         }
     }
 
+    /**
+     * Gets user by its googleID.
+     * @param googleId
+     * @return
+     */
     public User getUserByGoogleID(String googleId) {
         String sqlQuery = "SELECT * FROM users WHERE google_id = ?";
 
-        ResultSet rs = getObject(sqlQuery);
-        if (rs != null) {
-            try {
-                return new User(rs.getInt("id"), rs.getString("name"), rs.getString("department"),
-                    rs.getString("email"), rs.getString("google_id"), rs.getInt("solo_currency"),
-                    rs.getInt("group_currency"), rs.getBoolean("is_verified"), rs.getString("avatar"));
-            } catch (SQLException e) {
-                System.err.println("Database operation failed: " + e.getMessage()); 
+        try (Connection conn = connect(); 
+            PreparedStatement pstmt = conn.prepareStatement(sqlQuery)) {
+            
+            pstmt.setString(1, googleId); // This replaces the '?' with the actual ID
+            
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return new User(
+                        rs.getInt("id"), 
+                        rs.getString("username"), 
+                        rs.getString("department"),
+                        rs.getString("email"), 
+                        rs.getString("google_id"), 
+                        rs.getInt("solo_currency"),
+                        rs.getInt("group_currency"), 
+                        rs.getBoolean("is_verified"), 
+                        rs.getString("avatar")
+                    );
+                }
             }
+        } catch (SQLException e) {
+            System.err.println("Database operation failed: " + e.getMessage()); 
         }
-        return null;
+        return null; // Return null if no user exists
     }
 
     /**
@@ -133,21 +165,39 @@ public class DBManager {
     public User getUserByID(int id) {
         String sqlCommand = "SELECT * FROM users WHERE id = ?";
 
-        ResultSet rs = getObject(sqlCommand);
-        if (rs != null) {
-            try {
-                return new User(rs.getInt("id"), rs.getString("name"), rs.getString("department"),
-                    rs.getString("email"), rs.getString("google_id"), rs.getInt("solo_currency"),
-                    rs.getInt("group_currency"), rs.getBoolean("is_verified"), rs.getString("avatar"));
-            } catch (SQLException e) {
-                System.err.println("Database operation failed: " + e.getMessage());
+        try (Connection conn = connect(); 
+            PreparedStatement pstmt = conn.prepareStatement(sqlCommand)) {
+            
+            pstmt.setInt(1, id); // This replaces the '?' with the actual ID
+            
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return new User(
+                        rs.getInt("id"), 
+                        rs.getString("username"), 
+                        rs.getString("department"),
+                        rs.getString("email"), 
+                        rs.getString("google_id"), 
+                        rs.getInt("solo_currency"),
+                        rs.getInt("group_currency"), 
+                        rs.getBoolean("is_verified"), 
+                        rs.getString("avatar")
+                    );
+                }
             }
+        } catch (SQLException e) {
+            System.err.println("Database operation failed: " + e.getMessage()); 
         }
-        return null;
+        return null; // Return null if no user exists
     }
 
+    /**
+     * Get password of the user.
+     * @param username
+     * @return
+     */
     public String getPasswordByUsername(String username) {
-        String sqlQuery = "SELECT password FROM users WHERE username = ?";
+        String sqlQuery = "SELECT password_hash FROM users WHERE username = ?";
 
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sqlQuery)) {
 
@@ -187,9 +237,9 @@ public class DBManager {
      * @return
      */
     public boolean addFriend(int userID, int friendID) {        
-        String sqlCommand = "INSERT INTO friends(user_id, friend_id) VALUES(?, ?)";
+        String sqlCommand = "INSERT INTO friendships(user_id, friend_id) VALUES(?, ?)";
 
-        return executeSqlCommand(sqlCommand, userID, friendID);
+        return executeSqlCommand(sqlCommand, Math.min(userID, friendID), Math.max(userID, friendID));
     }   
 
     /**
@@ -199,13 +249,13 @@ public class DBManager {
      * @return
      */
     public boolean removeFriend(int userID, int friendID) {
-        String sqlCommand = "DELETE FROM friends WHERE (user_id = ? AND friend_id = ?) OR (user_id = ? AND friend_id = ?)";
+        String sqlCommand = "DELETE FROM friendships WHERE user_id = ? AND friend_id = ?";
 
-        return executeSqlCommand(sqlCommand, userID, friendID, userID, friendID);
+        return executeSqlCommand(sqlCommand, Math.min(userID, friendID), Math.max(userID, friendID));
     }
 
     /**
-     * Get friends of a user.
+     * Get friends of a user. (Working)
      * @param currentUserID
      * @return
      */
@@ -213,7 +263,7 @@ public class DBManager {
         List<User> friends = new ArrayList<>();
         // This query finds friends regardless of who initiated the request
         String sql = "SELECT u.* FROM users u " +
-                    "JOIN friends f ON (u.id = f.friend_id OR u.id = f.user_id) " +
+                    "JOIN friendships f ON (u.id = f.friend_id OR u.id = f.user_id) " +
                     "WHERE (f.user_id = ? OR f.friend_id = ?) " +
                     "AND u.id != ?";
         
@@ -226,9 +276,17 @@ public class DBManager {
             
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
-                friends.add(new User(rs.getString("id"), rs.getString("name"), rs.getString("department"),
-                    rs.getString("email"), rs.getInt("solo_currency"),
-                    rs.getInt("group_currency"), rs.getBoolean("is_verified"), rs.getString("avatar")));
+                friends.add(new User(
+                        rs.getInt("id"), 
+                        rs.getString("username"), 
+                        rs.getString("department"),
+                        rs.getString("email"), 
+                        rs.getString("google_id"), 
+                        rs.getInt("solo_currency"),
+                        rs.getInt("group_currency"), 
+                        rs.getBoolean("is_verified"), 
+                        rs.getString("avatar")
+                    ));
             }
         } catch (SQLException e) {
             System.err.println("Failed to fetch bidirectional friends: " + e.getMessage());
@@ -246,7 +304,7 @@ public class DBManager {
             
             ResultSet rs = stmt.executeQuery(sqlCommand);
             while (rs.next()) {
-                User user = new User(rs.getInt("id"), rs.getString("name"), rs.getString("department"),
+                User user = new User(rs.getInt("id"), rs.getString("username"), rs.getString("department"),
                     rs.getString("email"), rs.getString("google_id"), rs.getInt("solo_currency"),
                     rs.getInt("group_currency"), rs.getBoolean("is_verified"), rs.getString("avatar"));
                 users.add(user);
@@ -381,20 +439,28 @@ public class DBManager {
     public Task getTaskByID(int taskID) {
         String sqlCommand = "SELECT * FROM tasks WHERE id = ?";
 
-        ResultSet rs = getObject(sqlCommand);
-        if (rs != null) {
-            try {
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sqlCommand)) {
+
+            if (conn == null) return null; // Connection failed
+            
+            pstmt.setInt(1, taskID);
+
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
                 return new Task(rs.getString("name"), rs.getString("color"), rs.getInt("importance"),
-                    rs.getInt("user_id"), rs.getInt("id"), rs.getString("google_calendar_id"));
-            } catch (SQLException e) {
-                System.err.println("Database operation failed: " + e.getMessage());
+                    rs.getInt("user_id"), rs.getInt("id"), rs.getString("google_calendar_id"), rs.getBoolean("is_completed"));
+            } else {
+                return null; // No user found
             }
+            
+        } catch (SQLException e) {
+            System.err.println("Database operation failed: " + e.getMessage());
+            return null;
         }
-        return null;
     }
 
     /**
-     * Get all tasks.
+     * Get all tasks. (Working)
      * @return
      */
     public List<Task> getAllTasks(int userId) {
@@ -405,10 +471,10 @@ public class DBManager {
             stmt.setInt(1, userId);
             if (conn == null) return tasks; 
             
-            ResultSet rs = stmt.executeQuery(sqlCommand);
+            ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Task task = new Task(rs.getString("name"), rs.getString("color"), rs.getInt("importance"),
-                    rs.getInt("user_id"), rs.getInt("id"), rs.getString("google_calendar_id"));
+                    rs.getInt("user_id"), rs.getInt("id"), rs.getString("google_calendar_id"), rs.getBoolean("is_completed"));
                 tasks.add(task);
             }
         } catch (SQLException e) {
@@ -769,7 +835,5 @@ public class DBManager {
 
     public static void main(String[] args) {
         DBManager dbManager = new DBManager();
-        dbManager.insertUser("delfin", "delfin@example.com", "PASS", "GOOGLE_ID_123");
-    
     }
 }

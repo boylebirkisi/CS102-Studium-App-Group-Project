@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="cs102groupproject.MarketController"
+      spacing="12"
+      style="-fx-padding: 15; -fx-background-color: #ffffff;">
+
+    <VBox fx:id="marketBox" spacing="12"/>
+</VBox>

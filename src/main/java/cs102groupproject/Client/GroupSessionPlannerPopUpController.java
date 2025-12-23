@@ -44,7 +44,16 @@ public class GroupSessionPlannerPopUpController implements UIController {
         this.ownerController = ownerController;
         populateFriendsList();
     }
-
+    @FXML
+    public void initialize(){
+        WebSocketClient.addListener(
+            ActionType.GROUP_SESSION_CREATED,
+            payload -> {
+                GroupSession session = (GroupSession) payload;
+                System.out.println("✅ Group session created: " + session.getName());
+            }
+        );
+    }
     private void populateFriendsList() {
         ArrayList<User> friendsList = ownerController.getFriendsList();
 
@@ -87,20 +96,12 @@ public class GroupSessionPlannerPopUpController implements UIController {
 
         User creator = ClientSession.getCurrentUser();
 
-        // Server'a gidecek payload (DTO gibi)
-        Map<String, Object> payload = new HashMap<>();
-        payload.put("creatorId", creator.getId());
-        payload.put("sessionName", sessionName);
-        payload.put("sessionNo", sessionNo);
-        payload.put("sessionLength", sessionLength);
-        payload.put("breakLength", breakLength);
-        payload.put("startDate", startDate.toString());
-        payload.put("isPublic", isPublic);
+        GroupSession groupSessionwithoutId = new GroupSession(creator, new ArrayList<User>(), sessionName, "GROUP_SESSION", sessionNo, sessionLength, breakLength, startDate, isPublic);
 
         // send server with WebSocket
         ProtocolMessage msg = new ProtocolMessage(
                 ActionType.CREATE_GROUP_SESSION,
-                payload
+                groupSessionwithoutId
         );
 
         WebSocketClient.send(msg);

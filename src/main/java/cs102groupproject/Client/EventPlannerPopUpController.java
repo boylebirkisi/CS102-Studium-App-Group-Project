@@ -30,6 +30,12 @@ public class EventPlannerPopUpController implements UIController {
     @FXML
     private void initialize()
     {
+        WebSocketClient.addListener(ActionType.EVENT_CREATED, (payload) -> {
+            AppEvent newEvent = (AppEvent) payload;
+            Platform.runLater(() -> {
+                System.out.println("new event is added " + newEvent.getName());
+            });
+        });
     }
 
     public void setFields(PlannerController ownerController)
@@ -61,6 +67,7 @@ public class EventPlannerPopUpController implements UIController {
         LocalDateTime endDate = endDatePicker.getValue().atTime(endHour, endMinute);
         AppEvent event = new AppEvent(eventName, color, startDate, endDate,
             ClientSession.getUserId(), importance, null);
+        WebSocketClient.send(new ProtocolMessage(ActionType.CREATE_EVENT, event));
         ownerController.closePopUp();
     }
 

@@ -7,6 +7,7 @@ import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.*;
 import cs102groupproject.SharedObjects.AppEvent;
+import cs102groupproject.SharedObjects.Task;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -31,7 +32,11 @@ public class GoogleCalendarAPI {
          .build();
     }
 
-    // Returns all events from all calendar within a specific timeline
+    /**
+     * Returns all events from all calendar within a specific timeline
+     * @return
+     * @throws IOException
+     */
     public List<Event> listEvents() throws IOException {
         String[] calendarIds = getAllCalendars();
         List<Event> allEvents = new ArrayList<>();
@@ -43,7 +48,12 @@ public class GoogleCalendarAPI {
         return allEvents;
     }
 
-    // Gets events from a specific calendar
+    /**
+     * Gets event from specific calendars.
+     * @param calendarId
+     * @return
+     * @throws IOException
+     */
     private List<Event> getEventsFrom(String calendarId) throws IOException {
         // Gets events within a specific time interval
         LocalDateTime now = LocalDateTime.now();
@@ -61,7 +71,12 @@ public class GoogleCalendarAPI {
         return events.getItems();
     }
 
-    // Creates a new event in the user's google calendar
+    /**
+     * Creates a new event in the google calendar.
+     * @param event
+     * @return
+     * @throws IOException
+     */
     public Event createEvent(AppEvent event) throws IOException {
         // Converts LocalDate to DateTime
         long startMillis = event.getStart().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
@@ -83,7 +98,38 @@ public class GoogleCalendarAPI {
             .execute();
     }
 
-    // Gets all calendarIDs (primary, birthdays, etc.)
+    /**
+     * Creates a new event in google calendar based on the task created in the app.
+     * @param task
+     * @return
+     * @throws IOException
+     */
+    public Event createEvent(Task task) throws IOException {
+        // Converts LocalDate to DateTime
+        long startMillis = task.getDueDate().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        long endMillis = task.getDueDate().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
+
+        // 2. Create the Google DateTime objects
+        DateTime start = new DateTime(startMillis);
+        DateTime end = new DateTime(endMillis);
+
+        Event googleEvent = new Event()
+            .setSummary(task.getName())
+            .setDescription("Created via Studium")
+            .setStart(new EventDateTime().setDateTime(start).setTimeZone(ZoneId.systemDefault().toString()))
+            .setEnd(new EventDateTime().setDateTime(end).setTimeZone(ZoneId.systemDefault().toString()));
+
+        // Inserts the event into the Studium calendar
+        return calendar.events()
+            .insert(getStudiumCalendarId(), googleEvent)
+            .execute();
+    }
+
+    /**
+     * Gets all calendar ID's.
+     * @return
+     * @throws IOException
+     */
     private String[] getAllCalendars() throws IOException {
         CalendarList calendarList = calendar.calendarList().list().execute();
         List<CalendarListEntry> items = calendarList.getItems();
@@ -95,7 +141,11 @@ public class GoogleCalendarAPI {
         return calendarNames;
     }
 
-    // Gets the Studium calendar ID, creates if there is none
+    /**
+     * Gets the Studium calendar alreday, if it does not exists creates.
+     * @return
+     * @throws IOException
+     */
     private String getStudiumCalendarId() throws IOException {
         // If Studium calendar exists
         CalendarList items = calendar.calendarList().list().execute();

@@ -292,7 +292,7 @@
                <children>
                   <Text layoutX="205.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add" />
                   <Circle fx:id="addHabitCircle" fill="#ffffff00" layoutX="216.0" layoutY="27.0" onMouseClicked="#addHabitCircleClicked" radius="15.0" stroke="BLACK" strokeType="INSIDE" />
-                  <ChoiceBox fx:id="habitTrackerChoiceBox" layoutX="35.0" layoutY="14.0" prefWidth="150.0" />
+                  <ChoiceBox fx:id="habitTrackerComboBox" layoutX="35.0" layoutY="14.0" prefWidth="150.0" />
                   <TextField fx:id="addHabitTextField" layoutX="36.0" layoutY="14.0" onAction="#addHabitTextFieldAction" prefHeight="26.0" prefWidth="150.0" visible="false" />
                </children>
             </AnchorPane>

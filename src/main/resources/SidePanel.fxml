@@ -25,7 +25,7 @@
 
         <fx:include fx:id="marketView" source="Market.fxml"/>
         <fx:include fx:id="storageView" source="Storage.fxml"/>
-        <fx:include fx:id="sessionView" source="SessionPanel.fxml"/>
+        <fx:include fx:id="sessionView" source="SessionPopup.fxml"/>
 
     </StackPane>
 

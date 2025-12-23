@@ -18,7 +18,7 @@
                        fitHeight="720"
                        preserveRatio="false">
                 <image>
-                    <Image url="@Untitled_Artwork.png"/>
+                    <Image url="@images/Untitled_Artwork.png"/>
                 </image>
             </ImageView>
 

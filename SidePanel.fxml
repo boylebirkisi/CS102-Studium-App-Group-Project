@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.Button?>
+
+<VBox
+    xmlns="http://javafx.com/javafx/17"
+    xmlns:fx="http://javafx.com/fxml/1"
+    fx:controller="cs102groupproject.SidePanelController"
+    spacing="12"
+    prefWidth="250"
+    style="
+        -fx-background-color: #EADFC8;
+        -fx-padding: 12;
+    ">
+
+    <HBox spacing="8">
+        <Button text="Market"
+                onAction="#showMarket"
+                style="-fx-background-color: #C8B08A; -fx-text-fill: #3E2F1C;"/>
+
+        <Button text="Storage"
+                onAction="#showStorage"
+                style="-fx-background-color: #C8B08A; -fx-text-fill: #3E2F1C;"/>
+
+        <Button text="Sessions"
+                onAction="#showSessions"
+                style="-fx-background-color: #C8B08A; -fx-text-fill: #3E2F1C;"/>
+    </HBox>
+    <StackPane fx:id="contentArea"
+               style="-fx-background-color: transparent;">
+        <fx:include fx:id="marketView" source="Market.fxml"/>
+        <fx:include fx:id="storageView" source="Storage.fxml"/>
+        <fx:include fx:id="sessionView" source="SessionPopup.fxml"/>
+    </StackPane>
+
+</VBox>

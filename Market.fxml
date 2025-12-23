@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="cs102groupproject.MarketController"
+      spacing="10"
+      style="-fx-background-color: blue;">
+
+    <ScrollPane fitToWidth="true">
+        <content>
+            <VBox fx:id="marketBox"
+                  spacing="10"
+                  fillWidth="true"/>
+        </content>
+    </ScrollPane>
+
+</VBox>

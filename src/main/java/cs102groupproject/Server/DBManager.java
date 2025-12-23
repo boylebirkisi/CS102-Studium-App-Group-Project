@@ -457,12 +457,13 @@ public class DBManager {
             pstmt.setInt(1, taskID);
 
             ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                return new Task(rs.getString("name"), rs.getString("color"), rs.getInt("importance"),
-                    rs.getInt("user_id"), rs.getInt("id"), rs.getString("google_calendar_id"), rs.getBoolean("is_completed"));
-            } else {
-                return null; // No user found
-            }
+            // if (rs.next()) {
+            //     return new Task(rs.getString("name"), rs.getString("color"), rs.getInt("importance"),
+            //         rs.getInt("user_id"), rs.getInt("id"), rs.getString("google_calendar_id"), rs.getBoolean("is_completed"));
+            // } else {
+            //     return null; // No user found
+            // }
+            return null;
             
         } catch (SQLException e) {
             System.err.println("Database operation failed: " + e.getMessage());
@@ -483,11 +484,11 @@ public class DBManager {
             if (conn == null) return tasks; 
             
             ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                Task task = new Task(rs.getString("name"), rs.getString("color"), rs.getInt("importance"),
-                    rs.getInt("user_id"), rs.getInt("id"), rs.getString("google_calendar_id"), rs.getBoolean("is_completed"));
-                tasks.add(task);
-            }
+            // while (rs.next()) {
+            //     Task task = new Task(rs.getString("name"), rs.getString("color"), rs.getInt("importance"),
+            //         rs.getInt("user_id"), rs.getInt("id"), rs.getString("google_calendar_id"), rs.getBoolean("is_completed"));
+            //     tasks.add(task);
+            // }
         } catch (SQLException e) {
             System.err.println("Database operation failed: " + e.getMessage());
         }

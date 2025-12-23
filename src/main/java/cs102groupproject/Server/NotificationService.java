@@ -19,7 +19,7 @@ public class NotificationService {
     }
 
     public static void sendPDFRequest(int userID, int referenceID, String notification) {
-        Notification notif = new Notification(userID, referenceID, "sent you a PDF access request.", "New PDF Request", null, Notification.Type.PDFRequest);
+        Notification notif = new Notification(userID, referenceID, "sent you a PDF access request.", "New PDF Request", null, Notification.Type.PDF_REQUEST);
         OptionalNotification optNotif = new OptionalNotification(
             userID,
             referenceID,
@@ -28,12 +28,12 @@ public class NotificationService {
             null,
             "Accept",
             "Decline",
-            Notification.Type.PDFRequest
+            Notification.Type.PDF_REQUEST
         );
     }
 
     public static Notification sendInfoNotification(int userID, String notificationText, String heading) {
-        Notification notif = new Notification(userID, -1, notificationText, heading, null, Notification.Type.Informative);
+        Notification notif = new Notification(userID, -1, notificationText, heading, null, Notification.Type.INFORMATIVE);
         return notif;
     }
 }

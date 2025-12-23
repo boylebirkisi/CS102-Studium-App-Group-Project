@@ -71,6 +71,36 @@ public class PlannerController implements UIController {
     @FXML
     private void initialize()
     {
+        WebSocketClient.addListener(ActionType.HABIT_CREATED, (payload) -> {
+        Habit savedHabit = (Habit) payload;
+        Platform.runLater(() -> {
+                // habits.add(savedHabit);
+                habitTrackerComboBox.getItems().add(savedHabit);
+                System.out.println("habit is added to the list after the approval of server");
+            });
+        });
+
+        WebSocketClient.addListener(ActionType.TASK_CREATED, (payload) -> {
+            Task newTask = (Task) payload;
+            Platform.runLater(() -> {
+                tasks.add(newTask);
+                updateDate();
+                System.out.println("new task is added " + newTask.getName());
+            });
+        });
+
+        WebSocketClient.addListener(ActionType.TASK_UPDATED, (payload) -> {
+            Task updatedTask = (Task) payload;
+            Platform.runLater(() -> {
+                for (int i = 0; i < tasks.size(); i++) {
+                    if (tasks.get(i).getId() == updatedTask.getId()) {
+                        tasks.set(i, updatedTask);
+                        break;
+                    }
+                }
+                updateDate();
+            });
+        });
     }
 
     public void setFields(ArrayList<Habit> habits, ArrayList<AppEvent> events, ArrayList<Task> tasks) {
@@ -96,6 +126,23 @@ public class PlannerController implements UIController {
 
     private void updateHabitTracker(Habit habit)
     {
+        // for (int i = 0; i < habitCircleFlowPane.getChildren().size(); i++) {
+        //     CheckBox cb = (CheckBox) habitCircleFlowPane.getChildren().get(i);
+        //     final int index = i; // Lambda içinde kullanmak için final olmalı
+
+        //     cb.setSelected(habit.getCompletionString().charAt(i) == '1');
+
+        //     // clicking
+        //     cb.setOnAction(e -> {
+        //         // calling insert
+        //         habit.invertCompletedAtIndex(index); 
+                
+        //         // send the recent one to server
+        //         WebSocketClient.send(new ProtocolMessage(ActionType.UPDATE_HABIT, habit));
+                
+        //         System.out.println("Habit güncellendi, yeni completion: " + habit.getCompletionString());
+        //     });
+        // }
         clearHabitTrackerCircles();
         if (habit == null) return;
         boolean[] habitCompletionArray = new boolean[habit.getCompletionString().length()];
@@ -277,7 +324,6 @@ public class PlannerController implements UIController {
 
     private void drawTasksForDate(LocalDate date, boolean daily)
     {
-        
         dailyTasksVBoxHBox.setVisible(false);
         dailyTasksVBoxHBox.setManaged(false);
         weeklyScrollPane.setVisible(false);
@@ -307,6 +353,8 @@ public class PlannerController implements UIController {
                             {task.completeTask();}
                         else
                             {task.uncompleteTask();}
+                        WebSocketClient.send(new ProtocolMessage(ActionType.UPDATE_TASK, task));     
+                        updateDate();
                     });
                     Circle colorCircle = new Circle(8, Color.web(task.getColor()));
                     HBox taskBox = new HBox(new Label(task.getName()), taskCheckBox, colorCircle);
@@ -316,7 +364,7 @@ public class PlannerController implements UIController {
                         ((VBox)dailyTasksVBoxHBox.getChildren().get(1)).getChildren().add(taskBox);
                 }
             }
-            donePercentTextField.setText("%" + completedTasks / totalTasks * 100);
+            donePercentTextField.setText("%" + (int)((double)completedTasks / totalTasks * 100));
         }
         else
         {
@@ -342,7 +390,7 @@ public class PlannerController implements UIController {
                     ((VBox)weeklyTasksVBoxFlowPane.getChildren().get(dayOfWeek.getValue())).getChildren().add(label);
                 }
             }
-            donePercentTextField.setText("%" + completedTasks / totalTasks * 100);
+            donePercentTextField.setText("%" + (int)((double)completedTasks / totalTasks * 100));
         }
     }
 }

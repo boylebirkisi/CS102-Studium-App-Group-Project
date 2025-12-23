@@ -98,6 +98,8 @@ public class SocializationController {
         chatMessages = new ArrayList<>();
         User notFriend = new User(2, "Bob", "Mathematics", "B", "true", true, "String");
         onlineUsers.add(notFriend);
+        User anotherNotFriend = new User(3, "Charlie", "Physics", "C", "true", true, "String");
+        onlineUsers.add(anotherNotFriend);
     }
 
     public void setFields(ClientSession manager, ArrayList<User> friendsList, ArrayList<User> onlineUsers) {
@@ -130,7 +132,7 @@ public class SocializationController {
     {
         String name = userNameTextField.getText();
         String department = departmentTextField.getText();
-        ArrayList<User> allUsers = new ArrayList<>();
+        ArrayList<User> allUsers = onlineUsers;
         ArrayList<User> filteredUsers = filterUsersByNameAndDepartment(name, department, allUsers);
         for (Node node: searchParameters.getChildren())
         {
@@ -239,6 +241,14 @@ public class SocializationController {
 
     private ArrayList<User> filterUsersByNameAndDepartment(String name, String department, ArrayList<User> allUsers)
     {
+        
+        for (User user : allUsers)
+        {
+            if (user.getId() == ClientSession.getUserId() || friendsList.contains(user))
+            {
+                allUsers.remove(user);
+            }
+        }
         if (name.isEmpty() && department.isEmpty())
         {
             return allUsers;
@@ -443,8 +453,6 @@ public class SocializationController {
     @FXML
     public void refreshButtonFunctionality() {
         ClientSession.login(onlineUsers.get(1)); // Dummy login for testing
-        chatMessages.add(new ChatMessage(1, ClientSession.getUserId(), "Hey there!"));
-        chatMessages.add(new ChatMessage(ClientSession.getUserId(), 1, "Hello! How are you?"));
         refreshUI();
     }
 }

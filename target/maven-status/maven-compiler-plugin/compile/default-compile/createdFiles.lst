@@ -9,6 +9,7 @@ cs102groupproject\Client\WebSocketClient.class
 cs102groupproject\Server\EmailService.class
 cs102groupproject\SharedObjects\ActionType.class
 cs102groupproject\Server\AuthService.class
+cs102groupproject\Client\NotificationsController.class
 cs102groupproject\Server\PlannerService.class
 cs102groupproject\SharedObjects\AppEvent.class
 cs102groupproject\Client\GoogleOAuthClient.class
@@ -20,6 +21,7 @@ cs102groupproject\Client\WebSocketClient$MessageListener.class
 cs102groupproject\Client\Calendar.class
 cs102groupproject\SharedObjects\Notification.class
 cs102groupproject\Client\GroupSessionPlannerPopUpController.class
+cs102groupproject\Client\TaskPlannerPopUpController.class
 cs102groupproject\Server\GoogleCredentialManager.class
 cs102groupproject\SharedObjects\Habit.class
 cs102groupproject\SharedObjects\DayCell.class

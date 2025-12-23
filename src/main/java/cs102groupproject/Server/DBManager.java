@@ -361,30 +361,40 @@ public class DBManager {
     public Habit getHabitByID(int habitID) {
         String sqlCommand = "SELECT * FROM habits WHERE id = ?";
 
-        ResultSet rs = getObject(sqlCommand);
-        if (rs != null) {
-            try {
-                return new Habit(rs.getString("name"), rs.getInt("id"), rs.getInt("user_id"));
-            } catch (SQLException e) {
-                System.err.println("Database operation failed: " + e.getMessage());
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sqlCommand)) {
+
+            if (conn == null) return null; // Connection failed
+            
+            pstmt.setInt(1, habitID);
+
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return new Habit(rs.getString("name"), rs.getInt("id"), rs.getInt("user_id"), rs.getString("completed_arr_data"));
+            } else {
+                return null; // No user found
             }
+            
+        } catch (SQLException e) {
+            System.err.println("Database operation failed: " + e.getMessage());
+            return null;
         }
-        return null;
     }
 
     /**
-     * Get all habits.
+     * Get all habits of the user.
      * @return
      */
-    public List<Habit> getAllHabits() {
-        String sqlCommand = "SELECT * FROM habits";
+    public List<Habit> getAllHabits(int userID) {
+        String sqlCommand = "SELECT * FROM habits WHERE user_id = ?";
         List<Habit> habits = new ArrayList<>();
 
-        try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sqlCommand)) {
 
-            ResultSet rs = stmt.executeQuery(sqlCommand);
+            pstmt.setInt(1, userID);
+
+            ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
-                Habit habit = new Habit(rs.getString("name"), rs.getInt("id"), rs.getInt("user_id"));
+                Habit habit = new Habit(rs.getString("name"), rs.getInt("id"), rs.getInt("user_id"), rs.getString("completed_arr_data"));
                 habits.add(habit);
             }
         } catch (SQLException e) {
@@ -494,8 +504,8 @@ public class DBManager {
      * @param googleCalendarID
      * @return the eventID.
      */
-    public int addEvent(String name, String color, LocalDateTime start, LocalDateTime finish, String userId, int importance, int googleCalendarID) {
-        String sqlCommand = "INSERT INTO events(name, color, start_date, finish_date, user_id, importance, google_calendar_id) VALUES(?, ?, ?, ?, ?, ?, ?)";
+    public int addEvent(String name, String color, LocalDateTime start, LocalDateTime finish, int userId, int importance, String googleCalendarID) {
+        String sqlCommand = "INSERT INTO app_events(name, color, start_date, finish_date, user_id, importance, google_calendar_id) VALUES(?, ?, ?, ?, ?, ?, ?)";
 
         return insertAndGetID(sqlCommand, name, color, start, finish, userId, importance, googleCalendarID);
     }
@@ -506,7 +516,7 @@ public class DBManager {
      * @return
      */
     public boolean deleteEvent(int eventID) {
-        String sqlCommand = "DELETE FROM events WHERE id = ?";
+        String sqlCommand = "DELETE FROM app_events WHERE id = ?";
 
         return executeSqlCommand(sqlCommand, eventID);
     }
@@ -519,7 +529,7 @@ public class DBManager {
      * @return
      */
     public boolean updateEventDates(int eventID, LocalDateTime newStart, LocalDateTime newFinish) {
-        String sqlCommand = "UPDATE events SET start_date = ?, finish_date = ? WHERE id = ?";
+        String sqlCommand = "UPDATE app_events SET start_date = ?, finish_date = ? WHERE id = ?";
 
         return executeSqlCommand(sqlCommand, newStart, newFinish, eventID);
     }
@@ -530,11 +540,16 @@ public class DBManager {
      * @return
      */
     public AppEvent getEventByID(int eventID) {
-        String sqlCommand = "SELECT * FROM events WHERE id = ?";
+        String sqlCommand = "SELECT * FROM app_events WHERE id = ?";
 
-        ResultSet rs = getObject(sqlCommand);
-        if (rs != null) {
-            try {
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sqlCommand)) {
+
+            if (conn == null) return null; 
+            
+            pstmt.setInt(1, eventID);
+
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
                 return new AppEvent(
                     rs.getString("name"),
                     rs.getString("color"),
@@ -545,11 +560,14 @@ public class DBManager {
                     rs.getInt("id"),
                     rs.getString("google_calendar_id")
                 );
-            } catch (SQLException e) {
-                System.err.println("Database operation failed: " + e.getMessage());
+            } else {
+                return null; 
             }
+            
+        } catch (SQLException e) {
+            System.err.println("Database operation failed: " + e.getMessage());
+            return null;
         }
-        return null;
     }
 
     /**
@@ -557,7 +575,7 @@ public class DBManager {
      * @return
      */
     public List<AppEvent> getAllEvents(int userId) {
-        String sqlCommand = "SELECT * FROM events WHERE user_id = ?";
+        String sqlCommand = "SELECT * FROM app_events WHERE user_id = ?";
         List<AppEvent> events = new ArrayList<>();
 
         try (Connection conn = connect(); PreparedStatement stmt = conn.prepareStatement(sqlCommand)) {
@@ -618,6 +636,7 @@ public class DBManager {
         }
         return notifications;
     }
+
     public int addSession(Session session) {
         String sqlCommand = "INSERT INTO sessions(owner_id, name, type, no, length, break_length, start_date) VALUES(?, ?, ?, ?, ?, ?, ?)";
 
@@ -701,10 +720,12 @@ public class DBManager {
         return sessions;
     }
 
-    public int insertVerificationCode(String email, String code, long expiryTime) {
-        String sqlCommand = "INSERT INTO verification_code(email, code, expiry_time) VALUES(?, ?, ?)";
+    public boolean insertVerificationCode(String email, String code, long expiryTime) {
+        String sqlCommand = "INSERT INTO verification_codes (email, stored_code, expiry_time) " +
+         "VALUES (?, ?, ?) ON CONFLICT (email) DO UPDATE SET " +
+         "stored_code = EXCLUDED.stored_code, expiry_time = EXCLUDED.expiry_time";
 
-        return insertAndGetID(sqlCommand, email, code, expiryTime);
+        return executeSqlCommand(sqlCommand, email, code, expiryTime);
     }
 
     /**
@@ -835,5 +856,6 @@ public class DBManager {
 
     public static void main(String[] args) {
         DBManager dbManager = new DBManager();
+    
     }
 }

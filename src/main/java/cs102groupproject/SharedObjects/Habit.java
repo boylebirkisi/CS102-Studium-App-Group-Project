@@ -9,10 +9,10 @@ public class Habit extends TransferObject{
     private int id;
     private int userId;
 
-    public Habit(String name, int id, int userId)
+    public Habit(String name, int id, int userId, String completionString)
     {
         this.name = name;
-        completionString = "000000000000000000000000000000";
+        this.completionString = completionString;
         this.id = id;
         this.userId = userId;
         creationDate = LocalDate.now();

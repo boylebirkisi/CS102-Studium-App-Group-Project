@@ -1,8 +1,13 @@
 package cs102groupproject.Client;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import cs102groupproject.App;
+import cs102groupproject.SharedObjects.ActionType;
 import cs102groupproject.SharedObjects.ProtocolMessage;
 import cs102groupproject.SharedObjects.User;
 import cs102groupproject.SharedObjects.VerificationCode;
@@ -17,6 +22,18 @@ import javafx.application.Platform;
 @ClientEndpoint
 public class WebSocketClient {
     private static Session session;
+
+    // A map to hold listeners for specific ActionTypes
+    private static final Map<ActionType, List<MessageListener>> listeners = new HashMap<>();
+
+    // Interface for the callback
+    public interface MessageListener {
+        void handle(Object payload);
+    }
+
+    public static void addListener(ActionType type, MessageListener listener) {
+        listeners.computeIfAbsent(type, k -> new ArrayList<>()).add(listener);
+    }
 
     public static void connect() throws Exception {
         WebSocketContainer container =
@@ -51,32 +68,12 @@ public class WebSocketClient {
         ProtocolMessage msg = ProtocolMessage.fromJson(json);
 
         System.out.println("➡️ Action parsed: " + msg.getAction());
-
-        switch (msg.getAction()) {
-
-            case LOGIN_SUCCESS: {
-                User user = (User) msg.getPayload();
-                ClientSession.login(user);
-
-                Platform.runLater(() -> {
-                    try {
-                        App.setRoot("secondary");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                });
-
-                break;
-            }
-
-            case VERIFY_CODE: {
-                VerificationCode code = (VerificationCode) msg.getPayload();
-
-            }
-
-            case ERROR: {
-                System.out.println("Login failed: " + msg.getPayload());
-                break;
+        ActionType action = msg.getAction();
+        // Find and notify all registered listeners for this action
+        if (listeners.containsKey(action)) {
+            for (MessageListener listener : listeners.get(action)) {
+                // Use Platform.runLater because UI updates must happen on the FX thread
+                Platform.runLater(() -> listener.handle(msg.getPayload()));
             }
         }
     }

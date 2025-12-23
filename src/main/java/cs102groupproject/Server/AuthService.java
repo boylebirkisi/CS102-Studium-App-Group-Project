@@ -117,16 +117,23 @@ public class AuthService {
     // }
 
     public static VerificationCode sendVerificationCode(String email) {
-        // Send the code via email
         EmailService emailService = new EmailService();
-        VerificationCode code = emailService.createAndStoreVerificationCode(email);
-        boolean emailSent = EmailService.sendMail(email, "Your Verification Code", "Your verification code is: " + code.getStoredCode());
+        // 1. Generate the object (don't store yet)
+        String randomCode = EmailService.generateRandomCode(6);
+        long expiry = EmailService.calculateExpiryTime();
+        VerificationCode code = new VerificationCode(email, randomCode, expiry);
 
+        // 2. Try to send the mail
+        boolean emailSent = EmailService.sendMail(email, "Your Verification Code", "Your code is: " + code.getStoredCode());
+
+        // 3. Store in DB only if mail was sent
         if (emailSent) {
-            dbManager.insertVerificationCode(email, code.getStoredCode(), code.getExpiryTime());
+            boolean isInserted = dbManager.insertVerificationCode(email, code.getStoredCode(), code.getExpiryTime());
+            if (!isInserted) {
+                throw new RuntimeException("Failed to store verification code in the database.");
+            }
             return code;
-        } else {
-            return null;
-        }
+        } 
+        return null;
     }
 }

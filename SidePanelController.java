@@ -1,54 +1,44 @@
 package cs102groupproject;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.StackPane;
 
 public class SidePanelController {
+    
+    @FXML private StackPane contentArea;
 
-    @FXML
-    private VBox contentBox;
+    @FXML private Parent marketView;
+    @FXML private Parent storageView;
+    @FXML private Parent sessionView;
 
     @FXML
     public void initialize() {
+        showMarket(); // default
     }
 
     @FXML
     private void showMarket() {
-        load("Market");
+        marketView.toFront();
     }
 
     @FXML
     private void showStorage() {
-        load("Storage");
+        storageView.toFront();
     }
 
-    private void load(String fxml) {
-        try {
-            FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/cs102groupproject/" + fxml + ".fxml")
-            );
+    @FXML
+    private void showSessions() {
+        sessionView.toFront();
+    }
 
-            Parent view = loader.load();
-            Object controller = loader.getController();
+    @FXML
+    private void handleCreateSession() {
+        OfficeController.openSessionPopupStatic();
+    }
 
-            if (controller instanceof MarketController) {
-                MarketController mc = (MarketController) controller;
-                MarketController.setMarket(App.market);
-                mc.refreshStatic();
-            }
-
-            if (controller instanceof StorageController) {
-                StorageController sc = (StorageController) controller;
-                StorageController.setStorage(App.storage);
-                sc.refreshStatic();
-            }
-
-            contentBox.getChildren().setAll(view);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    @FXML
+    private void handleClose() {
+        OfficeController.toggleSidePanelStatic();
     }
 }

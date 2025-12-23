@@ -146,15 +146,25 @@
                         </Pane>
                      </children>
                   </Pane>
-                  <VBox layoutX="415.0" layoutY="62.0" prefHeight="315.0" prefWidth="225.0" style="-fx-background-color: E7D3A8;">
+                  <VBox fx:id="friendsTotalVBox" layoutX="415.0" layoutY="62.0" prefHeight="315.0" prefWidth="225.0" style="-fx-background-color: E7D3A8;">
                      <children>
                         <HBox alignment="CENTER_LEFT" prefHeight="26.0" prefWidth="226.0" style="-fx-background-color: EFE6D8;">
                            <children>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Friends">
+                              <Button fx:id="goBackButton" mnemonicParsing="false" onAction="#handleGoBackButton" style="-fx-managed: false;" text="Go Back" visible="false" />
+                              <Text fx:id="friendsText" strokeType="OUTSIDE" strokeWidth="0.0" text="Friends">
                                  <font>
                                     <Font size="20.0" />
                                  </font>
                               </Text>
+                              <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Text fx:id="friendNameText" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-managed: false;" text="Text" visible="false">
+                                       <font>
+                                          <Font size="20.0" />
+                                       </font>
+                                    </Text>
+                                 </children>
+                              </HBox>
                            </children>
                         </HBox>
                         <ScrollPane>

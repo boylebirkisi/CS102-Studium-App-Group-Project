@@ -29,5 +29,9 @@ public enum ActionType {
     CREATE_HABIT, 
     HABIT_CREATED, 
     UPDATE_HABIT, 
-    HABIT_UPDATED
+    HABIT_UPDATED,
+    UPDATE_TASK, 
+    TASK_CREATED, 
+    TASK_UPDATED, 
+    CREATE_TASK
 }

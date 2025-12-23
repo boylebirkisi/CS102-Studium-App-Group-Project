@@ -132,7 +132,7 @@ public class SocializationController {
     {
         String name = userNameTextField.getText();
         String department = departmentTextField.getText();
-        ArrayList<User> allUsers = onlineUsers;
+        ArrayList<User> allUsers = new ArrayList<>(onlineUsers);
         ArrayList<User> filteredUsers = filterUsersByNameAndDepartment(name, department, allUsers);
         for (Node node: searchParameters.getChildren())
         {

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+import cs102groupproject.SharedObjects.ChatMessage;
 import cs102groupproject.SharedObjects.Session;
 import cs102groupproject.SharedObjects.User;
 import javafx.fxml.FXML;
@@ -19,6 +20,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
@@ -30,6 +32,7 @@ public class SocializationController {
     ClientSession manager;
     ArrayList<User> friendsList;
     ArrayList<User> onlineUsers;
+    ArrayList<ChatMessage> chatMessages;
     @FXML
     private Text currencyEarnedLabel;
     @FXML
@@ -58,6 +61,14 @@ public class SocializationController {
     private VBox friendsVBox;
     @FXML
     private HBox onlineFriendsHBox;
+    @FXML
+    private VBox friendsTotalVBox;
+    @FXML
+    private Text friendsText;
+    @FXML
+    private Button goBackButton;
+    @FXML
+    private Text friendNameText;
 
     public ArrayList<User> getFriendsList() {return friendsList;}
     public void addFriend(User friend) {friendsList.add(friend);}
@@ -67,6 +78,8 @@ public class SocializationController {
     private void initialize()
     {
         friendsList = new ArrayList<>();
+        User friend = new User(1, "Alice", "Computer Science", "A", "true", true, "String");
+        friendsList.add(friend);
     }
 
     public void setFields(ClientSession manager, ArrayList<User> friendsList, ArrayList<User> onlineUsers) {
@@ -267,7 +280,45 @@ public class SocializationController {
         {
             Button sendMessageButton = new Button("Send Message");
             sendMessageButton.onMouseClickedProperty().set(e -> {
-                //Open chat with friend
+                friendsText.setVisible(false);
+                friendsText.setManaged(false);
+                friendNameText.setText(user.getUsername());
+                friendNameText.setVisible(true);
+                friendNameText.setManaged(true);
+                goBackButton.setVisible(true);
+                goBackButton.setManaged(true);
+                VBox chatVBox = new VBox();
+                for (ChatMessage msg : chatMessages)
+                {
+                    if (msg.getSenderID() == user.getId() || msg.getReceiverID() == user.getId())
+                    {
+                        HBox messageBox = new HBox();
+                        StackPane messagePane = new StackPane();
+                        Text messageText = new Text(msg.getMessage());
+                        LocalDateTime timestamp = msg.getTimestamp();
+                        messagePane.getChildren().add(messageText);
+                        Label messageTime = new Label(timestamp.getHour() + ":" + timestamp.getMinute());
+                        messagePane.getChildren().add(messageTime);
+                        StackPane.setAlignment(messageText, Pos.CENTER_LEFT);
+                        StackPane.setAlignment(messageTime, Pos.BOTTOM_RIGHT);
+                        messageBox.getChildren().add(messagePane);
+                        if (msg.getSenderID() == user.getId())
+                        {
+                            messageBox.setAlignment(Pos.CENTER_LEFT);
+                        }
+                        else
+                        {
+                            messageBox.setAlignment(Pos.CENTER_RIGHT);
+                        }
+                        chatVBox.getChildren().add(messageBox);
+                        break;
+                    }
+                }
+                chatVBox.setSpacing(10);
+                chatVBox.setLayoutX(friendsTotalVBox.getLayoutX());
+                chatVBox.setLayoutY(friendsTotalVBox.getLayoutY() + 26);
+                chatVBox.setPrefWidth(friendsTotalVBox.getWidth());
+                chatVBox.setPrefHeight(friendsVBox.getHeight());
             });
             userBox.getChildren().add(sendMessageButton);
             ContextMenu contextMenu = new ContextMenu();
@@ -290,6 +341,17 @@ public class SocializationController {
         });
         userBox.setSpacing(10);
         return userBox;
+    }
+
+    @FXML
+    private void handleGoBackButton()
+    {
+        friendsText.setVisible(true);
+        friendsText.setManaged(true);
+        friendNameText.setVisible(false);
+        friendNameText.setManaged(false);
+        goBackButton.setVisible(false);
+        goBackButton.setManaged(false);
     }
 
     @FXML

@@ -12,7 +12,7 @@ public class VerificationCode {
     }
 
     public boolean isExpired() {
-        return System.currentTimeMillis() <= expiryTime;
+        return System.currentTimeMillis() >= expiryTime;
     }
 
     public String email() {

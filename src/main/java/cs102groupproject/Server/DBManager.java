@@ -720,10 +720,12 @@ public class DBManager {
         return sessions;
     }
 
-    public int insertVerificationCode(String email, String code, long expiryTime) {
-        String sqlCommand = "INSERT INTO verification_code(email, code, expiry_time) VALUES(?, ?, ?)";
+    public boolean insertVerificationCode(String email, String code, long expiryTime) {
+        String sqlCommand = "INSERT INTO verification_codes (email, stored_code, expiry_time) " +
+         "VALUES (?, ?, ?) ON CONFLICT (email) DO UPDATE SET " +
+         "stored_code = EXCLUDED.stored_code, expiry_time = EXCLUDED.expiry_time";
 
-        return insertAndGetID(sqlCommand, email, code, expiryTime);
+        return executeSqlCommand(sqlCommand, email, code, expiryTime);
     }
 
     /**

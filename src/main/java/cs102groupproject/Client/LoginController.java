@@ -9,6 +9,7 @@ import cs102groupproject.App;
 import cs102groupproject.Server.AuthService;
 import cs102groupproject.SharedObjects.ActionType;
 import cs102groupproject.SharedObjects.AppEvent;
+import cs102groupproject.SharedObjects.LoginResponse;
 import cs102groupproject.SharedObjects.ProtocolMessage;
 import cs102groupproject.SharedObjects.User;
 import cs102groupproject.SharedObjects.UserCredentials;
@@ -51,8 +52,10 @@ public class LoginController{
         });
 
         WebSocketClient.addListener(ActionType.LOGIN_SUCCESS, (payload) -> {
-            User loggedInUser = (User) payload; 
+            User loggedInUser = ((LoginResponse) payload).getUser(); 
             ClientSession.login(loggedInUser);
+            ClientSession.setLoginResponse((LoginResponse) payload);
+
             Platform.runLater(() -> {
                     try {
                         App.loadScrollableScene();
@@ -63,6 +66,9 @@ public class LoginController{
         });
 
         WebSocketClient.addListener(ActionType.REGISTER_SUCCESS, (payload) -> {
+            User loggedInUser = ((LoginResponse) payload).getUser(); 
+            ClientSession.login(loggedInUser);
+            ClientSession.setLoginResponse((LoginResponse) payload);
             
             Platform.runLater(() -> {
                     try {

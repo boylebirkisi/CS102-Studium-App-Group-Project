@@ -31,6 +31,12 @@ public class EventPlannerPopUpController {
     @FXML
     private void initialize()
     {
+        WebSocketClient.addListener(ActionType.EVENT_CREATED, (payload) -> {
+            AppEvent newEvent = (AppEvent) payload;
+            Platform.runLater(() -> {
+                System.out.println("new event is added " + newEvent.getName());
+            });
+        });
     }
 
     public void setFields(PlannerController ownerController, ClientSession manager)

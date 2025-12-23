@@ -3,7 +3,9 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -26,7 +28,7 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField prefWidth="180.0" />
+                  <TextField fx:id="taskNameTextField" prefWidth="180.0" />
                </children>
             </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
@@ -36,30 +38,34 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <ColorPicker prefHeight="25.0" prefWidth="40.0" style="-fx-color-label-visible: false;">
+                  <ColorPicker fx:id="colorPicker" prefHeight="25.0" prefWidth="40.0" style="-fx-color-label-visible: false;">
                      <value>
                         <Color red="0.7490196228027344" green="0.125490203499794" blue="0.6352941393852234" />
                      </value>
                   </ColorPicker>
                </children>
             </HBox>
-            <Label text="Importance;">
+            <Label text="Importance:">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <HBox alignment="CENTER_LEFT" prefHeight="12.0" prefWidth="321.0" spacing="30.0">
+            <HBox fx:id="importanceButtonsHBox" alignment="CENTER_LEFT" prefHeight="12.0" prefWidth="321.0" spacing="30.0">
                <children>
-                  <Button mnemonicParsing="false" style="-fx-background-color: #27AE60; -fx-background-radius: 50;" text="1." />
-                  <Button mnemonicParsing="false" style="-fx-background-color: #F2C94C; -fx-background-radius: 50;" text="2." />
-                  <Button mnemonicParsing="false" style="-fx-background-color: #F2994A; -fx-background-radius: 50;" text="3." />
-                  <Button mnemonicParsing="false" style="-fx-background-color: #EB5757; -fx-background-radius: 50;" text="4." />
+                  <RadioButton mnemonicParsing="false" style="-fx-background-color: lime;" text="1.">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="importanceGroup" />
+                     </toggleGroup>
+                  </RadioButton>
+                  <RadioButton mnemonicParsing="false" style="-fx-background-color: yellow;" text="2." toggleGroup="$importanceGroup" />
+                  <RadioButton mnemonicParsing="false" style="-fx-background-color: orange;" text="3." toggleGroup="$importanceGroup" />
+                  <RadioButton mnemonicParsing="false" style="-fx-background-color: red;" text="4." toggleGroup="$importanceGroup" />
                </children>
             </HBox>
             <HBox alignment="CENTER" prefHeight="107.0" prefWidth="360.0" spacing="20.0">
                <children>
-                  <Button mnemonicParsing="false" style="-fx-background-color: #6FCF97;" text="Confirm" textFill="WHITE" />
-                  <Button mnemonicParsing="false" style="-fx-background-color: #E0E0E0;" text="Cancel" textFill="WHITE" />
+                  <Button mnemonicParsing="false" onAction="#handleCreateTaskButton" style="-fx-background-color: #6FCF97;" text="Confirm" textFill="WHITE" />
+                  <Button mnemonicParsing="false" onAction="#handleCancelButton" style="-fx-background-color: #E0E0E0;" text="Cancel" textFill="WHITE" />
                </children>
             </HBox>
          </children>

@@ -44,7 +44,7 @@ public class UserController {
         displayHabitStats();
     }
 
-    public User getCurrentUser() {return manager.getCurrentUser();}
+    public User getCurrentUser() {return ClientSession.getCurrentUser();}
     //public int getCurrentSessionID() {return manager.getSessionID();}
 
     // @FXML

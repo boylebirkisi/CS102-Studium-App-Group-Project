@@ -1,0 +1,22 @@
+.rounded-scroll {
+    -fx-background-color: transparent;
+    background-color: transparent;
+}
+
+.rounded-scroll > .viewport {
+    -fx-background-color: transparent;
+    background-color: transparent;
+}
+
+.rounded-scroll > .corner {
+    -fx-background-color: transparent;
+    background-color: transparent;
+}
+
+.rounded-content {
+    -fx-background-color: #e6d4ad;
+    background-color: #e6d4ad;
+    -fx-background-radius: 20;
+    -fx-padding: 20;
+    padding: 20;
+}

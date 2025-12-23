@@ -9,9 +9,9 @@ public class Notification extends TransferObject{
     private int referenceID;
     private String png;
     private boolean isRemoved;
-    public enum Status {Pending, Accepted, Declined};
+    public enum Status {PENDING, ACCEPTED, DECLINED};
     private Status status;
-    public enum Type {FriendRequest, PDFRequest, SessionInvite, Informative, FRIEND_REQUEST};
+    public enum Type {FRIEND_REQUEST, PDF_REQUEST, SESSION_INVITE, SESSION_ACCESS_REQUEST, INFORMATIVE};
     private Type type;
 
     public Notification(String notificationText, String heading, int id, String png, Type type)
@@ -23,7 +23,7 @@ public class Notification extends TransferObject{
         this.type = type;
         isRemoved = false;
         objectType = "Notification";
-        setStatus(Status.Pending);
+        setStatus(Status.PENDING);
     }
 
     public Notification(int userID, int referenceID, String notificationText, String heading, String png, Type type)
@@ -36,12 +36,14 @@ public class Notification extends TransferObject{
         this.type = type;
         isRemoved = false;
         objectType = "Notification";
-        setStatus(Status.Pending);
+        setStatus(Status.PENDING);
     }
 
     public String getNotificationText() {return notificationText;}
     public String getHeading() {return heading;}
     public int getId() {return id;}
+    public int getUserID() {return userID;}
+    public int getReferenceID() {return referenceID;}
     public String getPng() {return png;}
     public boolean getIsRemoved() {return isRemoved;}
     public void removeNotification() {isRemoved = true;}

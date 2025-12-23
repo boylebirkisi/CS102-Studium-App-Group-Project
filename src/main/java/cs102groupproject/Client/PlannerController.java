@@ -1,6 +1,8 @@
 package cs102groupproject.Client;
 
 import java.io.IOException;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -9,12 +11,15 @@ import cs102groupproject.SharedObjects.Habit;
 import cs102groupproject.SharedObjects.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
@@ -51,6 +56,18 @@ public class PlannerController {
     private VBox eventsVBox;
     @FXML
     private RadioButton dateRadioButton;
+    @FXML
+    private DatePicker datePicker;
+    @FXML
+    private HBox dailyTasksVBoxHBox;
+    @FXML
+    private RadioButton dailyRadioButton;
+    @FXML
+    private RadioButton weeklyRadioButton;
+    @FXML
+    private FlowPane weeklyTasksVBoxFlowPane;
+    @FXML
+    private ScrollPane weeklyScrollPane;
 
     @FXML
     private void initialize()
@@ -63,6 +80,8 @@ public class PlannerController {
         this.events = events;
         this.tasks = tasks;
         refreshUI();
+        if (datePicker.getValue() == null)
+            {datePicker.setValue(LocalDate.now());}
     }
 
     private void refreshUI()
@@ -72,9 +91,8 @@ public class PlannerController {
         habitTrackerComboBox.getSelectionModel()
             .selectedItemProperty()
             .addListener((obs, oldVal, newVal) -> {
-                if (newVal != null) {
-                    updateHabitTracker(newVal);
-                }
+                if (newVal != null)
+                    {updateHabitTracker(newVal);}
             });
     }
 
@@ -87,7 +105,7 @@ public class PlannerController {
         {
             char character = habit.getCompletionString().toCharArray()[i];
             if (character == '1')
-                habitCompletionArray[i] = true;
+                {habitCompletionArray[i] = true;}
         }
         for (int i = 0; i < habitCircleFlowPane.getChildren().size(); i++)
         {
@@ -136,9 +154,9 @@ public class PlannerController {
         eventsVBox.getChildren().clear();
         boolean sortByDate = true;
         if (dateRadioButton.isSelected())
-            sortByDate = true;
+            {sortByDate = true;}
         else
-            sortByDate = false;
+            {sortByDate = false;}
         ArrayList<AppEvent> sortedEvents = new ArrayList<>();
         if (sortByDate)
         {
@@ -228,5 +246,94 @@ public class PlannerController {
     public void closePopUp()
     {
         popUpStage.close();
+    }
+
+    public LocalDate getSelectedDate()
+    {
+        return datePicker.getValue();
+    }
+
+    @FXML
+    private void updateDate()
+    {
+        if (datePicker.getValue() == null)
+            {datePicker.setValue(LocalDate.now());}
+        calendarMonthLabel.setText(datePicker.getValue().getMonth().toString().toLowerCase() + " " + datePicker.getValue().getYear());
+        dateLabel.setText(datePicker.getValue().getMonth().toString().toLowerCase() + " " + datePicker.getValue().getDayOfMonth() + ", " + datePicker.getValue().getYear());
+        if (dailyRadioButton.isSelected())
+            {drawTasksForDate(datePicker.getValue(), true);}
+        else
+            {drawTasksForDate(datePicker.getValue(), false);}
+    }
+
+    private void drawTasksForDate(LocalDate date, boolean daily)
+    {
+        
+        dailyTasksVBoxHBox.setVisible(false);
+        dailyTasksVBoxHBox.setManaged(false);
+        weeklyScrollPane.setVisible(false);
+        weeklyScrollPane.setManaged(false);
+        int completedTasks = 0;
+        int totalTasks = 0;
+        for (Node node : dailyTasksVBoxHBox.getChildren())
+        {
+            ((VBox)node).getChildren().clear();
+        }
+        if (daily)
+        {
+            dailyTasksVBoxHBox.setVisible(true);
+            dailyTasksVBoxHBox.setManaged(true);
+            for (int i = 0; i < tasks.size(); i++)
+            {
+                Task task = tasks.get(i);
+                if (task.getDueDate().isEqual(date))
+                {
+                    if (task.getIsCompleted())
+                        {completedTasks++;}
+                    totalTasks++;
+                    CheckBox taskCheckBox = new CheckBox("");
+                    taskCheckBox.setSelected(task.getIsCompleted());
+                    taskCheckBox.setOnAction(e -> {
+                        if (taskCheckBox.isSelected())
+                            {task.completeTask();}
+                        else
+                            {task.uncompleteTask();}
+                    });
+                    Circle colorCircle = new Circle(8, Color.web(task.getColor()));
+                    HBox taskBox = new HBox(new Label(task.getName()), taskCheckBox, colorCircle);
+                    if (i % 2 == 0)
+                        ((VBox)dailyTasksVBoxHBox.getChildren().get(0)).getChildren().add(taskBox);
+                    else
+                        ((VBox)dailyTasksVBoxHBox.getChildren().get(1)).getChildren().add(taskBox);
+                }
+            }
+            donePercentTextField.setText("%" + completedTasks / totalTasks * 100);
+        }
+        else
+        {
+            weeklyScrollPane.setVisible(true);
+            weeklyScrollPane.setManaged(true);
+            for (int i = 0; i < tasks.size(); i++)
+            {
+                Task task = tasks.get(i);
+                LocalDate taskDueDate = task.getDueDate();
+                LocalDate startOfWeek = date.minusDays(date.getDayOfWeek().getValue() - 1);
+                LocalDate endOfWeek = startOfWeek.plusDays(6);
+                if ((taskDueDate.isEqual(startOfWeek) || taskDueDate.isAfter(startOfWeek)) &&
+                    (taskDueDate.isEqual(endOfWeek) || taskDueDate.isBefore(endOfWeek)))
+                {
+                    
+                    if (task.getIsCompleted())
+                        {completedTasks++;}
+                    totalTasks++;
+                    DayOfWeek dayOfWeek = taskDueDate.getDayOfWeek().minus(DayOfWeek.MONDAY.getValue());
+                    Label label = new Label(task.getName());
+                    if (task.getIsCompleted())
+                        {label.setStyle("-fx-strikethrough: true;");}
+                    ((VBox)weeklyTasksVBoxFlowPane.getChildren().get(dayOfWeek.getValue())).getChildren().add(label);
+                }
+            }
+            donePercentTextField.setText("%" + completedTasks / totalTasks * 100);
+        }
     }
 }

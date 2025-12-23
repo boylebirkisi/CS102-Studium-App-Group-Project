@@ -1,13 +1,38 @@
+.circle-checkbox {
+    -fx-padding: 0;
+}
+
 .circle-checkbox > .box {
     -fx-background-color: transparent;
+    background-color: transparent;
     -fx-border-color: black;
+    border-color: black;
+    -fx-border-width: 2;
+    border-width: 2;
     -fx-border-radius: 50%;
+    border-radius: 50%;
     -fx-background-radius: 50%;
     -fx-pref-width: 24;
     -fx-pref-height: 24;
 }
 
+.circle-checkbox > .box > .mark {
+    -fx-shape: "";
+    -fx-background-color: transparent;
+    background-color: transparent;
+}
+
 .circle-checkbox:selected > .box > .mark {
-    -fx-shape: "M 3 3 L 21 21 M 21 3 L 3 21";
-    -fx-background-color: black;
+    -fx-background-color: rgba(0,0,0,1);
+    -fx-background-image:
+        linear-gradient(from 0% 0% to 100% 100%,
+            transparent 46%,
+            black 46%,
+            black 54%,
+            transparent 54%),
+        linear-gradient(from 100% 0% to 0% 100%,
+            transparent 46%,
+            black 46%,
+            black 54%,
+            transparent 54%);
 }

@@ -27,7 +27,6 @@ public class LoginController{
     @FXML
     private TextField codeField;
 
-    private String accessToken;
     private String email;
     private static final AuthService manager = new AuthService();
 

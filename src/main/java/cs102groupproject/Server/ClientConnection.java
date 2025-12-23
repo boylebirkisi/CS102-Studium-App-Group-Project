@@ -23,6 +23,7 @@ public class ClientConnection {
     private static final SessionService sessionService = new SessionService(new DBManager());
     private static final EventService eventService = new EventService(new DBManager());
     private static final HabitService habitService = new HabitService(new DBManager());
+    private static final TaskService taskService = new TaskService(new DBManager());
 
     /** Logged-in user ID (null if not authenticated) */
     private int userId;

@@ -34,24 +34,44 @@ public class LoginController{
 
     @FXML
     public void initialize() {
+        this.email = null;
+        this.accessToken = null;
+
         WebSocketClient.addListener(ActionType.LOGIN_SUCCESS, (payload) -> {
             
-            // 2. We are now "inside" the logic triggered by WebSocketClient
-            // 3. We can reach variables directly:
             Platform.runLater(() -> {
                     try {
-                        App.setRoot("secondary");
+                        App.loadScrollableScene();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 });
         });
 
-        WebSocketClient.addListener(ActionType.VERIFY_CODE, (payload) -> {
+        WebSocketClient.addListener(ActionType.REGISTER_SUCCESS, (payload) -> {
             
-            System.out.println("" + ((VerificationCode)payload).getStoredCode());
+            Platform.runLater(() -> {
+                    try {
+                        App.loadScrollableScene();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+        });
+
+        WebSocketClient.addListener(ActionType.CODE_SUCCESS, (payload) -> {
+
+            Platform.runLater(() -> {
+                    try {
+                        App.setRoot("Avatar");;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
         });
     }
+
+    //! LOGIN1 METHODS
 
     @FXML
     public void handleRegisterButton() { 
@@ -63,28 +83,12 @@ public class LoginController{
     }
 
     @FXML
-    private void handleSendCode() {
-        System.out.println("Send Code button clicked!");
-        email = emailField.getText();
-        System.out.println("Email: " + email);
-
-        WebSocketClient.send(new ProtocolMessage(
-            ActionType.SEND_VERIFICATION_CODE,
-            Map.of("email", email)
-        ));
-    }
-
-    @FXML
     private void handleForgetPassword() {
-        System.out.println("Forget Password clicked!");
-        // Add your logic here (e.g., opening a new window)
-        Platform.runLater(() -> {
-                    try {
-                        App.loadScrollableScene();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                });
+        try {
+            App.setRoot("VerificationPage");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -112,12 +116,14 @@ public class LoginController{
         }
 
         ProtocolMessage msg = new ProtocolMessage(ActionType.DEV_LOGIN, 
-            Map.of("credentials", new UserCredentials(
+            new UserCredentials(
                 username,
+                null,
+                null,
                 password,
                 false,
-                "" // department is not needed for dev login
-            ))
+                ""
+            )
         );
 
         WebSocketClient.send(msg);
@@ -139,17 +145,13 @@ public class LoginController{
                 if (accessToken == null) {
                         throw new RuntimeException("No access token received");
                 }
-                
+
                 ProtocolMessage msg = new ProtocolMessage(
-                        ActionType.LOGIN_WITH_GOOGLE,
-                        Map.of("accessToken", accessToken)
+                    ActionType.LOGIN_WITH_GOOGLE,
+                    accessToken
                 );
-                System.out.println(accessToken);
-                User user = AuthService.registerWithGoogle(accessToken);
-                System.out.println("user info: " + user.getId());
 
                 WebSocketClient.send(msg);
-                //GoogleCalendarAPI calendarAPI = new GoogleCalendarAPI(credential);
         
             } catch (Exception e) {
                 e.printStackTrace();
@@ -157,35 +159,82 @@ public class LoginController{
         }).start();
     }
 
+    //! VERIFICATION PAGE METHODS
+
+    @FXML
+    private void handleSendCode() {
+        System.out.println("Send Code button clicked!");
+        this.email = emailField.getText();
+        System.out.println("Email: " + email);
+
+        WebSocketClient.send(new ProtocolMessage(
+            ActionType.SEND_VERIFICATION_CODE,
+            email
+        ));
+    }
+
+    @FXML
+    public void verifyCode() {
+        if (!codeField.getText().isEmpty()) {
+            String codeEntered = codeField.getText();
+            WebSocketClient.send(new ProtocolMessage(
+                ActionType.VERIFY_CODE,
+                // In order not to create a new object
+                new UserCredentials(null, email, null, codeEntered, true, "")
+            ));
+        }
+    }
+
+    @FXML
+    public void registerWithGoogleButton() {
+        new Thread(() -> {
+            try {
+                // Authenticates user with Google OAuth2
+                GoogleOAuthClient oauthClient = new GoogleOAuthClient();
+                // Gets OAuth2  Credential
+                Credential credential = oauthClient.authenticate();
+    
+                // Extracts access token from Credential
+                String accessToken = credential.getAccessToken();
+                if (accessToken == null) {
+                        throw new RuntimeException("No access token received");
+                }
+                
+                this.accessToken = accessToken;
+                App.setRoot("Avatar");
+                GoogleCalendarAPI calendarAPI = new GoogleCalendarAPI(credential);
+        
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+    //! AVATAR PAGE
+
     @FXML
     public void handleRegistration() {
+        if (usernameField.getText().isEmpty() || passwordField.getText().isEmpty() || departmentField.getText().isEmpty())
+            return;
+
         String username = usernameField.getText();
         String password = passwordField.getText();
         String department = departmentField.getText();
 
-        ProtocolMessage msg = new ProtocolMessage(
-            ActionType.REGISTER,
-            Map.of("credentials", new UserCredentials(
-                username,
-                password,
-                false,
-                department
-            ))
-        );
+        System.out.println(accessToken);
+        ProtocolMessage msg = null;
+        if (accessToken == null) {
+            msg = new ProtocolMessage(
+                ActionType.REGISTER,
+                new UserCredentials(username, this.email, null, password, false, department)
+            );
+        } else {
+            msg = new ProtocolMessage(
+                ActionType.REGISTER_WITH_GOOGLE,
+                new UserCredentials(username, null, accessToken, password, false, department)
+            );
+        }
 
         WebSocketClient.send(msg);
-    }   
-
-    @FXML
-    public void returnMainLoginPage() {
-        try
-        {
-            Scene mainLoginScene = new Scene(App.loadFXML("Login1TEST"), 600, 400);
-            App.setScene(mainLoginScene);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
+    }  
 }

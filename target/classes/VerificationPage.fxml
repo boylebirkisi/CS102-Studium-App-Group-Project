@@ -17,8 +17,13 @@
          </image>
       </ImageView>
       <TextField fx:id="emailField" layoutX="182.0" layoutY="217.0" prefHeight="26.0" prefWidth="225.0" />
-      <TextField fx:id="codeField" layoutX="217.0" layoutY="253.0" />
+      <TextField fx:id="codeField" layoutX="217.0" layoutY="253.0" onAction="#verifyCode"/>
       <Button fx:id="sendButton" layoutX="413.0" layoutY="217.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="65.0" text="Send Code" onAction="#handleSendCode">
+         <font>
+            <Font size="10.0" />
+         </font>
+      </Button>
+      <Button fx:id="sendButton" layoutX="217.0" layoutY="273.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="65.0" text="Send Code" onAction="#registerWithGoogleButton">
          <font>
             <Font size="10.0" />
          </font>

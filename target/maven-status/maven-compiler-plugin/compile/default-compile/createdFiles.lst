@@ -34,7 +34,6 @@ cs102groupproject/Client/WebSocketClient$MessageListener.class
 cs102groupproject/Client/LoginController.class
 cs102groupproject/Server/EmailService$1.class
 cs102groupproject/Client/EventPlannerPopUpController.class
-cs102groupproject/PrimaryController.class
 cs102groupproject/SharedObjects/Notification$Status.class
 cs102groupproject/Server/EmailService.class
 cs102groupproject/Server/PlannerService.class
@@ -44,7 +43,6 @@ cs102groupproject/SharedObjects/GroupChat.class
 cs102groupproject/Server/UserService.class
 cs102groupproject/Server/SessionManager.class
 cs102groupproject/Client/SocializationController.class
-cs102groupproject/SecondaryController.class
 cs102groupproject/SharedObjects/OptionalNotification.class
 cs102groupproject/Client/UserController.class
 cs102groupproject/Server/DBManager.class

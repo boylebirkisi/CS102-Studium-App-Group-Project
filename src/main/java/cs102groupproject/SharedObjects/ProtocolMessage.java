@@ -32,4 +32,23 @@ public class ProtocolMessage {
     public static ProtocolMessage fromJson(String json) {
         return gson.fromJson(json, ProtocolMessage.class);
     }
+
+    /**
+     * Returns payload object into original class type, which was lost during creation of json. (Bununla birlikte mapofa gerek yok)
+     * @param <T>
+     * @param type
+     * @return
+     */
+    public <T> T getPayloadAs(Class<T> type) {
+        if (payload == null) return null;
+        
+        // If the payload is already the right type (unlikely with JSON), return it
+        if (type.isInstance(payload)) {
+            return type.cast(payload);
+        }
+        
+        // Otherwise, convert the LinkedTreeMap back to JSON and parse as the desired Class
+        String json = gson.toJson(payload);
+        return gson.fromJson(json, type);
+    }
 }

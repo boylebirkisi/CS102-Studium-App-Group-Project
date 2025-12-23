@@ -45,20 +45,17 @@ public class ClientConnection {
 
             //*********test case************* 
             case DEV_LOGIN: {
-                Map<?, ?> payload = (Map<?, ?>) message.getPayload();
-                String username = (String) payload.get("username");
+                UserCredentials credentials = message.getPayloadAs(UserCredentials.class);
 
-                // Fake auth (TEST AMAÇLI)  eskiden this.userId = "dev-" + username;  idi ama int e çevirdik böyle bırakıyorum o yüzden 
-                int uId = 123;
-
-                System.out.println("✅ DEV_LOGIN success, userId = " + uId);
+                User user = AuthService.login(credentials);
 
                 send(new ProtocolMessage(
                         ActionType.LOGIN_SUCCESS,
-                        uId
+                        user
                 ));
                 break;
             }
+
             case START_GROUP_SESSION: {
                 // GroupSession session =
                 //         sessionService.createGroupSession(this);
@@ -86,10 +83,10 @@ public class ClientConnection {
             }
 
             case LOGIN_WITH_GOOGLE: {
-                Map<?, ?> payload = (Map<?, ?>) message.getPayload();
-                String token = payload.get("accessToken").toString();
+                String token = message.getPayloadAs(String.class);
 
-                User user = AuthService.registerWithGoogle(token);
+                User user = AuthService.loginWithGoogle(token);
+
                 if (user == null) {
                     sendError("LOGIN_WITH_GOOGLE failed");
                     return;
@@ -122,11 +119,8 @@ public class ClientConnection {
                     return;
                 }
 
+                // We do not need to inform client for this
                 System.out.println("✅ Verification code sent to " + email);
-
-                send(new ProtocolMessage(ActionType.VERIFY_CODE, 
-                    verificationCode
-                ));
                 break;
             }
             default: sendError("Unknown action");

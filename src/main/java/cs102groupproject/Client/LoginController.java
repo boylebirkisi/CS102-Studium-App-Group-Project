@@ -40,7 +40,7 @@ public class LoginController{
             // 3. We can reach variables directly:
             Platform.runLater(() -> {
                     try {
-                        App.setRoot("secondary");
+                        App.loadScrollableScene();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -53,6 +53,8 @@ public class LoginController{
         });
     }
 
+    //! LOGIN1 METHODS
+
     @FXML
     public void handleRegisterButton() { 
         try {
@@ -63,28 +65,12 @@ public class LoginController{
     }
 
     @FXML
-    private void handleSendCode() {
-        System.out.println("Send Code button clicked!");
-        email = emailField.getText();
-        System.out.println("Email: " + email);
-
-        WebSocketClient.send(new ProtocolMessage(
-            ActionType.SEND_VERIFICATION_CODE,
-            Map.of("email", email)
-        ));
-    }
-
-    @FXML
     private void handleForgetPassword() {
-        System.out.println("Forget Password clicked!");
-        // Add your logic here (e.g., opening a new window)
-        Platform.runLater(() -> {
-                    try {
-                        App.loadScrollableScene();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                });
+        try {
+            App.setRoot("VerificationPage");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -112,12 +98,12 @@ public class LoginController{
         }
 
         ProtocolMessage msg = new ProtocolMessage(ActionType.DEV_LOGIN, 
-            Map.of("credentials", new UserCredentials(
+            new UserCredentials(
                 username,
                 password,
                 false,
                 "" // department is not needed for dev login
-            ))
+            )
         );
 
         WebSocketClient.send(msg);
@@ -139,22 +125,37 @@ public class LoginController{
                 if (accessToken == null) {
                         throw new RuntimeException("No access token received");
                 }
-                
+
                 ProtocolMessage msg = new ProtocolMessage(
-                        ActionType.LOGIN_WITH_GOOGLE,
-                        Map.of("accessToken", accessToken)
+                    ActionType.LOGIN_WITH_GOOGLE,
+                    accessToken
                 );
-                System.out.println(accessToken);
-                User user = AuthService.registerWithGoogle(accessToken);
-                System.out.println("user info: " + user.getId());
 
                 WebSocketClient.send(msg);
-                //GoogleCalendarAPI calendarAPI = new GoogleCalendarAPI(credential);
         
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }).start();
+    }
+
+    //! VERIFICATION PAGE METHODS
+
+    @FXML
+    private void handleSendCode() {
+        System.out.println("Send Code button clicked!");
+        email = emailField.getText();
+        System.out.println("Email: " + email);
+
+        WebSocketClient.send(new ProtocolMessage(
+            ActionType.SEND_VERIFICATION_CODE,
+            Map.of("email", email)
+        ));
+    }
+
+    @FXML
+    public void verifyCode() {
+        
     }
 
     @FXML
@@ -174,18 +175,34 @@ public class LoginController{
         );
 
         WebSocketClient.send(msg);
-    }   
-
+    }  
+    
     @FXML
-    public void returnMainLoginPage() {
-        try
-        {
-            Scene mainLoginScene = new Scene(App.loadFXML("Login1TEST"), 600, 400);
-            App.setScene(mainLoginScene);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+    public void registerWithGoogle() {
+        new Thread(() -> {
+            try {
+                // Authenticates user with Google OAuth2
+                GoogleOAuthClient oauthClient = new GoogleOAuthClient();
+                // Gets OAuth2  Credential
+                Credential credential = oauthClient.authenticate();
+    
+                // Extracts access token from Credential
+                String accessToken = credential.getAccessToken();
+                if (accessToken == null) {
+                        throw new RuntimeException("No access token received");
+                }
+                
+                ProtocolMessage msg = new ProtocolMessage(
+                        ActionType.LOGIN_WITH_GOOGLE,
+                        Map.of("accessToken", accessToken)
+                );
+
+                WebSocketClient.send(msg);
+                GoogleCalendarAPI calendarAPI = new GoogleCalendarAPI(credential);
+        
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 }

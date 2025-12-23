@@ -85,7 +85,7 @@ public class LoginController{
     @FXML
     private void handleForgetPassword() {
         try {
-            App.setRoot("VerificationPage");
+            App.loadScrollableScene();
         } catch (Exception e) {
             e.printStackTrace();
         }

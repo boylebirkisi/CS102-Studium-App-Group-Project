@@ -18,6 +18,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -69,6 +70,16 @@ public class SocializationController {
     private Button goBackButton;
     @FXML
     private Text friendNameText;
+    @FXML
+    private ScrollPane friendsScrollPane;
+    @FXML
+    private VBox chatVBox;
+    @FXML
+    private ScrollPane chatScrollPane;
+    @FXML
+    private TextField sendMessageTextField;
+    @FXML
+    private HBox friendNameTextHBox;
 
     public ArrayList<User> getFriendsList() {return friendsList;}
     public void addFriend(User friend) {friendsList.add(friend);}
@@ -80,6 +91,13 @@ public class SocializationController {
         friendsList = new ArrayList<>();
         User friend = new User(1, "Alice", "Computer Science", "A", "true", true, "String");
         friendsList.add(friend);
+        onlineUsers = new ArrayList<>();
+        onlineUsers.add(friend);
+        friend.addCurrency(500, false);
+        friend.addCurrency(200, true);
+        chatMessages = new ArrayList<>();
+        User notFriend = new User(2, "Bob", "Mathematics", "B", "true", true, "String");
+        onlineUsers.add(notFriend);
     }
 
     public void setFields(ClientSession manager, ArrayList<User> friendsList, ArrayList<User> onlineUsers) {
@@ -159,10 +177,11 @@ public class SocializationController {
     @FXML
     private void listFriends()
     {
+        friendsVBox.getChildren().clear();
         for (User friend : friendsList)
         {
             HBox friendBox = createUserDisplayBox(friend, true);
-            ((VBox)searchResultsHBox.getChildren().get(0)).getChildren().add(friendBox);
+            friendsVBox.getChildren().add(friendBox);
         }
     }
 
@@ -266,8 +285,11 @@ public class SocializationController {
     private HBox createUserDisplayBox(User user, boolean isFriend)
     {
         Label avatarLabel = new Label(user.getAvatar());
+        Label idLabel = new Label(user.getId() + "");
+        idLabel.setManaged(false);
+        idLabel.setVisible(false);
         Label userLabel = new Label(user.getUsername() + " / " + user.getDepartment());
-        HBox userBox = new HBox(avatarLabel, userLabel);
+        HBox userBox = new HBox(idLabel, avatarLabel, userLabel);
         if (!isFriend)
         {
             Button addFriendButton = new Button("Add Friend");
@@ -280,28 +302,37 @@ public class SocializationController {
         {
             Button sendMessageButton = new Button("Send Message");
             sendMessageButton.onMouseClickedProperty().set(e -> {
-                friendsText.setVisible(false);
-                friendsText.setManaged(false);
+                System.out.println("currentuserid: " + ClientSession.getUserId() + " chat with userid: " + user.getId());
+                chatVBox.getChildren().clear();
+                toggleOnChatMenu();
                 friendNameText.setText(user.getUsername());
-                friendNameText.setVisible(true);
-                friendNameText.setManaged(true);
-                goBackButton.setVisible(true);
-                goBackButton.setManaged(true);
-                VBox chatVBox = new VBox();
+                sendMessageTextField.setOnAction(v ->
+                    {
+                        String messageText = sendMessageTextField.getText();
+                        if (messageText.isEmpty())
+                        {
+                            return;
+                        }
+                        ChatMessage newMessage = new ChatMessage(ClientSession.getUserId(), user.getId(), messageText);
+                        chatMessages.add(newMessage);
+                        Label messageTextNode = new Label(newMessage.getMessage());
+                        LocalDateTime timestamp = newMessage.getTimestamp();
+                        Label messageTime = new Label(timestamp.getHour() + ":" + timestamp.getMinute());
+                        HBox messageBox = new HBox(messageTextNode, messageTime);
+                        messageBox.setAlignment(Pos.CENTER_RIGHT);
+                        chatVBox.getChildren().add(messageBox);
+                        sendMessageTextField.clear();
+                    }
+                );
                 for (ChatMessage msg : chatMessages)
                 {
-                    if (msg.getSenderID() == user.getId() || msg.getReceiverID() == user.getId())
+                    if ((msg.getSenderID() == user.getId() && msg.getReceiverID() == ClientSession.getUserId()) ||
+                        (msg.getReceiverID() == user.getId() && msg.getSenderID() == ClientSession.getUserId()))
                     {
-                        HBox messageBox = new HBox();
-                        StackPane messagePane = new StackPane();
-                        Text messageText = new Text(msg.getMessage());
+                        Label messageText = new Label(msg.getMessage());
                         LocalDateTime timestamp = msg.getTimestamp();
-                        messagePane.getChildren().add(messageText);
                         Label messageTime = new Label(timestamp.getHour() + ":" + timestamp.getMinute());
-                        messagePane.getChildren().add(messageTime);
-                        StackPane.setAlignment(messageText, Pos.CENTER_LEFT);
-                        StackPane.setAlignment(messageTime, Pos.BOTTOM_RIGHT);
-                        messageBox.getChildren().add(messagePane);
+                        HBox messageBox = new HBox(messageText, messageTime);
                         if (msg.getSenderID() == user.getId())
                         {
                             messageBox.setAlignment(Pos.CENTER_LEFT);
@@ -311,14 +342,9 @@ public class SocializationController {
                             messageBox.setAlignment(Pos.CENTER_RIGHT);
                         }
                         chatVBox.getChildren().add(messageBox);
-                        break;
+                        sendMessageTextField.clear();
                     }
                 }
-                chatVBox.setSpacing(10);
-                chatVBox.setLayoutX(friendsTotalVBox.getLayoutX());
-                chatVBox.setLayoutY(friendsTotalVBox.getLayoutY() + 26);
-                chatVBox.setPrefWidth(friendsTotalVBox.getWidth());
-                chatVBox.setPrefHeight(friendsVBox.getHeight());
             });
             userBox.getChildren().add(sendMessageButton);
             ContextMenu contextMenu = new ContextMenu();
@@ -346,17 +372,37 @@ public class SocializationController {
     @FXML
     private void handleGoBackButton()
     {
-        friendsText.setVisible(true);
-        friendsText.setManaged(true);
-        friendNameText.setVisible(false);
-        friendNameText.setManaged(false);
-        goBackButton.setVisible(false);
-        goBackButton.setManaged(false);
+        toggleOnFriendsList();
+    }
+
+    private void toggleOnFriendsList()
+    {
+        toggleFriendMenuVsChatMenu(true);
+    }
+
+    private void toggleOnChatMenu()
+    {
+        toggleFriendMenuVsChatMenu(false);
+    }
+
+    private void toggleFriendMenuVsChatMenu(boolean state)
+    {
+        friendsScrollPane.setVisible(state);
+        friendsScrollPane.setManaged(state);
+        friendsText.setVisible(state);
+        friendsText.setManaged(state);
+        friendNameTextHBox.setVisible(!state);
+        friendNameTextHBox.setManaged(!state);
+        goBackButton.setVisible(!state);
+        goBackButton.setManaged(!state);
+        chatScrollPane.setVisible(!state);
+        chatScrollPane.setManaged(!state);
     }
 
     @FXML
     private void displayOnlineFriends()
     {
+        onlineFriendsHBox.getChildren().clear();
         ArrayList<User> usersToDisplay = new ArrayList<>();
         for (User friend : friendsList)
         {
@@ -392,5 +438,13 @@ public class SocializationController {
     public void closePopUp()
     {
         popUpStage.close();
+    }
+
+    @FXML
+    public void refreshButtonFunctionality() {
+        ClientSession.login(onlineUsers.get(1)); // Dummy login for testing
+        chatMessages.add(new ChatMessage(1, ClientSession.getUserId(), "Hey there!"));
+        chatMessages.add(new ChatMessage(ClientSession.getUserId(), 1, "Hello! How are you?"));
+        refreshUI();
     }
 }

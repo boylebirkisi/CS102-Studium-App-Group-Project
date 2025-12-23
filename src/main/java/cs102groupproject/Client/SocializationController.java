@@ -242,11 +242,13 @@ public class SocializationController {
     private ArrayList<User> filterUsersByNameAndDepartment(String name, String department, ArrayList<User> allUsers)
     {
         
-        for (User user : allUsers)
+        for (int i = 0; i < allUsers.size(); i++)
         {
+            User user = allUsers.get(i);
             if (user.getId() == ClientSession.getUserId() || friendsList.contains(user))
             {
                 allUsers.remove(user);
+                i--;
             }
         }
         if (name.isEmpty() && department.isEmpty())

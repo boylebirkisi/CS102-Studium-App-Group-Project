@@ -22,10 +22,13 @@ public class ClientConnection {
 
     /** Services handling business logic */
     private static final AuthService authService = new AuthService();
-    private static final SessionService sessionService = new SessionService();
+    private static final SessionService sessionService = new SessionService(new DBManager());
+    private static final EventService eventService = new EventService(new DBManager());
+    private static final HabitService habitService = new HabitService(new DBManager());
 
     /** Logged-in user ID (null if not authenticated) */
     private int userId;
+    private User loggedInUser;
 
     public ClientConnection(Session session, SessionManager sessionManager) {
         this.socketSession = session;
@@ -55,18 +58,96 @@ public class ClientConnection {
                 ));
                 break;
             }
-
-            case START_GROUP_SESSION: {
-                // GroupSession session =
-                //         sessionService.createGroupSession(this);
-
-                // send(new ProtocolMessage(
-                //         ActionType.GROUP_SESSION_CREATED,
-                //         Map.of("sessionId", session.getId())
-                // ));
-
+                
+            case SEND_PRIVATE_MESSAGE: {
+                ChatMessage chatMsg = message.getPayloadAs(ChatMessage.class);
+                ClientConnection receiverConn = sessionManager.getConnection(chatMsg.getReceiverId());
+                if (receiverConn != null) {
+                    receiverConn.send(new ProtocolMessage(ActionType.RECEIVE_PRIVATE_MESSAGE, chatMsg));
+                } 
+                else {
+                    System.out.println("The receiver is offline: " + chatMsg.getReceiverId());
+                }
                 break;
             }
+
+            case CREATE_HABIT:{
+                Habit habit = message.getPayloadAs(Habit.class);
+                Habit saved = habitService.updateHabit(habit); 
+                
+                send(new ProtocolMessage(ActionType.HABIT_CREATED, saved));
+                break;
+            }
+                
+            case UPDATE_HABIT: {
+                Habit habit = message.getPayloadAs(Habit.class);
+                habitService.updateHabit(habit); 
+                
+                send(new ProtocolMessage(ActionType.HABIT_UPDATED, habit));
+                break;
+            }
+
+            case CREATE_EVENT: {
+                if (loggedInUser == null) {
+                    sendError("Not authenticated");
+                    return;
+                }
+
+                AppEvent event = message.getPayloadAs(AppEvent.class);
+                
+                try {
+                    AppEvent savedEvent = eventService.createEvent(event);
+                    // feedback for test purposes
+                    send(new ProtocolMessage(ActionType.EVENT_CREATED, savedEvent));
+                } 
+                catch (Exception e) {
+                    sendError("Could not create event: " + e.getMessage());
+                }
+                break;
+            }
+
+            //create group session pop-up handling
+            case CREATE_GROUP_SESSION: {
+                if (loggedInUser == null) {
+                    sendError("Not authenticated");
+                    return;
+                }
+
+                Map<?, ?> payload = (Map<?, ?>) message.getPayload();
+
+                String sessionName = payload.get("sessionName").toString();
+                int sessionNo = Integer.parseInt(payload.get("sessionNo").toString());
+                int sessionLength = Integer.parseInt(payload.get("sessionLength").toString());
+                int breakLength = Integer.parseInt(payload.get("breakLength").toString());
+                boolean isPublic = Boolean.parseBoolean(payload.get("isPublic").toString());
+
+                LocalDateTime startDate =
+                    LocalDateTime.parse(payload.get("startDate").toString());
+
+                User owner = this.loggedInUser;
+
+                GroupSession session = new GroupSession(
+                    owner,
+                    new ArrayList<>(),
+                    sessionName,
+                    "GroupSession",
+                    sessionNo,
+                    sessionLength,
+                    breakLength,
+                    startDate,
+                    isPublic
+                );
+
+                GroupSession saved = sessionService.createGroupSession(session);
+
+                send(new ProtocolMessage(
+                    ActionType.GROUP_SESSION_CREATED,
+                    saved
+                ));
+
+                break;
+            }                
+    
 
             case JOIN_GROUP_SESSION: {
                 // Map<?, ?> payload = (Map<?, ?>) message.getPayload();
@@ -91,7 +172,10 @@ public class ClientConnection {
                     sendError("LOGIN_WITH_GOOGLE failed");
                     return;
                 }
-
+                this.loggedInUser = user;
+                this.userId = user.getId();
+                sessionManager.login(user.getId(), this);
+                
                 System.out.println("✅ LOGIN_WITH_GOOGLE success, userId = " + user.getId());
 
                 send(new ProtocolMessage(
@@ -107,6 +191,8 @@ public class ClientConnection {
                 User user = AuthService.register(credentials);
 
                 if (user != null) {
+                    this.loggedInUser = user;
+                    this.userId = user.getId();
                     send(new ProtocolMessage(
                         ActionType.REGISTER_SUCCESS,
                         user
@@ -120,6 +206,8 @@ public class ClientConnection {
 
                 User user = AuthService.registerWithGoogle(credentials);
                 if (user != null) {
+                    this.loggedInUser = user;
+                    this.userId = user.getId();
                     send(new ProtocolMessage(
                         ActionType.REGISTER_SUCCESS,
                         user

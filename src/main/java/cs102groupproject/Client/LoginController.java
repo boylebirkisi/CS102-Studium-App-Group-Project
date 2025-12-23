@@ -36,9 +36,24 @@ public class LoginController implements UIController {
 
     @FXML
     public void initialize() {
+        // this.email = null;
+        // this.accessToken = null;
+
+        WebSocketClient.addListener(ActionType.ERROR, (payload) -> {
+            String errorMessage = (String) payload;
+            
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("An error is detected.");
+                alert.setContentText(errorMessage);
+                alert.showAndWait();
+            });
+        });
 
         WebSocketClient.addListener(ActionType.LOGIN_SUCCESS, (payload) -> {
-            
+            User loggedInUser = (User) payload; 
+            ClientSession.login(loggedInUser);
             Platform.runLater(() -> {
                     try {
                         App.loadScrollableScene();
@@ -199,6 +214,14 @@ public class LoginController implements UIController {
                 // Extracts access token from Credential
                 
                 String accessToken = credential.getAccessToken();
+
+                //
+                //ProtocolMessage msg = new ProtocolMessage(
+                    //ActionType.REGISTER_WITH_GOOGLE,
+                                //accessToken
+                //);
+
+                //WebSocketClient.send(msg);
                 if (accessToken == null) {
                     throw new RuntimeException("No access token received");
                 }

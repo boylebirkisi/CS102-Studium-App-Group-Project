@@ -34,10 +34,10 @@ public class LoginController{
 
     @FXML
     public void initialize() {
+        this.email = null;
+
         WebSocketClient.addListener(ActionType.LOGIN_SUCCESS, (payload) -> {
             
-            // 2. We are now "inside" the logic triggered by WebSocketClient
-            // 3. We can reach variables directly:
             Platform.runLater(() -> {
                     try {
                         App.loadScrollableScene();
@@ -47,9 +47,26 @@ public class LoginController{
                 });
         });
 
-        WebSocketClient.addListener(ActionType.VERIFY_CODE, (payload) -> {
+        WebSocketClient.addListener(ActionType.REGISTER_SUCCESS, (payload) -> {
             
-            System.out.println("" + ((VerificationCode)payload).getStoredCode());
+            Platform.runLater(() -> {
+                    try {
+                        App.loadScrollableScene();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+        });
+
+        WebSocketClient.addListener(ActionType.CODE_SUCCESS, (payload) -> {
+
+            Platform.runLater(() -> {
+                    try {
+                        App.setRoot("Avatar");;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
         });
     }
 
@@ -144,18 +161,25 @@ public class LoginController{
     @FXML
     private void handleSendCode() {
         System.out.println("Send Code button clicked!");
-        email = emailField.getText();
+        this.email = emailField.getText();
         System.out.println("Email: " + email);
 
         WebSocketClient.send(new ProtocolMessage(
             ActionType.SEND_VERIFICATION_CODE,
-            Map.of("email", email)
+            email
         ));
     }
 
     @FXML
     public void verifyCode() {
-        
+        if (!codeField.getText().isEmpty()) {
+            String codeEntered = codeField.getText();
+            WebSocketClient.send(new ProtocolMessage(
+                ActionType.VERIFY_CODE,
+                // In order not to create a new object
+                new UserCredentials(email, codeEntered, true, "")
+            ));
+        }
     }
 
     @FXML

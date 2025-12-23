@@ -117,16 +117,13 @@ public class AuthService {
     // }
 
     public static VerificationCode sendVerificationCode(String email) {
-        EmailService emailService = new EmailService();
-        // 1. Generate the object (don't store yet)
+
         String randomCode = EmailService.generateRandomCode(6);
         long expiry = EmailService.calculateExpiryTime();
-        VerificationCode code = new VerificationCode(email, randomCode, expiry);
+        VerificationCode code = new VerificationCode(randomCode, email, expiry);
 
-        // 2. Try to send the mail
         boolean emailSent = EmailService.sendMail(email, "Your Verification Code", "Your code is: " + code.getStoredCode());
 
-        // 3. Store in DB only if mail was sent
         if (emailSent) {
             boolean isInserted = dbManager.insertVerificationCode(email, code.getStoredCode(), code.getExpiryTime());
             if (!isInserted) {
@@ -135,5 +132,15 @@ public class AuthService {
             return code;
         } 
         return null;
+    }
+
+    public static boolean verifyCode(String email, String code) {
+        VerificationCode vCode = dbManager.getVerificationCode(email);
+        if (vCode != null && !vCode.isExpired()) {
+            if (code.equals(vCode.getStoredCode())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

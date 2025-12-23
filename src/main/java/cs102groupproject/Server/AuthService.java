@@ -14,6 +14,7 @@ import java.io.IOException;
 
 public class AuthService {
     private static DBManager dbManager = new DBManager();
+    private static PasswordHasher hasher = new PasswordHasher();
     // Login with Google
     public static User loginWithGoogle(String accessToken) {
 
@@ -43,8 +44,8 @@ public class AuthService {
     }
 
     // Google Register
-    public static User registerWithGoogle(String accessToken) {
-        System.out.println("Registering with Google, accessToken: ");
+    public static User registerWithGoogle(UserCredentials credentials) {
+        String accessToken = credentials.getAccessToken();
 
         try {
             // Sets the access token
@@ -66,10 +67,11 @@ public class AuthService {
                 throw new RuntimeException("User with this Google ID already exists");
             } else {
                 dbManager.insertUser(
-                    userInfo.getName(),
+                    credentials.getUsername(),
                     userInfo.getEmail(),
-                    null,
-                    googleId
+                    hasher.hashPassword(credentials.getPassword()),
+                    googleId,
+                    credentials.getDepartment()
                 );
             }
             return dbManager.getUserByGoogleID(googleId);
@@ -87,35 +89,37 @@ public class AuthService {
         if (credentials == null) {
             throw new IllegalArgumentException("Credentials cannot be null");
         } else {
-            String password = dbManager.getPasswordByUsername(credentials.getEmailOrUsername());
+            String password = dbManager.getPasswordByUsername(credentials.getUsername());
             PasswordHasher hasher = new PasswordHasher();
             if (password != null && hasher.checkPassword(credentials.getPassword(), password)) {
-                User user = dbManager.getUserByUsername(credentials.getEmailOrUsername());
+                User user = dbManager.getUserByUsername(credentials.getUsername());
                 return user;
             } 
         }
         return null;
     }
 
-    // /**
-    //  * Registers a new user with given details.
-    //  * @return
-    //  */
-    // public static User register(UserCredentials credentials) {
-    //     if (credentials == null) {
-    //         throw new IllegalArgumentException("Credentials cannot be null");
-    //     } else {
-    //         PasswordHasher hasher = new PasswordHasher();
-    //         String hashedPassword = hasher.hashPassword(credentials.getPassword());
-    //         // int userID = dbManager.insertUser(credentials.getUsernameOrEmail(), credentials.getEmail(), hashedPassword, credentials.getGoogleID());
-    //         // if (userID != -1) {
-    //         //     return dbManager.getUserByID(userID);
-    //         // } else {
-    //         //     return null;
-    //         // }
-    //     }
-    // }
+    /**
+    * Registers a new user with given details.
+    * @return
+    */
+    public static User register(UserCredentials credentials) {
+        if (credentials == null) {
+            throw new IllegalArgumentException("Credentials cannot be null");
+        } else {
+            if (dbManager.getUserByEmail(credentials.getEmail()) == null) {
+                int userID = dbManager.insertUser(credentials.getUsername(), credentials.getEmail(), hasher.hashPassword(credentials.getPassword()), null, credentials.getDepartment());
+                return dbManager.getUserByID(userID);
+            }
+        }
+        return null;
+    }
 
+    /**
+     * Send verification code.
+     * @param email
+     * @return
+     */
     public static VerificationCode sendVerificationCode(String email) {
 
         String randomCode = EmailService.generateRandomCode(6);

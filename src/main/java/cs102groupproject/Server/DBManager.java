@@ -36,9 +36,9 @@ public class DBManager {
      * @param password The user's hashed password.
      * @return true if the insert was successful, false otherwise.
      */
-    public int insertUser(String name, String email, String password, String googleId) {
+    public int insertUser(String name, String email, String password, String googleId, String department) {
         // Use PreparedStatement for security (prevents SQL Injection)
-        String sqlQuery = "INSERT INTO users(username, email, password_hash, google_id) VALUES(?, ?, ?, ?)"; 
+        String sqlQuery = "INSERT INTO users(username, email, password_hash, google_id, department) VALUES(?, ?, ?, ?, ?)"; 
 
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sqlQuery)) {
 
@@ -48,6 +48,7 @@ public class DBManager {
             pstmt.setString(2, email);
             pstmt.setString(3, password);
             pstmt.setString(4, googleId);
+            pstmt.setString(5, department);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {

@@ -31,8 +31,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-public class PlannerController {
-    ClientSession manager;
+public class PlannerController implements UIController {
     ArrayList<Habit> habits;
     ArrayList<AppEvent> events;
     ArrayList<Task> tasks;
@@ -74,8 +73,7 @@ public class PlannerController {
     {
     }
 
-    public void setFields(ClientSession manager, ArrayList<Habit> habits, ArrayList<AppEvent> events, ArrayList<Task> tasks) {
-        this.manager = manager;
+    public void setFields(ArrayList<Habit> habits, ArrayList<AppEvent> events, ArrayList<Task> tasks) {
         this.habits = habits;
         this.events = events;
         this.tasks = tasks;
@@ -224,13 +222,23 @@ public class PlannerController {
     @FXML
     private void addEventButtonClicked() throws IOException
     {
-        showPopUp("EventPlannerPopUp");
+        EventPlannerPopUpController eventController = (EventPlannerPopUpController) showPopUp("EventPlannerPopUp");
+        eventController.setFields(this);
         popUpStage.setTitle("Add Event Pop-Up Menu");
     }
 
-    public void showPopUp(String fxmlPath) throws IOException
+    @FXML
+    private void addTaskButtonClicked() throws IOException
+    {
+        TaskPlannerPopUpController taskController = (TaskPlannerPopUpController) showPopUp("TaskPlannerPopUp");
+        taskController.setFields(this);
+        popUpStage.setTitle("Add Task Pop-Up Menu");
+    }
+
+    public UIController showPopUp(String fxmlPath) throws IOException
     {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/" + fxmlPath + ".fxml"));
+        UIController controller = loader.getController();
         Parent popUpRoot = loader.load();
         Scene scene = new Scene(popUpRoot);
         popUpStage = new Stage();
@@ -241,6 +249,7 @@ public class PlannerController {
         popUpStage.show();
         popUpStage.setResizable(false);
         popUpStage.centerOnScreen();
+        return controller;
     }
 
     public void closePopUp()

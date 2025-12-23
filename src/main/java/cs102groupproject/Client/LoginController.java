@@ -20,7 +20,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 
-public class LoginController{
+public class LoginController implements UIController {
     @FXML
     private TextField usernameField;
     @FXML

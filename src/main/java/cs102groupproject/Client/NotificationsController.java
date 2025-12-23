@@ -15,7 +15,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-public class NotificationsController {
+public class NotificationsController implements UIController {
     ArrayList<Notification> notifications;
     ArrayList<User> users;
     ArrayList<GroupSession> groupSessions;

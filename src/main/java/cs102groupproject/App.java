@@ -7,8 +7,18 @@ import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import cs102groupproject.Client.OfficeController;
+import cs102groupproject.Client.PlannerController;
+import cs102groupproject.Client.SocializationController;
 import cs102groupproject.Client.WebSocketClient;
+import cs102groupproject.SharedObjects.AppEvent;
+import cs102groupproject.SharedObjects.ChatMessage;
+import cs102groupproject.SharedObjects.Habit;
+import cs102groupproject.SharedObjects.Task;
+import cs102groupproject.SharedObjects.User;
+
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * JavaFX App
@@ -54,7 +64,9 @@ public class App extends Application {
         scene = newScene;
     }
 
-    public static void loadScrollableScene()
+    public static void loadScrollableScene(ArrayList<Habit> habits,
+        ArrayList<AppEvent> events, ArrayList<Task> tasks, ArrayList<User> friendsList,
+        ArrayList<User> onlineUsers, ArrayList<ChatMessage> chatMessages, ArrayList<User> allUsers) throws IOException
     {
         ScrollPane scrollPane = new ScrollPane();
         VBox contentBox = new VBox();
@@ -63,22 +75,36 @@ public class App extends Application {
         scrollPane.hbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.NEVER);
         contentBox.setSpacing(10);
         scrollPane.setContent(contentBox);
-        loadView("Office1", contentBox);
-        loadView("Planner", contentBox);
-        loadView("Socialization", contentBox);
+
+        FXMLLoader officeLoader = loadFXMLReturnLoader("Office1");
+        Parent officeView = officeLoader.load();
+        contentBox.getChildren().add(officeView);
+        OfficeController officeController = officeLoader.getController();
+
+        FXMLLoader plannerLoader = loadFXMLReturnLoader("Planner");
+        Parent plannerView = plannerLoader.load();
+        contentBox.getChildren().add(plannerView);
+        PlannerController plannerController = plannerLoader.getController();
+        plannerController.setFields(habits, events, tasks);
+
+        FXMLLoader socializationLoader = loadFXMLReturnLoader("Socialization");
+        Parent socializationView = socializationLoader.load();
+        contentBox.getChildren().add(socializationView);
+        SocializationController socializationController = socializationLoader.getController();
+        socializationController.setFields(friendsList, onlineUsers, chatMessages, allUsers);
+
         scene.setRoot(scrollPane);
     }
 
-    public static void loadView(String fxml, VBox contentBox)
-    {
-        try 
-        {
-            Parent view = loadFXML(fxml);
-            contentBox.getChildren().add(view);
+    public static FXMLLoader loadFXMLReturnLoader(String fxml) throws IOException {
+        var url = App.class.getResource("/" + fxml + ".fxml");
+        System.out.println("FXML URL = " + url);
+
+        if (url == null) {
+            throw new RuntimeException("FXML FILE NOT FOUND");
         }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+
+        FXMLLoader loader = new FXMLLoader(url);
+        return loader;
     }
 }

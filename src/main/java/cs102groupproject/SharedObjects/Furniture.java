@@ -11,6 +11,7 @@ public class Furniture {
     private String category;
     private String imagePath;
 
+
     public Furniture(int ID, String name, String description, int height, int width, int soloPrice, int groupPrice, String category, String imagePath) {
         this.ID = ID;
         this.name = name;
@@ -83,4 +84,21 @@ public class Furniture {
         this.imagePath = imagePath;
     }
     
+    @Override
+public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof Furniture)) return false;
+    Furniture f = (Furniture) o;
+    return this.ID == f.ID;
+}
+
+@Override
+public int hashCode() {
+    return Integer.hashCode(ID);
+}
+
+public PlaceType getPlaceType() {
+    return PlaceType.valueOf(category);
+}
+
 }

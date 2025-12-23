@@ -25,19 +25,20 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-public class SocializationController {
+public class SocializationController implements UIController {
     Stage popUpStage = null;
-    ClientSession manager;
     ArrayList<User> friendsList;
     ArrayList<User> onlineUsers;
     ArrayList<ChatMessage> chatMessages;
+    ArrayList<User> allUsers;
     @FXML
     private Text currencyEarnedLabel;
     @FXML
@@ -122,10 +123,12 @@ public class SocializationController {
         onlineUsers.add(anotherNotFriend);
     }
 
-    public void setFields(ClientSession manager, ArrayList<User> friendsList, ArrayList<User> onlineUsers) {
-        this.manager = manager;
+    public void setFields(ArrayList<User> friendsList, ArrayList<User> onlineUsers,
+        ArrayList<ChatMessage> chatMessages, ArrayList<User> allUsers) {
         this.friendsList = friendsList;
         this.onlineUsers = onlineUsers;
+        this.chatMessages = chatMessages;
+        this.allUsers = allUsers;
         refreshUI();
     }
 
@@ -256,6 +259,13 @@ public class SocializationController {
         sessionInfoBox.setAlignment(Pos.CENTER_RIGHT);
         HBox sessionBox = new HBox(sessionLabel, sessionInfoBox);
         sessionBox.setSpacing(10);
+        sessionBox.setOnMouseClicked(e ->
+            {
+                Circle requestSentCircle = new Circle(5, Color.GREEN);
+                sessionBox.getChildren().add(requestSentCircle);
+                //send server join request.
+            }
+        );
         return sessionBox;
     }
 
@@ -454,6 +464,8 @@ public class SocializationController {
     public void showPopUp() throws IOException
     {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/GroupSessionPlannerPopUp.fxml"));
+        GroupSessionPlannerPopUpController controller = loader.getController();
+        controller.setOwnerController(this);
         Parent popUpRoot = loader.load();
         Scene scene = new Scene(popUpRoot);
         popUpStage = new Stage();

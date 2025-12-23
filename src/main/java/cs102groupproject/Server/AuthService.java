@@ -143,7 +143,7 @@ public class AuthService {
 
     public static boolean verifyCode(String email, String code) {
         VerificationCode vCode = dbManager.getVerificationCode(email);
-        if (vCode != null && !vCode.isExpired()) {
+        if (vCode != null) {
             if (code.equals(vCode.getStoredCode())) {
                 return true;
             }
@@ -151,31 +151,11 @@ public class AuthService {
         return false;
     }
 
-    public List<User> getFriendsOfUser(int userId) {
-        return dbManager.getFriends(userId);
+    public LoginResponse loginResponse(int userId, User user) {
+        LoginResponse rs = new LoginResponse(user, dbManager.getFriends(userId), dbManager.getAllUsers(),dbManager.getAllNotifications(), dbManager.getChatMessages(userId),
+                                            dbManager.getAllEvents(userId), dbManager.getAllTasks(userId), dbManager.getAllHabits(userId), dbManager.getAllIndividualSessions(userId));
+        
+        return rs;
     }
 
-    public List<Habit> getAllOfUser(int userId) {
-        return dbManager.getAllHabits(userId);
-    }
-
-    public List<AppEvent> getAllEvents(int userId) {
-        return dbManager.getAllEvents(userId);
-    }
-
-    public List<Habit> getAllHabits(int userId) {
-        return dbManager.getAllHabits(userId);
-    }
-
-    public List<ChatMessage> getAllMessages(int userId) {
-        return dbManager.getChatMessages(userId);
-    }
-
-    public List<Session> getAllIndividualSessions(int userId) {
-        return dbManager.getAllIndividualSessions(userId);
-    }
-
-    public List<Notification> getAllNotifications(int userId) {
-        return dbManager.getAllNotifications();
-    }
 }

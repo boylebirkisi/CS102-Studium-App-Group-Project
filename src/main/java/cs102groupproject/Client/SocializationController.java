@@ -105,18 +105,9 @@ public class SocializationController implements UIController {
             });
         });
 
-        WebSocketClient.addListener(ActionType.LOGIN_SUCCESS, (payload) -> {
-            User loggedInUser = (User) payload; 
-
-
-        });
-
-        WebSocketClient.addListener(ActionType.REGISTER_SUCCESS, (payload) -> {
-            User loggedInUser = (User) payload; 
-            
-            this.friendsList = new ArrayList<>();
-            this.chatMessages = new ArrayList<>();
-        });
+        // Böyle data alınacak
+        this.friendsList = new ArrayList<>(ClientSession.getLoginResponse().getFriends());
+        this.chatMessages = new ArrayList<>(ClientSession.getLoginResponse().getMessages());
         
         friendsList = new ArrayList<>();
         User friend = new User(1, "Alice", "Computer Science", "A", "true", true, "String");

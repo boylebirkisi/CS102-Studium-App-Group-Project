@@ -1,6 +1,7 @@
 package cs102groupproject.Client;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Map;
 
 import com.google.api.client.auth.oauth2.Credential;
@@ -9,6 +10,7 @@ import cs102groupproject.App;
 import cs102groupproject.Server.AuthService;
 import cs102groupproject.SharedObjects.ActionType;
 import cs102groupproject.SharedObjects.AppEvent;
+import cs102groupproject.SharedObjects.LoginResponse;
 import cs102groupproject.SharedObjects.ProtocolMessage;
 import cs102groupproject.SharedObjects.User;
 import cs102groupproject.SharedObjects.UserCredentials;
@@ -51,11 +53,16 @@ public class LoginController implements UIController {
         });
 
         WebSocketClient.addListener(ActionType.LOGIN_SUCCESS, (payload) -> {
-            User loggedInUser = (User) payload; 
+            LoginResponse rs = (LoginResponse) payload;
+            User loggedInUser = rs.getUser(); 
             ClientSession.login(loggedInUser);
+            ClientSession.setLoginResponse(rs);
+
             Platform.runLater(() -> {
                     try {
-                        App.loadScrollableScene();
+                        // Online userlar ekelenecek
+                        App.loadScrollableScene(new ArrayList<>(rs.getHabits()), new ArrayList<>(rs.getEventsOfUser()), new ArrayList<>(rs.getTasksOfUser()), new ArrayList<>(rs.getFriends()), null,
+                                                new ArrayList<>(rs.getMessages()), new ArrayList<>(rs.getAllUsers()));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -63,10 +70,16 @@ public class LoginController implements UIController {
         });
 
         WebSocketClient.addListener(ActionType.REGISTER_SUCCESS, (payload) -> {
+            LoginResponse rs = (LoginResponse) payload;
+            User loggedInUser = rs.getUser(); 
+            ClientSession.login(loggedInUser);
+            ClientSession.setLoginResponse((LoginResponse) payload);
             
             Platform.runLater(() -> {
                     try {
-                        App.loadScrollableScene();
+                        // Online userlar ekelenecek
+                        App.loadScrollableScene(new ArrayList<>(rs.getHabits()), new ArrayList<>(rs.getEventsOfUser()), new ArrayList<>(rs.getTasksOfUser()), new ArrayList<>(rs.getFriends()), null,
+                                                new ArrayList<>(rs.getMessages()), new ArrayList<>(rs.getAllUsers()));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -98,11 +111,11 @@ public class LoginController implements UIController {
 
     @FXML
     private void handleForgetPassword() {
-        try {
-            App.loadScrollableScene();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        // try {
+        //     App.loadScrollableScene();
+        // } catch (Exception e) {
+        //     e.printStackTrace();
+        // }
     }
 
     @FXML

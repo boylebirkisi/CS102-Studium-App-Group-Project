@@ -1,113 +1,247 @@
-
-
-// import javafx.fxml.FXML;
-// import javafx.scene.image.ImageView;
-// import javafx.scene.layout.Pane;
-
-// public class OfficeController {
-
-//     private static final double BASE_WIDTH = 600;
-//     private static final double BASE_HEIGHT = 400;
-
-//     @FXML private ImageView backgroundView;
-
-//     @FXML private Pane wallLeftPane;
-//     @FXML private Pane deskZonePane;
-//     @FXML private Pane wallRightPane;
-//     @FXML private Pane windowPane;
-//     @FXML private Pane floorPane;
-
-//     @FXML
-//     public void initialize() {
-
-//         backgroundView.sceneProperty().addListener((obs, oldScene, scene) -> {
-//             if (scene == null) return;
-
-//             // background scaling
-//             backgroundView.fitWidthProperty().bind(scene.widthProperty());
-//             backgroundView.fitHeightProperty().bind(scene.heightProperty());
-
-//             // pane scaling
-//             scene.widthProperty().addListener((o, oldW, newW) -> rescale(scene));
-//             scene.heightProperty().addListener((o, oldH, newH) -> rescale(scene));
-
-//             rescale(scene);
-//         });
-//         deskZonePane.setDisable(false);
-//         deskZonePane.setMouseTransparent(false);
-//         deskZonePane.setOpacity(1.0);
-//         deskZonePane.setStyle(
-//             "-fx-border-color: red; -fx-border-width: 3;"
-//         );
-//         deskZonePane.setOnMouseClicked(e -> System.out.println("DESK CLICKED"));
-//         deskZonePane.toFront();
-//     }
-
-//     @FXML
-//     private void deskClicked() {
-//         System.out.println("DESK CLICKED");
-//     }
-
-//     private void rescale(javafx.scene.Scene scene) {
-
-//         double scaleX = scene.getWidth() / BASE_WIDTH;
-//         double scaleY = scene.getHeight() / BASE_HEIGHT;
-
-//         scalePane(wallLeftPane, scaleX, scaleY);
-//         scalePane(deskZonePane, scaleX, scaleY);
-//         scalePane(wallRightPane, scaleX, scaleY);
-//         scalePane(windowPane, scaleX, scaleY);
-//         scalePane(floorPane, scaleX, scaleY);
-//     }
-
-//     private void scalePane(Pane pane, double sx, double sy) {
-//         pane.setLayoutX(pane.getLayoutX() * sx);
-//         pane.setLayoutY(pane.getLayoutY() * sy);
-//         pane.setPrefWidth(pane.getPrefWidth() * sx);
-//         pane.setPrefHeight(pane.getPrefHeight() * sy);
-//     }
-// }
 package cs102groupproject.Client;
+
+import cs102groupproject.App;
+import cs102groupproject.SharedObjects.Furniture;
+import cs102groupproject.SharedObjects.PlaceType;
+import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import java.io.IOException;
-import cs102groupproject.App;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.util.Duration;
 
-import cs102groupproject.App;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class OfficeController implements UIController {
+public class OfficeController {
+
+
+    public static void setPendingFurniture(Furniture f) {
+        if (instance != null && f != null) {
+            instance.enterPlacementMode(f);
+        }
+    }
+
+    private Furniture pendingFurniture;
+    private boolean placementMode = false;
+    private final Map<Pane, Furniture> occupiedZones = new HashMap<>();
+    private final Map<Pane, PlaceType> zoneMap = new HashMap<>();
+    private List<Pane> allZones;
 
     @FXML
-    private void deskClicked() throws IOException {
-        System.out.println("DESK CLICKED: Going to Market");
-        App.setRoot("Market");  // Market.fxml sahnesine geç
+    private AnchorPane sideDrawer;
+
+    private boolean sideOpen = false;
+
+    private static OfficeController instance;
+
+    public static OfficeController getInstance() {
+        return instance;
+    }
+
+    @FXML private Pane DESK_1, DESK_2, WALL_LEFT_1, WALL_RIGHT_1, FLOOR_1;
+
+    @FXML
+    public void initialize() {
+        instance = this;
+
+        sideDrawer.setTranslateX(300);
+        sideDrawer.setVisible(false);
+        sideDrawer.setManaged(false);
+
+        allZones = List.of(
+            DESK_1, DESK_2,
+            WALL_LEFT_1, WALL_RIGHT_1,
+            FLOOR_1
+        );
+
+        zoneMap.put(DESK_1, PlaceType.DESK_ZONE);
+        zoneMap.put(DESK_2, PlaceType.DESK_ZONE);
+        zoneMap.put(WALL_LEFT_1, PlaceType.WALL_LEFT);
+        zoneMap.put(WALL_RIGHT_1, PlaceType.WALL_RIGHT);
+        zoneMap.put(FLOOR_1, PlaceType.FLOOR);
+
+        resetZones();
+    }
+
+
+    private void enterPlacementMode(Furniture f) {
+        pendingFurniture = f;
+        placementMode = true;
+        showPreviews();
+    }
+
+    private void exitPlacementMode() {
+        pendingFurniture = null;
+        placementMode = false;
+
+        for (Pane zone : allZones) {
+            zone.setStyle("");
+            zone.getChildren().removeIf(n -> n instanceof ImageView
+                    && !occupiedZones.containsKey(zone));
+
+            zone.setVisible(occupiedZones.containsKey(zone));
+            zone.setMouseTransparent(!occupiedZones.containsKey(zone));
+        }
+    }
+
+    private void showPreviews() {
+        if (!placementMode || pendingFurniture == null) return;
+
+        PlaceType needed = PlaceType.valueOf(pendingFurniture.getCategory());
+
+        for (Pane zone : allZones) {
+
+            if (occupiedZones.containsKey(zone)) continue;
+            if (zoneMap.get(zone) != needed) continue;
+
+            ImageView preview = new ImageView(
+                new Image(getClass().getResourceAsStream(
+                    pendingFurniture.getImagePath()
+                ))
+            );
+
+            preview.setFitWidth(zone.getPrefWidth());
+            preview.setFitHeight(zone.getPrefHeight());
+            preview.setPreserveRatio(true);
+            preview.setOpacity(0.5);
+            preview.setMouseTransparent(true);
+
+            zone.getChildren().setAll(preview);
+            zone.setVisible(true);
+            zone.setMouseTransparent(false);
+            zone.setStyle("-fx-background-color: lightgreen;");
+        }
     }
 
     @FXML
-    private void floorClicked() throws IOException {
-        System.out.println("FLOOR CLICKED: Going to Storage");
-        App.setRoot("Storage"); // Storage.fxml sahnesine geç
+    private void placeFurniture(MouseEvent e) {
+
+        if (e.getButton() != MouseButton.PRIMARY) return;
+        if (!placementMode || pendingFurniture == null) return;
+
+        Pane zone = (Pane) e.getSource();
+        if (occupiedZones.containsKey(zone)) return;
+
+        Furniture placed = pendingFurniture;
+
+        ImageView real = new ImageView(
+            new Image(getClass().getResourceAsStream(
+                placed.getImagePath()
+            ))
+        );
+
+        real.setFitWidth(zone.getPrefWidth());
+        real.setFitHeight(zone.getPrefHeight());
+        real.setPreserveRatio(true);
+        real.setMouseTransparent(true);
+        zone.setOnContextMenuRequested(ev -> {
+            ContextMenu menu = new ContextMenu();
+            MenuItem toStorage = new MenuItem("Storage'a gönder");
+
+            toStorage.setOnAction(ae -> {
+                zone.getChildren().clear();
+                occupiedZones.remove(zone);
+                zone.setVisible(false);
+                zone.setMouseTransparent(true);
+
+                App.storage.addFurniture(placed);
+                StorageController.refreshStatic();
+            });
+
+            menu.getItems().add(toStorage);
+            menu.show(zone, ev.getScreenX(), ev.getScreenY());
+            ev.consume();
+        });
+
+        zone.getChildren().setAll(real);
+        occupiedZones.put(zone, placed);
+
+        App.market.removeItem(placed);
+        StorageController.refreshStatic();
+        MarketController.refreshStatic();
+
+        exitPlacementMode();
+    }
+
+    private void resetZones() {
+        for (Pane zone : allZones) {
+            zone.getChildren().clear();
+            zone.setVisible(false);
+            zone.setMouseTransparent(true);
+            zone.setStyle("");
+        }
     }
 
     @FXML
-    private void wallLeftClicked() {
-        System.out.println("Wall Left clicked!");
+    private void openSessionPopup() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/cs102groupproject/SessionPopup.fxml")
+            );
+
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Study Session");
+            stage.setScene(new Scene(root));
+            stage.setResizable(false);
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
-    private void wallRightClicked() {
-        System.out.println("Wall Right clicked!");
+    public void toggleSidePanel() {
+
+        TranslateTransition tt = new TranslateTransition(Duration.millis(250), sideDrawer);
+
+        if (!sideOpen) {
+            sideDrawer.setVisible(true);
+            sideDrawer.setManaged(true);
+            tt.setFromX(300);
+            tt.setToX(0);
+            sideOpen = true;
+        } else {
+            tt.setFromX(0);
+            tt.setToX(300);
+            tt.setOnFinished(e -> {
+                sideDrawer.setVisible(false);
+                sideDrawer.setManaged(false);
+            });
+            sideOpen = false;
+        }
+
+        tt.play();
     }
 
-    @FXML
-    private void windowClicked() {
-        System.out.println("Window clicked!");
+    public static void toggleSidePanelStatic() {
+    if (instance != null) {
+        instance.toggleSidePanel();
     }
+}
 
-    @FXML
-    private void doorClicked() {
-        System.out.println("Door clicked!");
+    public static void openSessionPopupStatic() {
+    if (instance != null) {
+        instance.openSessionPopup();
     }
+}
 
 
+    
 }

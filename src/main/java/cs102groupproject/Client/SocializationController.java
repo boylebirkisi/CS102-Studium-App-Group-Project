@@ -26,6 +26,8 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -266,6 +268,13 @@ public class SocializationController implements UIController {
         sessionInfoBox.setAlignment(Pos.CENTER_RIGHT);
         HBox sessionBox = new HBox(sessionLabel, sessionInfoBox);
         sessionBox.setSpacing(10);
+        sessionBox.setOnMouseClicked(e ->
+            {
+                Circle requestSentCircle = new Circle(5, Color.GREEN);
+                sessionBox.getChildren().add(requestSentCircle);
+                //send server join request.
+            }
+        );
         return sessionBox;
     }
 

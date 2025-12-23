@@ -6,11 +6,10 @@ import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.services.oauth2.Oauth2;
 import com.google.api.services.oauth2.model.Userinfo;
 
-import cs102groupproject.SharedObjects.User;
-import cs102groupproject.SharedObjects.UserCredentials;
-import cs102groupproject.SharedObjects.VerificationCode;
+import cs102groupproject.SharedObjects.*;
 
 import java.io.IOException;
+import java.util.List;
 
 public class AuthService {
     private static DBManager dbManager = new DBManager();
@@ -150,5 +149,33 @@ public class AuthService {
             }
         }
         return false;
+    }
+
+    public List<User> getFriendsOfUser(int userId) {
+        return dbManager.getFriends(userId);
+    }
+
+    public List<Habit> getAllOfUser(int userId) {
+        return dbManager.getAllHabits(userId);
+    }
+
+    public List<AppEvent> getAllEvents(int userId) {
+        return dbManager.getAllEvents(userId);
+    }
+
+    public List<Habit> getAllHabits(int userId) {
+        return dbManager.getAllHabits(userId);
+    }
+
+    public List<ChatMessage> getAllMessages(int userId) {
+        return dbManager.getChatMessages(userId);
+    }
+
+    public List<Session> getAllIndividualSessions(int userId) {
+        return dbManager.getAllIndividualSessions(userId);
+    }
+
+    public List<Notification> getAllNotifications(int userId) {
+        return dbManager.getAllNotifications();
     }
 }

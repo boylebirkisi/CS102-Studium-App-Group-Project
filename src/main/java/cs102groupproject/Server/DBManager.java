@@ -280,11 +280,10 @@ public class DBManager {
      */
     public List<User> getFriends(int currentUserID) {
         List<User> friends = new ArrayList<>();
-        // This query finds friends regardless of who initiated the request
         String sql = "SELECT u.* FROM users u " +
-                    "JOIN friendships f ON (u.id = f.friend_id OR u.id = f.user_id) " +
+                    "JOIN friendships f ON (u.id::integer = f.friend_id OR u.id::integer = f.user_id) " +
                     "WHERE (f.user_id = ? OR f.friend_id = ?) " +
-                    "AND u.id != ?";
+                    "AND u.id::integer != ?";
         
         try (Connection conn = connect(); 
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -293,19 +292,15 @@ public class DBManager {
             pstmt.setInt(2, currentUserID);
             pstmt.setInt(3, currentUserID);
             
-            ResultSet rs = pstmt.executeQuery();
+            // Fix: Removed 'sql' from executeQuery()
+            ResultSet rs = pstmt.executeQuery(); 
+            
             while (rs.next()) {
                 friends.add(new User(
-                        rs.getInt("id"), 
-                        rs.getString("username"), 
-                        rs.getString("department"),
-                        rs.getString("email"), 
-                        rs.getString("google_id"), 
-                        rs.getInt("solo_currency"),
-                        rs.getInt("group_currency"), 
-                        rs.getBoolean("is_verified"), 
-                        rs.getString("avatar")
-                    ));
+                    rs.getInt("id"), rs.getString("username"), rs.getString("department"),
+                    rs.getString("email"), rs.getString("google_id"), rs.getInt("solo_currency"),
+                    rs.getInt("group_currency"), rs.getBoolean("is_verified"), rs.getString("avatar")
+                ));
             }
         } catch (SQLException e) {
             System.err.println("Failed to fetch bidirectional friends: " + e.getMessage());
@@ -524,7 +519,7 @@ public class DBManager {
      * @return the eventID.
      */
     public int addEvent(String name, String color, LocalDateTime start, LocalDateTime finish, int userId, int importance, String googleCalendarID) {
-        String sqlCommand = "INSERT INTO app_events(name, color, start_date, finish_date, user_id, importance, google_calendar_id) VALUES(?, ?, ?, ?, ?, ?, ?)";
+        String sqlCommand = "INSERT INTO app_events(name, color, start_time, finish_time, user_id, importance, google_calendar_id) VALUES(?, ?, ?, ?, ?, ?, ?)";
 
         return insertAndGetID(sqlCommand, name, color, start, finish, userId, importance, googleCalendarID);
     }
@@ -548,7 +543,7 @@ public class DBManager {
      * @return
      */
     public boolean updateEventDates(int eventID, LocalDateTime newStart, LocalDateTime newFinish) {
-        String sqlCommand = "UPDATE app_events SET start_date = ?, finish_date = ? WHERE id = ?";
+        String sqlCommand = "UPDATE app_events SET start_time = ?, finish_time = ? WHERE id = ?";
 
         return executeSqlCommand(sqlCommand, newStart, newFinish, eventID);
     }
@@ -572,8 +567,8 @@ public class DBManager {
                 return new AppEvent(
                     rs.getString("name"),
                     rs.getString("color"),
-                    rs.getTimestamp("start_date").toLocalDateTime(),  
-                    rs.getTimestamp("finish_date").toLocalDateTime(), 
+                    rs.getTimestamp("start_time").toLocalDateTime(),  
+                    rs.getTimestamp("finish_time").toLocalDateTime(), 
                     rs.getInt("user_id"),
                     rs.getInt("importance"),
                     rs.getInt("id"),
@@ -602,13 +597,13 @@ public class DBManager {
             stmt.setInt(1, userId);
             if (conn == null) return events; 
             
-            ResultSet rs = stmt.executeQuery(sqlCommand);
+            ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 AppEvent event = new AppEvent(
                     rs.getString("name"),
                     rs.getString("color"),
-                    rs.getTimestamp("start_date").toLocalDateTime(),  
-                    rs.getTimestamp("finish_date").toLocalDateTime(), 
+                    rs.getTimestamp("start_time").toLocalDateTime(),  
+                    rs.getTimestamp("finish_time").toLocalDateTime(), 
                     rs.getInt("user_id"),
                     rs.getInt("importance"),
                     rs.getInt("id"),
@@ -682,7 +677,7 @@ public class DBManager {
             stmt.setInt(1, userId);
             if (conn == null) return sessions; 
             
-            ResultSet rs = stmt.executeQuery(sqlCommand);
+            ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Session session = new Session(
                     getUserByID(rs.getInt("owner_id")),

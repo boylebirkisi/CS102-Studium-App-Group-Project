@@ -24,15 +24,10 @@
 
 .circle-checkbox:selected > .box > .mark {
     -fx-background-color: rgba(0,0,0,1);
-    -fx-background-image:
-        linear-gradient(from 0% 0% to 100% 100%,
-            transparent 46%,
-            black 46%,
-            black 54%,
-            transparent 54%),
-        linear-gradient(from 100% 0% to 0% 100%,
-            transparent 46%,
-            black 46%,
-            black 54%,
-            transparent 54%);
+    -fx-background-color: 
+        /* The "X" mark gradients */
+        linear-gradient(from 0% 0% to 100% 100%, 
+            transparent 46%, black 46%, black 54%, transparent 54%),
+        linear-gradient(from 100% 0% to 0% 100%, 
+            transparent 46%, black 46%, black 54%, transparent 54%);
 }

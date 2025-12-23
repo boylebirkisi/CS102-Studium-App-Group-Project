@@ -24,6 +24,7 @@ public class ClientConnection {
     private static final EventService eventService = new EventService(new DBManager());
     private static final HabitService habitService = new HabitService(new DBManager());
     private static final TaskService taskService = new TaskService(new DBManager());
+    private static final ChatService chatService = new ChatService(new DBManager());
 
     /** Logged-in user ID (null if not authenticated) */
     private int userId;
@@ -71,6 +72,7 @@ public class ClientConnection {
                 
             case SEND_PRIVATE_MESSAGE: {
                 ChatMessage chatMsg = message.getPayloadAs(ChatMessage.class);
+                chatService.saveMessage(chatMsg);
                 ClientConnection receiverConn = sessionManager.getConnection(chatMsg.getReceiverID());
                 if (receiverConn != null) {
                     receiverConn.send(new ProtocolMessage(ActionType.RECEIVE_PRIVATE_MESSAGE, chatMsg));
@@ -80,6 +82,7 @@ public class ClientConnection {
                 }
                 break;
             }
+                
             case UPDATE_TASK: {
                 Task task = message.getPayloadAs(Task.class);
                 taskService.updateTask(task); 

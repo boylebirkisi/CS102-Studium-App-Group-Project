@@ -2,6 +2,7 @@ package cs102groupproject;
 
 import cs102groupproject.SharedObjects.Furniture;
 import cs102groupproject.SharedObjects.PlaceType;
+import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -12,9 +13,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +26,6 @@ import java.util.Map;
 
 public class OfficeController {
 
-    private static OfficeController instance;
 
     public static void setPendingFurniture(Furniture f) {
         if (instance != null && f != null) {
@@ -36,11 +39,26 @@ public class OfficeController {
     private final Map<Pane, PlaceType> zoneMap = new HashMap<>();
     private List<Pane> allZones;
 
+    @FXML
+    private AnchorPane sideDrawer;
+
+    private boolean sideOpen = false;
+
+    private static OfficeController instance;
+
+    public static OfficeController getInstance() {
+        return instance;
+    }
+
     @FXML private Pane DESK_1, DESK_2, WALL_LEFT_1, WALL_RIGHT_1, FLOOR_1;
 
     @FXML
     public void initialize() {
         instance = this;
+
+        sideDrawer.setTranslateX(300);
+        sideDrawer.setVisible(false);
+        sideDrawer.setManaged(false);
 
         allZones = List.of(
             DESK_1, DESK_2,
@@ -56,6 +74,7 @@ public class OfficeController {
 
         resetZones();
     }
+
 
     private void enterPlacementMode(Furniture f) {
         pendingFurniture = f;
@@ -186,4 +205,42 @@ public class OfficeController {
         }
     }
 
+    @FXML
+    public void toggleSidePanel() {
+
+        TranslateTransition tt = new TranslateTransition(Duration.millis(250), sideDrawer);
+
+        if (!sideOpen) {
+            sideDrawer.setVisible(true);
+            sideDrawer.setManaged(true);
+            tt.setFromX(300);
+            tt.setToX(0);
+            sideOpen = true;
+        } else {
+            tt.setFromX(0);
+            tt.setToX(300);
+            tt.setOnFinished(e -> {
+                sideDrawer.setVisible(false);
+                sideDrawer.setManaged(false);
+            });
+            sideOpen = false;
+        }
+
+        tt.play();
+    }
+
+    public static void toggleSidePanelStatic() {
+    if (instance != null) {
+        instance.toggleSidePanel();
+    }
+}
+
+    public static void openSessionPopupStatic() {
+    if (instance != null) {
+        instance.openSessionPopup();
+    }
+}
+
+
+    
 }

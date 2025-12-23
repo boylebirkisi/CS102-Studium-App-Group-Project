@@ -69,6 +69,7 @@ public class EventPlannerPopUpController {
         LocalDateTime endDate = endDatePicker.getValue().atTime(endHour, endMinute);
         AppEvent event = new AppEvent(eventName, color, startDate, endDate,
             ClientSession.getUserId(), importance, null);
+        WebSocketClient.send(new ProtocolMessage(ActionType.CREATE_EVENT, event));
         ownerController.closePopUp();
     }
 

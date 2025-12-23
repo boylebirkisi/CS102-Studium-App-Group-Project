@@ -52,7 +52,8 @@ public class LoginController{
         });
 
         WebSocketClient.addListener(ActionType.LOGIN_SUCCESS, (payload) -> {
-            
+            User loggedInUser = (User) payload; 
+            ClientSession.login(loggedInUser);
             Platform.runLater(() -> {
                     try {
                         App.loadScrollableScene();

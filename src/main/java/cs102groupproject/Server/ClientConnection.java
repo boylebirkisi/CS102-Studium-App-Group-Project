@@ -176,24 +176,12 @@ public class ClientConnection {
                 
                 System.out.println("✅ LOGIN_WITH_GOOGLE success, userId = " + user.getId());
 
-                List<User> friends = authService.getFriendsOfUser(userId);
-                List<Notification> notifications = authService.getAllNotifications(userId);
-                List<cs102groupproject.SharedObjects.Session> individualSessions= authService.getAllIndividualSessions(userId);
-                List<ChatMessage> messages = authService.getAllMessages(userId);
-                List<AppEvent> eventsOfUser = authService.getAllEvents(userId);
-                List<Habit> habits = authService.getAllHabits(userId);
+                LoginResponse loginResponse = authService.loginResponse(userId, user);
 
                 // DAHA EKLENECEK ÇOK ŞEY VAR (BÜTÜN USERLAR; SESSIONLAR
                 send(new ProtocolMessage(
                         ActionType.LOGIN_SUCCESS,
-                        Map.of("friends", friends,
-                                "notifications", notifications,
-                                "messages", messages,
-                                "eventsOfUser", eventsOfUser,
-                                "habits", habits,
-                                "individualSessions", individualSessions,
-                                "user", user
-                        )
+                        loginResponse
                 ));
                 break;
             }

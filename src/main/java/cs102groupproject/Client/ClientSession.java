@@ -1,6 +1,7 @@
 package cs102groupproject.Client;
 
 import cs102groupproject.SharedObjects.User;
+import cs102groupproject.SharedObjects.LoginResponse;
 
 /**
  * Client-side application context.
@@ -9,6 +10,7 @@ import cs102groupproject.SharedObjects.User;
 public final class ClientSession {
     //controllers will be added
     private static User currentUser;
+    private static LoginResponse loginResponse;
     private static int activeGroupId; // Group / Study session ID (business)
 
     private ClientSession() {
@@ -49,5 +51,13 @@ public final class ClientSession {
 
     public static boolean isInGroup() {
         return activeGroupId != -1;
+    }
+
+    public static LoginResponse getLoginResponse() {
+        return loginResponse;
+    }
+
+    public static void setLoginResponse(LoginResponse loginResponse) {
+        ClientSession.loginResponse = loginResponse;
     }
 }

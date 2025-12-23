@@ -3,6 +3,9 @@ package cs102groupproject;
 import cs102groupproject.SharedObjects.Furniture;
 import cs102groupproject.SharedObjects.PlaceType;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
@@ -10,14 +13,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class OfficeController {
-
-    /* ------------ STATIC ------------ */
 
     private static OfficeController instance;
 
@@ -27,20 +30,13 @@ public class OfficeController {
         }
     }
 
-    /* ------------ STATE ------------ */
-
     private Furniture pendingFurniture;
     private boolean placementMode = false;
-
     private final Map<Pane, Furniture> occupiedZones = new HashMap<>();
     private final Map<Pane, PlaceType> zoneMap = new HashMap<>();
     private List<Pane> allZones;
 
-    /* ------------ FXML ------------ */
-
     @FXML private Pane DESK_1, DESK_2, WALL_LEFT_1, WALL_RIGHT_1, FLOOR_1;
-
-    /* ------------ INIT ------------ */
 
     @FXML
     public void initialize() {
@@ -61,8 +57,6 @@ public class OfficeController {
         resetZones();
     }
 
-    /* ------------ PLACEMENT MODE ------------ */
-
     private void enterPlacementMode(Furniture f) {
         pendingFurniture = f;
         placementMode = true;
@@ -75,8 +69,6 @@ public class OfficeController {
 
         for (Pane zone : allZones) {
             zone.setStyle("");
-
-            // SADECE preview image'ları temizle
             zone.getChildren().removeIf(n -> n instanceof ImageView
                     && !occupiedZones.containsKey(zone));
 
@@ -84,8 +76,6 @@ public class OfficeController {
             zone.setMouseTransparent(!occupiedZones.containsKey(zone));
         }
     }
-
-    /* ------------ PREVIEW ------------ */
 
     private void showPreviews() {
         if (!placementMode || pendingFurniture == null) return;
@@ -116,8 +106,6 @@ public class OfficeController {
         }
     }
 
-    /* ------------ PLACE ------------ */
-
     @FXML
     private void placeFurniture(MouseEvent e) {
 
@@ -139,8 +127,6 @@ public class OfficeController {
         real.setFitHeight(zone.getPrefHeight());
         real.setPreserveRatio(true);
         real.setMouseTransparent(true);
-
-        // SAĞ TIK → STORAGE (SADECE YERLEŞTİRİLMİŞ ZONE)
         zone.setOnContextMenuRequested(ev -> {
             ContextMenu menu = new ContextMenu();
             MenuItem toStorage = new MenuItem("Storage'a gönder");
@@ -163,15 +149,12 @@ public class OfficeController {
         zone.getChildren().setAll(real);
         occupiedZones.put(zone, placed);
 
-        // satın alma + transfer
         App.market.removeItem(placed);
         StorageController.refreshStatic();
         MarketController.refreshStatic();
 
         exitPlacementMode();
     }
-
-    /* ------------ RESET ------------ */
 
     private void resetZones() {
         for (Pane zone : allZones) {
@@ -181,4 +164,26 @@ public class OfficeController {
             zone.setStyle("");
         }
     }
+
+    @FXML
+    private void openSessionPopup() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/cs102groupproject/SessionPopup.fxml")
+            );
+
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Study Session");
+            stage.setScene(new Scene(root));
+            stage.setResizable(false);
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

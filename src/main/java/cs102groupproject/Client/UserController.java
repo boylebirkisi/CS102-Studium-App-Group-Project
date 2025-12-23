@@ -13,7 +13,7 @@ import cs102groupproject.SharedObjects.GroupSession;
 import cs102groupproject.SharedObjects.Habit;
 import cs102groupproject.SharedObjects.Session;
 
-public class UserController {
+public class UserController implements UIController {
     ClientSession manager;
     ArrayList<Habit> habits;
     ArrayList<Session> sessions;

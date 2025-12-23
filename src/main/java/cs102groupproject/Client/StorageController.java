@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import cs102groupproject.App;
 
-public class StorageController {
+public class StorageController implements UIController {
 
     @FXML
     private void goBack() throws IOException {

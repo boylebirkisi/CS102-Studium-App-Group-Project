@@ -17,10 +17,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 
-public class GroupSessionPlannerPopUpController {
-
+public class GroupSessionPlannerPopUpController implements UIController {
     private SocializationController ownerController;
-
     @FXML
     private TextField sessionNameTextField;
     @FXML
@@ -37,6 +35,10 @@ public class GroupSessionPlannerPopUpController {
     private DatePicker startDatePicker;
     @FXML
     private TextField timeTextField;
+
+    @FXML
+    private void initialize(){
+    }
 
     public void setOwnerController(SocializationController ownerController) {
         this.ownerController = ownerController;

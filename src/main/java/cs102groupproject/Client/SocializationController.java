@@ -21,19 +21,18 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-public class SocializationController {
+public class SocializationController implements UIController {
     Stage popUpStage = null;
-    ClientSession manager;
     ArrayList<User> friendsList;
     ArrayList<User> onlineUsers;
     ArrayList<ChatMessage> chatMessages;
+    ArrayList<User> allUsers;
     @FXML
     private Text currencyEarnedLabel;
     @FXML
@@ -102,10 +101,12 @@ public class SocializationController {
         onlineUsers.add(anotherNotFriend);
     }
 
-    public void setFields(ClientSession manager, ArrayList<User> friendsList, ArrayList<User> onlineUsers) {
-        this.manager = manager;
+    public void setFields(ArrayList<User> friendsList, ArrayList<User> onlineUsers,
+        ArrayList<ChatMessage> chatMessages, ArrayList<User> allUsers) {
         this.friendsList = friendsList;
         this.onlineUsers = onlineUsers;
+        this.chatMessages = chatMessages;
+        this.allUsers = allUsers;
         refreshUI();
     }
 
@@ -434,6 +435,8 @@ public class SocializationController {
     public void showPopUp() throws IOException
     {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/GroupSessionPlannerPopUp.fxml"));
+        GroupSessionPlannerPopUpController controller = loader.getController();
+        controller.setOwnerController(this);
         Parent popUpRoot = loader.load();
         Scene scene = new Scene(popUpRoot);
         popUpStage = new Stage();

@@ -110,7 +110,7 @@
                   <VBox prefHeight="352.0" prefWidth="394.0" />
                </children>
             </HBox>
-            <Button layoutX="701.0" layoutY="485.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" text="Add Task" />
+            <Button layoutX="701.0" layoutY="485.0" mnemonicParsing="false" onAction="#addTaskButtonClicked" prefHeight="26.0" prefWidth="110.0" text="Add Task" />
             <ScrollPane fx:id="weeklyScrollPane" layoutX="-2.0" layoutY="106.0" prefHeight="376.0" prefWidth="854.0" style="-fx-managed: false;" stylesheets="@roundedScroll.css" visible="false">
                <styleClass>
                   <String fx:value="rounded-content" />

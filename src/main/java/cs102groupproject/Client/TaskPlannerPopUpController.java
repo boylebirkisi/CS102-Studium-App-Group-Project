@@ -7,9 +7,8 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 
-public class TaskPlannerPopUpController {
+public class TaskPlannerPopUpController implements UIController {
     PlannerController ownerController;
-    ClientSession manager;
     @FXML
     private TextField taskNameTextField;
     @FXML
@@ -22,10 +21,9 @@ public class TaskPlannerPopUpController {
     {
     }
 
-    public void setFields(PlannerController ownerController, ClientSession manager)
+    public void setFields(PlannerController ownerController)
     {
         this.ownerController = ownerController;
-        this.manager = manager;
     }
 
     @FXML

@@ -75,7 +75,7 @@ import cs102groupproject.App;
 
 import cs102groupproject.App;
 
-public class OfficeController {
+public class OfficeController implements UIController {
 
     @FXML
     private void deskClicked() throws IOException {

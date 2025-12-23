@@ -18,7 +18,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 
-public class LoginController{
+public class LoginController implements UIController {
     @FXML
     private TextField usernameField;
     @FXML

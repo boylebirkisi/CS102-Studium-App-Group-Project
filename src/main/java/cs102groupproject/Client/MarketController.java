@@ -8,7 +8,7 @@ import java.io.IOException;
 import cs102groupproject.App;
 import cs102groupproject.SharedObjects.*;
 
-public class MarketController {
+public class MarketController implements UIController {
     @FXML
     private Label moneyLabel;
 

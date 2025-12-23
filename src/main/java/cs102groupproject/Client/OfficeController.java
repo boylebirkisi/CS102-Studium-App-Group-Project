@@ -157,7 +157,7 @@ public class OfficeController {
                 zone.setVisible(false);
                 zone.setMouseTransparent(true);
 
-                App.storage.addFurniture(placed);
+                //App.storage.addFurniture(placed);
                 StorageController.refreshStatic();
             });
 
@@ -169,7 +169,7 @@ public class OfficeController {
         zone.getChildren().setAll(real);
         occupiedZones.put(zone, placed);
 
-        App.market.removeItem(placed);
+        //App.market.removeItem(placed);
         StorageController.refreshStatic();
         MarketController.refreshStatic();
 

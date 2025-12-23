@@ -4,7 +4,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Map;
 
+import com.fatboyindustrial.gsonjavatime.Converters;
 import com.google.api.client.auth.oauth2.Credential;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import cs102groupproject.App;
 import cs102groupproject.Server.AuthService;
@@ -39,6 +42,7 @@ public class LoginController implements UIController {
 
     @FXML
     public void initialize() {
+        Gson gson = Converters.registerAll(new GsonBuilder()).create();
 
         WebSocketClient.addListener(ActionType.ERROR, (payload) -> {
             String errorMessage = (String) payload;
@@ -53,7 +57,15 @@ public class LoginController implements UIController {
         });
 
         WebSocketClient.addListener(ActionType.LOGIN_SUCCESS, (payload) -> {
-            LoginResponse rs = (LoginResponse) payload;
+            String jsonString = gson.toJson(payload); 
+            LoginResponse rs = gson.fromJson(jsonString, LoginResponse.class);
+
+            // 2. NULL CHECK: Ensure parsing worked before accessing methods
+            if (rs == null || rs.getUser() == null) {
+                System.err.println("❌ Critical Error: LoginResponse or User data is missing from server!");
+                return;
+            }
+
             User loggedInUser = rs.getUser(); 
             ClientSession.login(loggedInUser);
             ClientSession.setLoginResponse(rs);
@@ -70,7 +82,9 @@ public class LoginController implements UIController {
         });
 
         WebSocketClient.addListener(ActionType.REGISTER_SUCCESS, (payload) -> {
-            LoginResponse rs = (LoginResponse) payload;
+            String jsonString = gson.toJson(payload); 
+            LoginResponse rs = gson.fromJson(jsonString, LoginResponse.class);
+
             User loggedInUser = rs.getUser(); 
             ClientSession.login(loggedInUser);
             ClientSession.setLoginResponse((LoginResponse) payload);

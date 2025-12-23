@@ -2,14 +2,11 @@ package cs102groupproject.Server;
 
 import jakarta.websocket.Session;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Map;
 
-import cs102groupproject.SharedObjects.ActionType;
-import cs102groupproject.SharedObjects.GroupSession;
-import cs102groupproject.SharedObjects.ProtocolMessage;
-import cs102groupproject.SharedObjects.User;
-import cs102groupproject.SharedObjects.UserCredentials;
-import cs102groupproject.SharedObjects.VerificationCode;
+import cs102groupproject.SharedObjects.*;
 import cs102groupproject.Server.AuthService;
 import cs102groupproject.Server.SessionService;
 
@@ -61,12 +58,12 @@ public class ClientConnection {
                 
             case SEND_PRIVATE_MESSAGE: {
                 ChatMessage chatMsg = message.getPayloadAs(ChatMessage.class);
-                ClientConnection receiverConn = sessionManager.getConnection(chatMsg.getReceiverId());
+                ClientConnection receiverConn = sessionManager.getConnection(chatMsg.getReceiverID());
                 if (receiverConn != null) {
                     receiverConn.send(new ProtocolMessage(ActionType.RECEIVE_PRIVATE_MESSAGE, chatMsg));
                 } 
                 else {
-                    System.out.println("The receiver is offline: " + chatMsg.getReceiverId());
+                    System.out.println("The receiver is offline: " + chatMsg.getReceiverID());
                 }
                 break;
             }

@@ -342,10 +342,10 @@ public class DBManager {
      * @param userID
      * @return
      */
-    public boolean addHabit(String name, int userID) {
+    public Habit addHabit(String name, int userID) {
         String sqlCommand = "INSERT INTO habits(name, user_id) VALUES(?, ?)";
-
-        return executeSqlCommand(sqlCommand, name, userID);
+        int id = insertAndGetID(sqlCommand, name, userID);
+        return getHabitByID(id);
     }
 
     /**

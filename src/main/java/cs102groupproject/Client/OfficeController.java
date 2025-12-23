@@ -1,4 +1,4 @@
-// package cs102groupproject;
+
 
 // import javafx.fxml.FXML;
 // import javafx.scene.image.ImageView;
@@ -108,4 +108,6 @@ public class OfficeController {
     private void doorClicked() {
         System.out.println("Door clicked!");
     }
+
+
 }

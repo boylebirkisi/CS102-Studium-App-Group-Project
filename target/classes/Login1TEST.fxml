@@ -14,26 +14,15 @@
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="490.0" layoutX="-6.0" layoutY="-9.0" stroke="BLACK" strokeType="INSIDE" width="650.0" />
       <ImageView fitHeight="411.0" fitWidth="418.0" layoutX="104.0" layoutY="-80.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@/images/logo.png" />
+            <Image url="@images/logo.png" />
          </image>
       </ImageView>
-      <TextField
-            fx:id="usernameField"
-            layoutX="221.0"
-            layoutY="202.0"
-            promptText="Username"
-        />
+      <TextField fx:id="usernameField" layoutX="221.0" layoutY="202.0" promptText="Username" />
 
-        <TextField
-            fx:id="passwordField"
-            layoutX="221.0"
-            layoutY="231.0"
-            promptText="Password"
-            onAction="#handleEnterLogin"
-        />
+        <TextField fx:id="passwordField" layoutX="221.0" layoutY="231.0" onAction="#handleEnterLogin" promptText="Password" />
       <!-- <TextField layoutX="221.0" layoutY="202.0" />
       <TextField layoutX="221.0" layoutY="231.0" onAction="#handleLoginButton"/> -->
-      <Text layoutX="307.0" layoutY="269.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Forget Password?" wrappingWidth="101.108154296875" onMouseClicked="#handleForgetPassword">
+      <Text layoutX="307.0" layoutY="269.0" onMouseClicked="#handleForgetPassword" strokeType="OUTSIDE" strokeWidth="0.0" text="Forgot Password?" wrappingWidth="101.108154296875">
          <font>
             <Font size="10.0" />
          </font>
@@ -43,12 +32,12 @@
             <Font size="14.0" />
          </font>
       </Text>
-      <Button layoutX="205.0" layoutY="294.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="195.0" text="Login with your Google Account" onAction="#handleLoginWithGoogleButton">
+      <Button layoutX="205.0" layoutY="294.0" mnemonicParsing="false" onAction="#handleLoginWithGoogleButton" prefHeight="32.0" prefWidth="195.0" text="Login with your Google Account">
          <font>
             <Font size="10.0" />
          </font>
       </Button>
-      <Button layoutX="276.0" layoutY="363.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="58.0" text="Register" onAction="#handleRegisterButton">
+      <Button layoutX="276.0" layoutY="363.0" mnemonicParsing="false" onAction="#handleRegisterButton" prefHeight="27.0" prefWidth="58.0" text="Register">
          <font>
             <Font size="10.0" />
          </font>

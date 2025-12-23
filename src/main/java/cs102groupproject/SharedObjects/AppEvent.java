@@ -50,6 +50,7 @@ public class AppEvent extends TransferObject {
     public int getUserId() {return userId;}
     public int getImportance() {return importance;}
     public int getId() {return id;}
+    public void setId(int id) {this.id = id;}
     public String getGoogleCaldendarID() {return googleCaldendarID;}
 
     public boolean getIsExpired() 

@@ -43,7 +43,11 @@ public class AuthService {
         }
     }
 
-    // Google Register
+    /**
+     * Register with google
+     * @param credentials
+     * @return
+     */
     public static User registerWithGoogle(UserCredentials credentials) {
         String accessToken = credentials.getAccessToken();
 

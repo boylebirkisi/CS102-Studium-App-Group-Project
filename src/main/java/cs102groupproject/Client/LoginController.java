@@ -28,14 +28,12 @@ public class LoginController{
     @FXML
     private TextField codeField;
 
-    private String accessToken;
-    private String email;
+    private static String accessToken = null;
+    private static String email = null;
     private static final AuthService manager = new AuthService();
 
     @FXML
     public void initialize() {
-        this.email = null;
-        this.accessToken = null;
 
         WebSocketClient.addListener(ActionType.LOGIN_SUCCESS, (payload) -> {
             
@@ -195,14 +193,19 @@ public class LoginController{
                 Credential credential = oauthClient.authenticate();
     
                 // Extracts access token from Credential
+                
                 String accessToken = credential.getAccessToken();
                 if (accessToken == null) {
-                        throw new RuntimeException("No access token received");
+                    throw new RuntimeException("No access token received");
                 }
-                
-                this.accessToken = accessToken;
-                App.setRoot("Avatar");
-                GoogleCalendarAPI calendarAPI = new GoogleCalendarAPI(credential);
+
+                Platform.runLater(() -> {
+                    this.accessToken = accessToken; 
+                        try {
+                            App.setRoot("Avatar"); 
+                        } catch (Exception e) { e.printStackTrace();
+                    }
+                });
         
             } catch (Exception e) {
                 e.printStackTrace();
@@ -221,7 +224,7 @@ public class LoginController{
         String password = passwordField.getText();
         String department = departmentField.getText();
 
-        System.out.println(accessToken);
+        System.out.println("ACCESSTOKEN: " + accessToken);
         ProtocolMessage msg = null;
         if (accessToken == null) {
             msg = new ProtocolMessage(

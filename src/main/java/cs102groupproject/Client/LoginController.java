@@ -1,5 +1,6 @@
 package cs102groupproject.Client;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 import com.google.api.client.auth.oauth2.Credential;
@@ -7,6 +8,7 @@ import com.google.api.client.auth.oauth2.Credential;
 import cs102groupproject.App;
 import cs102groupproject.Server.AuthService;
 import cs102groupproject.SharedObjects.ActionType;
+import cs102groupproject.SharedObjects.AppEvent;
 import cs102groupproject.SharedObjects.ProtocolMessage;
 import cs102groupproject.SharedObjects.User;
 import cs102groupproject.SharedObjects.UserCredentials;
@@ -150,6 +152,8 @@ public class LoginController{
                 );
 
                 WebSocketClient.send(msg);
+
+                System.out.println("Event create lala");
         
             } catch (Exception e) {
                 e.printStackTrace();

@@ -1,29 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx/17"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="cs102groupproject.SidePanelController"
-      prefWidth="140"
-      style="-fx-background-color: #ECECEC;">
+<VBox
+    xmlns="http://javafx.com/javafx/17"
+    xmlns:fx="http://javafx.com/fxml/1"
+    fx:controller="cs102groupproject.SidePanelController"
+    spacing="10"
+    prefWidth="250"
+    style="-fx-background-color: #2c2f33; -fx-padding: 10;">
 
+    <!-- TAB BUTTONS -->
     <HBox spacing="5">
         <Button text="Market" onAction="#showMarket"/>
         <Button text="Storage" onAction="#showStorage"/>
+        <Button text="Sessions" onAction="#showSessions"/>
     </HBox>
 
-    <Separator/>
+    <!-- CONTENT -->
+    <StackPane fx:id="contentArea" prefHeight="600">
 
-    <ScrollPane fitToWidth="true">
-        <content>
-            <VBox fx:id="contentBox" spacing="5"/>
-        </content>
-    </ScrollPane>
+        <fx:include fx:id="marketView" source="Market.fxml"/>
+        <fx:include fx:id="storageView" source="Storage.fxml"/>
+        <fx:include fx:id="sessionView" source="SessionPanel.fxml"/>
+
+    </StackPane>
 
 </VBox>
 

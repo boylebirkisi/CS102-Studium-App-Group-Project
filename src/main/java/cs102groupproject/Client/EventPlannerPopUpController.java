@@ -13,9 +13,8 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 
-public class EventPlannerPopUpController {
+public class EventPlannerPopUpController implements UIController {
     PlannerController ownerController;
-    ClientSession manager;
     @FXML
     private TextField eventNameTextField;
     @FXML
@@ -42,10 +41,9 @@ public class EventPlannerPopUpController {
         });
     }
 
-    public void setFields(PlannerController ownerController, ClientSession manager)
+    public void setFields(PlannerController ownerController)
     {
         this.ownerController = ownerController;
-        this.manager = manager;
     }
 
     @FXML

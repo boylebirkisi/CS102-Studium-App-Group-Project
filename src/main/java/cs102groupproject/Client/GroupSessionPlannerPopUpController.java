@@ -2,8 +2,6 @@ package cs102groupproject.Client;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import cs102groupproject.SharedObjects.ActionType;
 import cs102groupproject.SharedObjects.GroupSession;
@@ -18,10 +16,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 
-public class GroupSessionPlannerPopUpController {
-
+public class GroupSessionPlannerPopUpController implements UIController {
     private SocializationController ownerController;
-
     @FXML
     private TextField sessionNameTextField;
     @FXML

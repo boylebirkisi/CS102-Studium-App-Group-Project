@@ -45,20 +45,17 @@ public class ClientConnection {
 
             //*********test case************* 
             case DEV_LOGIN: {
-                Map<?, ?> payload = (Map<?, ?>) message.getPayload();
-                String username = (String) payload.get("username");
+                UserCredentials credentials = message.getPayloadAs(UserCredentials.class);
 
-                // Fake auth (TEST AMAÇLI)  eskiden this.userId = "dev-" + username;  idi ama int e çevirdik böyle bırakıyorum o yüzden 
-                int uId = 123;
-
-                System.out.println("✅ DEV_LOGIN success, userId = " + uId);
+                User user = AuthService.login(credentials);
 
                 send(new ProtocolMessage(
                         ActionType.LOGIN_SUCCESS,
-                        uId
+                        user
                 ));
                 break;
             }
+
             case START_GROUP_SESSION: {
                 // GroupSession session =
                 //         sessionService.createGroupSession(this);
@@ -86,10 +83,10 @@ public class ClientConnection {
             }
 
             case LOGIN_WITH_GOOGLE: {
-                Map<?, ?> payload = (Map<?, ?>) message.getPayload();
-                String token = payload.get("accessToken").toString();
+                String token = message.getPayloadAs(String.class);
 
-                User user = AuthService.registerWithGoogle(token);
+                User user = AuthService.loginWithGoogle(token);
+
                 if (user == null) {
                     sendError("LOGIN_WITH_GOOGLE failed");
                     return;
@@ -105,16 +102,34 @@ public class ClientConnection {
             }
 
             case REGISTER: {
-                Map<?, ?> payload = (Map<?, ?>) message.getPayload();
-                UserCredentials credentials = (UserCredentials) payload.get("credentials");
+                UserCredentials credentials = message.getPayloadAs(UserCredentials.class);
 
-                //User user = AuthService.register(credentials);
+                User user = AuthService.register(credentials);
+
+                if (user != null) {
+                    send(new ProtocolMessage(
+                        ActionType.REGISTER_SUCCESS,
+                        user
+                    ));
+                }
+                break;
+            }
+
+            case REGISTER_WITH_GOOGLE: {
+                UserCredentials credentials = message.getPayloadAs(UserCredentials.class);
+
+                User user = AuthService.registerWithGoogle(credentials);
+                if (user != null) {
+                    send(new ProtocolMessage(
+                        ActionType.REGISTER_SUCCESS,
+                        user
+                    ));
+                }
                 break;
             }
 
             case SEND_VERIFICATION_CODE: {
-                Map<?, ?> payload = (Map<?, ?>) message.getPayload();
-                String email = payload.get("email").toString();
+                String email = message.getPayloadAs(String.class);
 
                 VerificationCode verificationCode = AuthService.sendVerificationCode(email);
                 if (verificationCode == null) {
@@ -122,12 +137,27 @@ public class ClientConnection {
                     return;
                 }
 
+                // We do not need to inform client for this
                 System.out.println("✅ Verification code sent to " + email);
-
-                send(new ProtocolMessage(ActionType.VERIFY_CODE, 
-                    verificationCode
-                ));
                 break;
+            }
+
+            case VERIFY_CODE: {
+                UserCredentials credentials = message.getPayloadAs(UserCredentials.class);
+                String email = credentials.getUsername();
+                String code = credentials.getPassword();
+
+                boolean success = AuthService.verifyCode(email, code);
+
+                if (success) {
+                    send(new ProtocolMessage(
+                        ActionType.CODE_SUCCESS, 
+                        null));
+                } else {
+                    send(new ProtocolMessage(
+                        ActionType.CODE_FAILURE, 
+                        null));
+                }
             }
             default: sendError("Unknown action");
         }

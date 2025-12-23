@@ -72,7 +72,8 @@ public class GoogleCalendarAPI {
         DateTime end = new DateTime(endMillis);
 
         Event googleEvent = new Event()
-            .setDescription(event.getName())
+            .setSummary(event.getName())
+            .setDescription("Created via Studium")
             .setStart(new EventDateTime().setDateTime(start).setTimeZone(ZoneId.systemDefault().toString()))
             .setEnd(new EventDateTime().setDateTime(end).setTimeZone(ZoneId.systemDefault().toString()));
 

@@ -8,9 +8,11 @@ import java.util.ArrayList;
 public class LoginResponse {
     private User user;
     private List<User> friends;
+    private List<User> allUsers;
     private List<Notification> notifications;
     private List<ChatMessage> messages;
     private List<AppEvent> eventsOfUser;
+    private List<Task> tasksOfUser;
     private List<Habit> habits;
     private List<Session> individualSessions;
 
@@ -34,14 +36,16 @@ public class LoginResponse {
      * @param habits
      * @param individualSessions
      */
-    public LoginResponse(User user, List<User> friends, List<Notification> notifications, 
-                         List<ChatMessage> messages, List<AppEvent> eventsOfUser, 
+    public LoginResponse(User user, List<User> friends, List<User> allUsers, List<Notification> notifications, 
+                         List<ChatMessage> messages, List<AppEvent> eventsOfUser, List<Task> tasksOfUser,
                          List<Habit> habits, List<Session> individualSessions) {
         this.user = user;
         this.friends = friends;
+        this.allUsers = allUsers;
         this.notifications = notifications;
         this.messages = messages;
         this.eventsOfUser = eventsOfUser;
+        this.tasksOfUser = tasksOfUser;
         this.habits = habits;
         this.individualSessions = individualSessions;
     }
@@ -68,4 +72,22 @@ public class LoginResponse {
 
     public List<Session> getIndividualSessions() { return individualSessions; }
     public void setIndividualSessions(List<Session> individualSessions) { this.individualSessions = individualSessions; }
+
+    public List<Task> getTasksOfUser() {
+        return tasksOfUser;
+    }
+
+    public void setTasksOfUser(List<Task> tasksOfUser) {
+        this.tasksOfUser = tasksOfUser;
+    }
+
+    public List<User> getAllUsers() {
+        return allUsers;
+    }
+
+    public void setAllUsers(List<User> allUsers) {
+        this.allUsers = allUsers;
+    }
+    
+
 }

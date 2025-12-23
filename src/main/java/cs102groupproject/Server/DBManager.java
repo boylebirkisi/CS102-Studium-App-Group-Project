@@ -752,6 +752,51 @@ public class DBManager {
     }
 
     /**
+     * Inserts a new ChatMesssage.
+     * @param senderID
+     * @param receiverID
+     * @param text
+     * @param timestamp
+     * @return
+     */
+    public int insertChatMessage(int senderID, int receiverID, String text, LocalDateTime timestamp) {
+        String sqlCommand = "INSERT INTO chat_messages (sender_id, receiver_id, message_text, timestamp)" +
+                            "VALUES (?, ?, ?, ?)";
+
+        return insertAndGetID(sqlCommand, senderID, receiverID, text, timestamp);        
+    }
+
+    public List<ChatMessage> getChatMessages(int userID) {
+        String sqlCommand = "SELECT * FROM chat_messages WHERE sender_id = ? OR receiver_id = ? ORDER BY timestamp ASC";
+        List<ChatMessage> messages = new ArrayList<>();
+
+        try (Connection conn = connect(); 
+         PreparedStatement pstmt = conn.prepareStatement(sqlCommand)) {
+
+        if (conn == null) return messages; 
+        
+        pstmt.setInt(1, userID);
+        pstmt.setInt(2, userID);
+
+        try (ResultSet rs = pstmt.executeQuery()) {
+            while (rs.next()) {
+                // Pull the actual data from the database columns
+                int senderId = rs.getInt("sender_id");
+                int receiverId = rs.getInt("receiver_id");
+                String content = rs.getString("message_text"); // Adjust column name to match your DB
+                long timestamp = rs.getLong("timestamp");
+
+                // Create the object using the database values
+                messages.add(new ChatMessage(senderId, receiverId, content, timestamp));
+            }
+        }
+        } catch (SQLException e) {
+            System.err.println("Database operation failed: " + e.getMessage());
+        }
+        return messages;
+    }
+
+    /**
      * Get object by SQL command.
      * @param sqlCommand
      * @return

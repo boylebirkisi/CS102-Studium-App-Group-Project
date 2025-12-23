@@ -6,7 +6,7 @@
 
 <Pane xmlns="http://javafx.com/javafx/17"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="cs102groupproject.StorageController"
+      fx:controller="cs102groupproject.Client.StorageController"
       prefWidth="600"
       prefHeight="400"
       style="-fx-background-color: #ECECEC;">

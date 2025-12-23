@@ -2,11 +2,13 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 
 <VBox
     xmlns="http://javafx.com/javafx/17"
     xmlns:fx="http://javafx.com/fxml/1"
-    fx:controller="cs102groupproject.SidePanelController"
+    fx:controller="cs102groupproject.Client.SidePanelController"
     spacing="10"
     prefWidth="250"
     style="-fx-background-color: #2c2f33; -fx-padding: 10;">

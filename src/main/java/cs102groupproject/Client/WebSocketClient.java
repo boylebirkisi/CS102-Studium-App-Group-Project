@@ -78,10 +78,7 @@ public class WebSocketClient {
         }
     }
 
-
     public static boolean isConnected() {
         return session != null && session.isOpen();
     }
-
-
 }

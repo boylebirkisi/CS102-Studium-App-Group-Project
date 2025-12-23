@@ -1,13 +1,14 @@
 package cs102groupproject.SharedObjects;
 
+import com.fatboyindustrial.gsonjavatime.Converters;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * Represents a message exchanged between client and server.
  */
 public class ProtocolMessage {
-
-    private static final Gson gson = new Gson();
+    private static final Gson gson = Converters.registerAll(new GsonBuilder()).create();
 
     private ActionType action;
     private Object payload;

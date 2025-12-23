@@ -152,10 +152,63 @@ public class AuthService {
     }
 
     public LoginResponse loginResponse(int userId, User user) {
-        LoginResponse rs = new LoginResponse(user, dbManager.getFriends(userId), dbManager.getAllUsers(),dbManager.getAllNotifications(), dbManager.getChatMessages(userId),
-                                            dbManager.getAllEvents(userId), dbManager.getAllTasks(userId), dbManager.getAllHabits(userId), dbManager.getAllIndividualSessions(userId));
-        
+    System.out.println("\n--- Starting LoginResponse Construction for User ID: " + userId + " ---");
+
+    try {
+        System.out.print("1/9 Fetching Friends... ");
+        List<User> friends = dbManager.getFriends(userId);
+        System.out.println("Done (" + friends.size() + " found)");
+
+        System.out.print("2/9 Fetching All Users... ");
+        List<User> allUsers = dbManager.getAllUsers();
+        System.out.println("Done (" + allUsers.size() + " found)");
+
+        System.out.print("3/9 Fetching Notifications... ");
+        List<Notification> notifications = dbManager.getAllNotifications();
+        System.out.println("Done");
+
+        System.out.print("4/9 Fetching Chat Messages... ");
+        List<ChatMessage> messages = dbManager.getChatMessages(userId);
+        System.out.println("Done");
+
+        System.out.print("5/9 Fetching Events... ");
+        List<AppEvent> events = dbManager.getAllEvents(userId);
+        System.out.println("Done");
+
+        System.out.print("6/9 Fetching Tasks... ");
+        List<Task> tasks = dbManager.getAllTasks(userId);
+        System.out.println("Done");
+
+        System.out.print("7/9 Fetching Habits... ");
+        List<Habit> habits = dbManager.getAllHabits(userId);
+        System.out.println("Done");
+
+        System.out.print("8/9 Fetching Sessions... ");
+        List<Session> sessions = dbManager.getAllIndividualSessions(userId);
+        System.out.println("Done");
+
+        System.out.println("9/9 Creating final LoginResponse object...");
+        LoginResponse rs = new LoginResponse(
+            user, 
+            friends, 
+            allUsers, 
+            notifications, 
+            messages, 
+            events, 
+            tasks, 
+            habits, 
+            sessions
+        );
+
+        System.out.println("--- LoginResponse Successfully Built ---\n");
         return rs;
+
+    } catch (Exception e) {
+        System.err.println("\n❌ CRITICAL FAILURE during LoginResponse construction!");
+        System.err.println("Error Message: " + e.getMessage());
+        e.printStackTrace();
+        return null;
     }
+}
 
 }

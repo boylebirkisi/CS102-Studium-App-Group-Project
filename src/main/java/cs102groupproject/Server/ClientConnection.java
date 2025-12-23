@@ -47,12 +47,23 @@ public class ClientConnection {
             //*********test case************* 
             case DEV_LOGIN: {
                 UserCredentials credentials = message.getPayloadAs(UserCredentials.class);
-
                 User user = AuthService.login(credentials);
 
+                if (user == null) {
+                    sendError("Developer Login failed: Invalid credentials."); // Fix the text here
+                    return;
+                }
+
+                this.loggedInUser = user;
+                this.userId = user.getId();
+                sessionManager.login(user.getId(), this);
+
+                LoginResponse loginResponse = authService.loginResponse(userId, user);
+
+                // DAHA EKLENECEK ÇOK ŞEY VAR (BÜTÜN USERLAR; SESSIONLAR
                 send(new ProtocolMessage(
                         ActionType.LOGIN_SUCCESS,
-                        user
+                        loginResponse
                 ));
                 break;
             }
@@ -247,6 +258,7 @@ public class ClientConnection {
                         ActionType.CODE_FAILURE, 
                         null));
                 }
+                break;
             }
             default: sendError("Unknown action");
         }

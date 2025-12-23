@@ -27,7 +27,6 @@ cs102groupproject\SharedObjects\Task.class
 cs102groupproject\Client\PlannerController.class
 cs102groupproject\Server\PasswordHasher.class
 cs102groupproject\PrimaryController.class
-cs102groupproject\Client\SessionManager.class
 cs102groupproject\Client\WebSocketClient$1.class
 cs102groupproject\SharedObjects\ChatMessage.class
 cs102groupproject\SharedObjects\ProtocolMessage.class

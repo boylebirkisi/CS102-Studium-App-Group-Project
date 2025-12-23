@@ -104,9 +104,9 @@
                               <Insets right="10.0" />
                            </padding>
                         </HBox>
-                        <HBox fx:id="searchParameters" alignment="CENTER_LEFT" prefHeight="32.0" prefWidth="312.0">
+                        <HBox fx:id="searchParameters" alignment="CENTER_LEFT" prefHeight="31.0" prefWidth="322.0">
                            <children>
-                              <HBox fx:id="userSearchParameters" alignment="CENTER">
+                              <HBox fx:id="userSearchParameters" alignment="CENTER" prefHeight="31.0" prefWidth="316.0" style="-fx-managed: true;">
                                  <children>
                                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Name: " />
                                     <TextField fx:id="userNameTextField" prefHeight="26.0" prefWidth="74.0" promptText="______" />
@@ -114,12 +114,12 @@
                                     <TextField fx:id="departmentTextField" prefHeight="26.0" prefWidth="74.0" promptText="______" />
                                  </children>
                               </HBox>
-                              <HBox fx:id="sessionParameters" alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                              <HBox fx:id="sessionSearchParameters" alignment="CENTER" prefHeight="31.0" prefWidth="384.0" style="-fx-managed: false;" visible="false">
                                  <children>
                                     <CheckBox fx:id="aboutToStartCheckBox" mnemonicParsing="false" text="About to start" />
                                     <CheckBox fx:id="hasStartedCheckBox" mnemonicParsing="false" text="Has started" />
                                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Name: " />
-                                    <TextField fx:id="sessionNameTextField" promptText="______" />
+                                    <TextField fx:id="sessionNameTextField" prefHeight="26.0" prefWidth="87.0" promptText="______" />
                                  </children>
                               </HBox>
                            </children>

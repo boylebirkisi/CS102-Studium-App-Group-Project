@@ -18,7 +18,6 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -86,7 +85,7 @@ public class SocializationController {
     @FXML
     private void displayCurrencyEarned()
     {
-        currencyEarnedLabel.setText("You have earned " + manager.getCurrentUser().getGroupCurrency() + " so far. Study more, earn more.");
+        currencyEarnedLabel.setText("You have earned " + ClientSession.getCurrentUser().getGroupCurrency() + " so far. Study more, earn more.");
     }
 
     @FXML

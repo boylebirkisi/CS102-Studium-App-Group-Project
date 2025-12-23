@@ -4,15 +4,19 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+import cs102groupproject.App;
+import cs102groupproject.SharedObjects.ActionType;
 import cs102groupproject.SharedObjects.ChatMessage;
 import cs102groupproject.SharedObjects.Session;
 import cs102groupproject.SharedObjects.User;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContextMenu;
@@ -87,6 +91,31 @@ public class SocializationController implements UIController {
     @FXML
     private void initialize()
     {
+        WebSocketClient.addListener(ActionType.ERROR, (payload) -> {
+            String errorMessage = (String) payload;
+            
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("An error is detected.");
+                alert.setContentText(errorMessage);
+                alert.showAndWait();
+            });
+        });
+
+        WebSocketClient.addListener(ActionType.LOGIN_SUCCESS, (payload) -> {
+            User loggedInUser = (User) payload; 
+
+
+        });
+
+        WebSocketClient.addListener(ActionType.REGISTER_SUCCESS, (payload) -> {
+            User loggedInUser = (User) payload; 
+            
+            this.friendsList = new ArrayList<>();
+            this.chatMessages = new ArrayList<>();
+        });
+        
         friendsList = new ArrayList<>();
         User friend = new User(1, "Alice", "Computer Science", "A", "true", true, "String");
         friendsList.add(friend);

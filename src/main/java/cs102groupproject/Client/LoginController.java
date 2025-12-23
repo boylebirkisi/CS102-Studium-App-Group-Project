@@ -16,6 +16,7 @@ import cs102groupproject.SharedObjects.VerificationCode;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 
 public class LoginController implements UIController {
@@ -36,8 +37,6 @@ public class LoginController implements UIController {
 
     @FXML
     public void initialize() {
-        // this.email = null;
-        // this.accessToken = null;
 
         WebSocketClient.addListener(ActionType.ERROR, (payload) -> {
             String errorMessage = (String) payload;

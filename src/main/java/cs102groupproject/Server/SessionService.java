@@ -1,28 +1,32 @@
 package cs102groupproject.Server;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 import cs102groupproject.SharedObjects.GroupSession;
-import cs102groupproject.Server.ClientConnection;
-//not completed just trial 
+//not completed yet
 public class SessionService {
 
-    private static final Map<String, GroupSession> sessions = new ConcurrentHashMap<>();
+    private final DBManager db;
 
-    // public GroupSession createGroupSession(ClientConnection owner) {
-    //     GroupSession session = new GroupSession();
-    //     sessions.put(session.getId(), session);
-    //     session.addParticipant(owner);
-    //     return session;
-    // }
+    public SessionService(DBManager db) {
+        this.db = db;
+    }
 
-    // public GroupSession joinGroupSession(String id, ClientConnection client) {
-    //     GroupSession session = sessions.get(id);
-    //     if (session == null) {
-    //         throw new IllegalArgumentException("Session not found");
-    //     }
-    //     session.addParticipant(client);
-    //     return session;
-    // }
+    public GroupSession createGroupSession(GroupSession groupSession) {
+
+        int sessionId = db.addSession(groupSession);
+        if (sessionId == -1) {
+            throw new RuntimeException("Session insert failed");
+        }
+
+        groupSession.setId(sessionId);
+
+        // // group_sessions tablosu
+        // db.addGroupSession(sessionId, groupSession.isPublic());
+
+        // // owner participant olarak eklenmeli bence
+        // db.addSessionParticipant(sessionId, groupSession.getOwner().getId());
+
+        return groupSession;
+    }
 }

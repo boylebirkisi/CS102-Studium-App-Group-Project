@@ -2,14 +2,12 @@ package cs102groupproject.Server;
 
 import jakarta.websocket.Session;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-import cs102groupproject.SharedObjects.ActionType;
-import cs102groupproject.SharedObjects.GroupSession;
-import cs102groupproject.SharedObjects.ProtocolMessage;
-import cs102groupproject.SharedObjects.User;
-import cs102groupproject.SharedObjects.UserCredentials;
-import cs102groupproject.SharedObjects.VerificationCode;
+import cs102groupproject.SharedObjects.*;
 import cs102groupproject.Server.AuthService;
 import cs102groupproject.Server.SessionService;
 
@@ -61,21 +59,21 @@ public class ClientConnection {
                 
             case SEND_PRIVATE_MESSAGE: {
                 ChatMessage chatMsg = message.getPayloadAs(ChatMessage.class);
-                ClientConnection receiverConn = sessionManager.getConnection(chatMsg.getReceiverId());
+                ClientConnection receiverConn = sessionManager.getConnection(chatMsg.getReceiverID());
                 if (receiverConn != null) {
                     receiverConn.send(new ProtocolMessage(ActionType.RECEIVE_PRIVATE_MESSAGE, chatMsg));
                 } 
                 else {
-                    System.out.println("The receiver is offline: " + chatMsg.getReceiverId());
+                    System.out.println("The receiver is offline: " + chatMsg.getReceiverID());
                 }
                 break;
             }
 
             case CREATE_HABIT:{
                 Habit habit = message.getPayloadAs(Habit.class);
-                Habit saved = habitService.updateHabit(habit); 
+                //Habit saved = habitService.updateHabit(habit); 
                 
-                send(new ProtocolMessage(ActionType.HABIT_CREATED, saved));
+                send(new ProtocolMessage(ActionType.HABIT_CREATED, null));
                 break;
             }
                 
@@ -178,9 +176,24 @@ public class ClientConnection {
                 
                 System.out.println("✅ LOGIN_WITH_GOOGLE success, userId = " + user.getId());
 
+                List<User> friends = authService.getFriendsOfUser(userId);
+                List<Notification> notifications = authService.getAllNotifications(userId);
+                List<cs102groupproject.SharedObjects.Session> individualSessions= authService.getAllIndividualSessions(userId);
+                List<ChatMessage> messages = authService.getAllMessages(userId);
+                List<AppEvent> eventsOfUser = authService.getAllEvents(userId);
+                List<Habit> habits = authService.getAllHabits(userId);
+
+                // DAHA EKLENECEK ÇOK ŞEY VAR (BÜTÜN USERLAR; SESSIONLAR
                 send(new ProtocolMessage(
                         ActionType.LOGIN_SUCCESS,
-                        user
+                        Map.of("friends", friends,
+                                "notifications", notifications,
+                                "messages", messages,
+                                "eventsOfUser", eventsOfUser,
+                                "habits", habits,
+                                "individualSessions", individualSessions,
+                                "user", user
+                        )
                 ));
                 break;
             }

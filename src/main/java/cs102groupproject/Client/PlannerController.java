@@ -6,15 +6,19 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+import cs102groupproject.SharedObjects.ActionType;
 import cs102groupproject.SharedObjects.AppEvent;
 import cs102groupproject.SharedObjects.Habit;
+import cs102groupproject.SharedObjects.ProtocolMessage;
 import cs102groupproject.SharedObjects.Task;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -42,7 +46,7 @@ public class PlannerController implements UIController {
     @FXML
     private Label dateLabel;
     @FXML
-    private ComboBox<Habit> habitTrackerComboBox;
+    private ChoiceBox<Habit> habitTrackerComboBox;
     @FXML
     private Label calendarMonthLabel;
     @FXML
@@ -104,12 +108,25 @@ public class PlannerController implements UIController {
     }
 
     public void setFields(ArrayList<Habit> habits, ArrayList<AppEvent> events, ArrayList<Task> tasks) {
-        this.habits = habits;
-        this.events = events;
-        this.tasks = tasks;
-        refreshUI();
-        if (datePicker.getValue() == null)
-            {datePicker.setValue(LocalDate.now());}
+
+        this.habits = (habits != null) ? habits : new ArrayList<>();
+        this.events = (events != null) ? events : new ArrayList<>();
+        this.tasks = (tasks != null) ? tasks : new ArrayList<>();
+        
+        javafx.application.Platform.runLater(() -> {
+        // Check for nulls just in case fx:id is missing in FXML
+        if (datePicker != null) {
+            if (datePicker.getValue() == null) {
+                datePicker.setValue(LocalDate.now());
+            }
+        }
+        
+        if (habitTrackerComboBox != null) {
+            refreshUI();
+        } else {
+            System.err.println("Error: habitTrackerComboBox is null. Check fx:id in Planner.fxml");
+        }
+        });
     }
 
     private void refreshUI()

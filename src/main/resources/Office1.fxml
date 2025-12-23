@@ -68,7 +68,7 @@
 
     <!-- RIGHT SIDE PANEL -->
     <right>
-        <fx:include source="SidePanel.fxml"/>
+        <fx:include fx:id="sideDrawer" source="SidePanel.fxml"/>
     </right>
 
 </BorderPane>

@@ -41,7 +41,7 @@ public class OfficeController {
     private List<Pane> allZones;
 
     @FXML
-    private AnchorPane sideDrawer;
+    private Pane sideDrawer;
 
     private boolean sideOpen = false;
 

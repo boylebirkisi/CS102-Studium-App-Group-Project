@@ -35,6 +35,7 @@ public class LoginController{
     @FXML
     public void initialize() {
         this.email = null;
+        this.accessToken = null;
 
         WebSocketClient.addListener(ActionType.LOGIN_SUCCESS, (payload) -> {
             
@@ -117,9 +118,11 @@ public class LoginController{
         ProtocolMessage msg = new ProtocolMessage(ActionType.DEV_LOGIN, 
             new UserCredentials(
                 username,
+                null,
+                null,
                 password,
                 false,
-                "" // department is not needed for dev login
+                ""
             )
         );
 
@@ -177,32 +180,13 @@ public class LoginController{
             WebSocketClient.send(new ProtocolMessage(
                 ActionType.VERIFY_CODE,
                 // In order not to create a new object
-                new UserCredentials(email, codeEntered, true, "")
+                new UserCredentials(null, email, null, codeEntered, true, "")
             ));
         }
     }
 
     @FXML
-    public void handleRegistration() {
-        String username = usernameField.getText();
-        String password = passwordField.getText();
-        String department = departmentField.getText();
-
-        ProtocolMessage msg = new ProtocolMessage(
-            ActionType.REGISTER,
-            Map.of("credentials", new UserCredentials(
-                username,
-                password,
-                false,
-                department
-            ))
-        );
-
-        WebSocketClient.send(msg);
-    }  
-    
-    @FXML
-    public void registerWithGoogle() {
+    public void registerWithGoogleButton() {
         new Thread(() -> {
             try {
                 // Authenticates user with Google OAuth2
@@ -216,12 +200,8 @@ public class LoginController{
                         throw new RuntimeException("No access token received");
                 }
                 
-                ProtocolMessage msg = new ProtocolMessage(
-                        ActionType.LOGIN_WITH_GOOGLE,
-                        Map.of("accessToken", accessToken)
-                );
-
-                WebSocketClient.send(msg);
+                this.accessToken = accessToken;
+                App.setRoot("Avatar");
                 GoogleCalendarAPI calendarAPI = new GoogleCalendarAPI(credential);
         
             } catch (Exception e) {
@@ -229,4 +209,32 @@ public class LoginController{
             }
         }).start();
     }
+
+    //! AVATAR PAGE
+
+    @FXML
+    public void handleRegistration() {
+        if (usernameField.getText().isEmpty() || passwordField.getText().isEmpty() || departmentField.getText().isEmpty())
+            return;
+
+        String username = usernameField.getText();
+        String password = passwordField.getText();
+        String department = departmentField.getText();
+
+        System.out.println(accessToken);
+        ProtocolMessage msg = null;
+        if (accessToken == null) {
+            msg = new ProtocolMessage(
+                ActionType.REGISTER,
+                new UserCredentials(username, this.email, null, password, false, department)
+            );
+        } else {
+            msg = new ProtocolMessage(
+                ActionType.REGISTER_WITH_GOOGLE,
+                new UserCredentials(username, null, accessToken, password, false, department)
+            );
+        }
+
+        WebSocketClient.send(msg);
+    }  
 }

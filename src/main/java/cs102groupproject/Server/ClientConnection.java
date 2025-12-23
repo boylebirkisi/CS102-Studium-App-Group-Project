@@ -104,7 +104,27 @@ public class ClientConnection {
             case REGISTER: {
                 UserCredentials credentials = message.getPayloadAs(UserCredentials.class);
 
-                //User user = AuthService.register(credentials);
+                User user = AuthService.register(credentials);
+
+                if (user != null) {
+                    send(new ProtocolMessage(
+                        ActionType.REGISTER_SUCCESS,
+                        user
+                    ));
+                }
+                break;
+            }
+
+            case REGISTER_WITH_GOOGLE: {
+                UserCredentials credentials = message.getPayloadAs(UserCredentials.class);
+
+                User user = AuthService.registerWithGoogle(credentials);
+                if (user != null) {
+                    send(new ProtocolMessage(
+                        ActionType.REGISTER_SUCCESS,
+                        user
+                    ));
+                }
                 break;
             }
 
@@ -124,7 +144,7 @@ public class ClientConnection {
 
             case VERIFY_CODE: {
                 UserCredentials credentials = message.getPayloadAs(UserCredentials.class);
-                String email = credentials.getEmailOrUsername();
+                String email = credentials.getUsername();
                 String code = credentials.getPassword();
 
                 boolean success = AuthService.verifyCode(email, code);

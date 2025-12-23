@@ -2,6 +2,7 @@ package cs102groupproject.SharedObjects;
 
 public enum ActionType {
     REGISTER,
+    REGISTER_WITH_GOOGLE,
     REGISTER_SUCCESS,
     LOGIN_WITH_GOOGLE,
     LOGOUT,

@@ -68,12 +68,28 @@ public class ClientConnection {
                 }
                 break;
             }
-
-            case CREATE_HABIT:{
-                Habit habit = message.getPayloadAs(Habit.class);
-                //Habit saved = habitService.updateHabit(habit); 
+            case UPDATE_TASK: {
+                Task task = message.getPayloadAs(Task.class);
+                taskService.updateTask(task); 
                 
-                send(new ProtocolMessage(ActionType.HABIT_CREATED, null));
+                send(new ProtocolMessage(ActionType.TASK_UPDATED, task));
+                break;
+            }
+
+            case CREATE_TASK: {
+                Task task = message.getPayloadAs(Task.class);
+                Task savedTask = taskService.createTask(task); // DB'ye kaydet ve ID al
+                send(new ProtocolMessage(ActionType.TASK_CREATED, savedTask));
+                break;
+            }
+            case CREATE_HABIT: {
+                Habit habit = message.getPayloadAs(Habit.class);
+                try {
+                    Habit savedHabit = habitService.createHabit(habit);
+                    send(new ProtocolMessage(ActionType.HABIT_CREATED, savedHabit));
+                } catch (Exception e) {
+                    sendError("Habit created failed: " + e.getMessage());
+                }
                 break;
             }
                 

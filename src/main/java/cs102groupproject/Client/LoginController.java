@@ -37,8 +37,6 @@ public class LoginController{
 
     @FXML
     public void initialize() {
-        // this.email = null;
-        // this.accessToken = null;
 
         WebSocketClient.addListener(ActionType.ERROR, (payload) -> {
             String errorMessage = (String) payload;

@@ -21,7 +21,7 @@ public class HabitService {
     }
 
     public void updateHabit(Habit habit) {
-        db.updateHabitCompletionString(habit.getId(),habit.getCompletionString(), habit.isExpired());
+        //db.updateHabitCompletionString(habit.getId(),habit.getCompletionString(), habit.isExpired());
     }
     
 }

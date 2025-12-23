@@ -102,16 +102,14 @@ public class ClientConnection {
             }
 
             case REGISTER: {
-                Map<?, ?> payload = (Map<?, ?>) message.getPayload();
-                UserCredentials credentials = (UserCredentials) payload.get("credentials");
+                UserCredentials credentials = message.getPayloadAs(UserCredentials.class);
 
                 //User user = AuthService.register(credentials);
                 break;
             }
 
             case SEND_VERIFICATION_CODE: {
-                Map<?, ?> payload = (Map<?, ?>) message.getPayload();
-                String email = payload.get("email").toString();
+                String email = message.getPayloadAs(String.class);
 
                 VerificationCode verificationCode = AuthService.sendVerificationCode(email);
                 if (verificationCode == null) {
@@ -122,6 +120,24 @@ public class ClientConnection {
                 // We do not need to inform client for this
                 System.out.println("✅ Verification code sent to " + email);
                 break;
+            }
+
+            case VERIFY_CODE: {
+                UserCredentials credentials = message.getPayloadAs(UserCredentials.class);
+                String email = credentials.getEmailOrUsername();
+                String code = credentials.getPassword();
+
+                boolean success = AuthService.verifyCode(email, code);
+
+                if (success) {
+                    send(new ProtocolMessage(
+                        ActionType.CODE_SUCCESS, 
+                        null));
+                } else {
+                    send(new ProtocolMessage(
+                        ActionType.CODE_FAILURE, 
+                        null));
+                }
             }
             default: sendError("Unknown action");
         }

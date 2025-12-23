@@ -728,6 +728,28 @@ public class DBManager {
         return executeSqlCommand(sqlCommand, email, code, expiryTime);
     }
 
+    public VerificationCode getVerificationCode (String email) {
+        String sqlCommand = "SELECT * FROM verification_codes WHERE email = ?";
+
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sqlCommand)) {
+
+            if (conn == null) return null; 
+            
+            pstmt.setString(1, email);
+
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return new VerificationCode(rs.getString("stored_code"), rs.getString("email"), rs.getLong("expiry_time"));
+            } else {
+                return null; 
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Database operation failed: " + e.getMessage());
+            return null;
+        }
+    }
+
     /**
      * Get object by SQL command.
      * @param sqlCommand

@@ -13,17 +13,17 @@
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="420.0" layoutX="-6.0" layoutY="-9.0" stroke="BLACK" strokeType="INSIDE" width="615.0" />
       <ImageView fitHeight="411.0" fitWidth="418.0" layoutX="104.0" layoutY="-80.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@/images/logo.png" />
+            <Image url="@images/logo.png" />
          </image>
       </ImageView>
-      <TextField fx:id="emailField" layoutX="182.0" layoutY="217.0" prefHeight="26.0" prefWidth="225.0" />
-      <TextField fx:id="codeField" layoutX="217.0" layoutY="253.0" onAction="#verifyCode"/>
-      <Button fx:id="sendButton" layoutX="413.0" layoutY="217.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="65.0" text="Send Code" onAction="#handleSendCode">
+      <TextField fx:id="emailField" layoutX="182.0" layoutY="217.0" prefHeight="26.0" prefWidth="225.0" promptText="Enter Your Email" />
+      <TextField fx:id="codeField" layoutX="217.0" layoutY="253.0" onAction="#verifyCode" promptText="Enter Verification Code" />
+      <Button fx:id="sendButton" layoutX="413.0" layoutY="217.0" mnemonicParsing="false" onAction="#handleSendCode" prefHeight="27.0" prefWidth="120.0" text="Send Verification Code">
          <font>
             <Font size="10.0" />
          </font>
       </Button>
-      <Button fx:id="sendButton" layoutX="217.0" layoutY="273.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="65.0" text="Send Code" onAction="#registerWithGoogleButton">
+      <Button fx:id="sendButton" layoutX="239.0" layoutY="317.0" mnemonicParsing="false" onAction="#registerWithGoogleButton" prefHeight="27.0" prefWidth="110.0" text="Register With Google">
          <font>
             <Font size="10.0" />
          </font>

@@ -36,9 +36,9 @@ public class DBManager {
      * @param password The user's hashed password.
      * @return true if the insert was successful, false otherwise.
      */
-    public int insertUser(String name, String email, String password, String googleId) {
+    public int insertUser(String name, String email, String password, String googleId, String department) {
         // Use PreparedStatement for security (prevents SQL Injection)
-        String sqlQuery = "INSERT INTO users(username, email, password_hash, google_id) VALUES(?, ?, ?, ?)"; 
+        String sqlQuery = "INSERT INTO users(username, email, password_hash, google_id, department) VALUES(?, ?, ?, ?, ?)"; 
 
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sqlQuery)) {
 
@@ -48,6 +48,7 @@ public class DBManager {
             pstmt.setString(2, email);
             pstmt.setString(3, password);
             pstmt.setString(4, googleId);
+            pstmt.setString(5, department);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -728,6 +729,28 @@ public class DBManager {
         return executeSqlCommand(sqlCommand, email, code, expiryTime);
     }
 
+    public VerificationCode getVerificationCode (String email) {
+        String sqlCommand = "SELECT * FROM verification_codes WHERE email = ?";
+
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sqlCommand)) {
+
+            if (conn == null) return null; 
+            
+            pstmt.setString(1, email);
+
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return new VerificationCode(rs.getString("stored_code"), rs.getString("email"), rs.getLong("expiry_time"));
+            } else {
+                return null; 
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Database operation failed: " + e.getMessage());
+            return null;
+        }
+    }
+
     /**
      * Get object by SQL command.
      * @param sqlCommand
@@ -856,6 +879,6 @@ public class DBManager {
 
     public static void main(String[] args) {
         DBManager dbManager = new DBManager();
-    
+        
     }
 }

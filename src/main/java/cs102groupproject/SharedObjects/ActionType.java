@@ -2,10 +2,14 @@ package cs102groupproject.SharedObjects;
 
 public enum ActionType {
     REGISTER,
+    REGISTER_WITH_GOOGLE,
+    REGISTER_SUCCESS,
     LOGIN_WITH_GOOGLE,
     LOGOUT,
     SEND_VERIFICATION_CODE,
     VERIFY_CODE,
+    CODE_SUCCESS,
+    CODE_FAILURE,
     FETCH_DATA,
     UPDATE_DATA,
     DELETE_DATA,

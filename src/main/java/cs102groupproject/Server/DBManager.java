@@ -4,6 +4,7 @@ import cs102groupproject.SharedObjects.*;
 import javafx.scene.Group;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -232,6 +233,23 @@ public class DBManager {
     }
 
     /**
+     * Updates user's currency.
+     * @param userID
+     * @param currency
+     * @param isGroup
+     * @return
+     */
+    public boolean updateUserCurrency(int userID, int currency, boolean isGroup) {
+        String sqlCommand = "";
+        if (isGroup) {
+            sqlCommand = "UPDATE users SET group_currency = ? WHERE id = ?";
+        } else {
+            sqlCommand = "UPDATE users SET solo_currency = ? WHERE id = ?";
+        }
+        return executeSqlCommand(sqlCommand, currency, userID);
+    }
+
+    /**
      * Create a friendship between two users.
      * @param userID
      * @param friendID
@@ -413,10 +431,10 @@ public class DBManager {
      * @param googleCalendarID
      * @return
      */
-    public int addTask(String name, String color, int importance, int userId, String googleCalendarID) {
-        String sqlCommand = "INSERT INTO tasks(name, color, importance, user_id, google_calendar_id) VALUES(?, ?, ?, ?, ?)";
+    public int addTask(String name, String color, int importance, int userId, String googleCalendarID, LocalDate dueDate) {
+        String sqlCommand = "INSERT INTO tasks(name, color, importance, user_id, google_calendar_id, due_date) VALUES(?, ?, ?, ?, ?, *)";
 
-        return insertAndGetID(sqlCommand, name, color, importance, userId, googleCalendarID);
+        return insertAndGetID(sqlCommand, name, color, importance, userId, googleCalendarID, dueDate);
     }
 
     /**
@@ -452,18 +470,17 @@ public class DBManager {
 
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sqlCommand)) {
 
-            if (conn == null) return null; // Connection failed
+            if (conn == null) return null; 
             
             pstmt.setInt(1, taskID);
 
             ResultSet rs = pstmt.executeQuery();
-            // if (rs.next()) {
-            //     return new Task(rs.getString("name"), rs.getString("color"), rs.getInt("importance"),
-            //         rs.getInt("user_id"), rs.getInt("id"), rs.getString("google_calendar_id"), rs.getBoolean("is_completed"));
-            // } else {
-            //     return null; // No user found
-            // }
-            return null;
+            if (rs.next()) {
+                return new Task(rs.getString("name"), rs.getString("color"), rs.getInt("importance"),
+                    rs.getInt("user_id"), rs.getInt("id"), rs.getDate("due_date").toLocalDate() ,rs.getString("google_calendar_id"), rs.getBoolean("is_completed"));
+            } else {
+                return null; 
+            }
             
         } catch (SQLException e) {
             System.err.println("Database operation failed: " + e.getMessage());
@@ -484,11 +501,11 @@ public class DBManager {
             if (conn == null) return tasks; 
             
             ResultSet rs = stmt.executeQuery();
-            // while (rs.next()) {
-            //     Task task = new Task(rs.getString("name"), rs.getString("color"), rs.getInt("importance"),
-            //         rs.getInt("user_id"), rs.getInt("id"), rs.getString("google_calendar_id"), rs.getBoolean("is_completed"));
-            //     tasks.add(task);
-            // }
+            while (rs.next()) {
+                Task task = new Task(rs.getString("name"), rs.getString("color"), rs.getInt("importance"),
+                    rs.getInt("user_id"), rs.getInt("id"), rs.getDate("due_date").toLocalDate(), rs.getString("google_calendar_id"), rs.getBoolean("is_completed"));
+                tasks.add(task);
+            }
         } catch (SQLException e) {
             System.err.println("Database operation failed: " + e.getMessage());
         }
@@ -639,6 +656,11 @@ public class DBManager {
         return notifications;
     }
 
+    /**
+     * Add session to the db.
+     * @param session
+     * @return
+     */
     public int addSession(Session session) {
         String sqlCommand = "INSERT INTO sessions(owner_id, name, type, no, length, break_length, start_date) VALUES(?, ?, ?, ?, ?, ?, ?)";
 
@@ -646,6 +668,11 @@ public class DBManager {
             session.getNo(), session.getLength(), session.getBreakLength(), session.getStartDate());
     }
 
+    /**
+     * Get all indiviudal session of the user.
+     * @param userId
+     * @return
+     */
     public List<Session> getAllIndividualSessions(int userId) {
         String sqlCommand = "SELECT * FROM sessions WHERE owner_id = ?";
         List<Session> sessions = new ArrayList<>();
@@ -674,6 +701,11 @@ public class DBManager {
         return sessions;
     }
 
+    /**
+     * Get individual group session of a user.
+     * @param sessionID
+     * @return
+     */
     public Session getIndividualSessionByID(int sessionID) {
         String sqlCommand = "SELECT * FROM sessions WHERE id = ?";
 
@@ -696,6 +728,10 @@ public class DBManager {
         return null;
     }
 
+    /**
+     * Get all group sessions.
+     * @return
+     */
     public List<GroupSession> getAllGroupSessions() {
         String sqlCommand = "SELECT * FROM group_sessions";
         List<GroupSession> sessions = new ArrayList<>();
@@ -722,6 +758,13 @@ public class DBManager {
         return sessions;
     }
 
+    /**
+     * Insert verfication code, it it exists replace it.
+     * @param email
+     * @param code
+     * @param expiryTime
+     * @return
+     */
     public boolean insertVerificationCode(String email, String code, long expiryTime) {
         String sqlCommand = "INSERT INTO verification_codes (email, stored_code, expiry_time) " +
          "VALUES (?, ?, ?) ON CONFLICT (email) DO UPDATE SET " +
@@ -730,6 +773,11 @@ public class DBManager {
         return executeSqlCommand(sqlCommand, email, code, expiryTime);
     }
 
+    /**
+     * Get verification code.
+     * @param email
+     * @return
+     */
     public VerificationCode getVerificationCode (String email) {
         String sqlCommand = "SELECT * FROM verification_codes WHERE email = ?";
 

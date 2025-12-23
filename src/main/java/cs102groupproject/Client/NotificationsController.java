@@ -27,8 +27,10 @@ public class NotificationsController implements UIController {
     {
     }
 
-    public void setFields(ArrayList<Notification> notifications)
+    public void setFields(ArrayList<Notification> notifications, ArrayList<User> users, ArrayList<GroupSession> groupSessions)
     {
+        this.users = users;
+        this.groupSessions = groupSessions;
         this.notifications = notifications;
         drawNotifications();
     }

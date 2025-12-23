@@ -36,7 +36,7 @@ public class EmailService {
     /**
      * Generates a random 6-digit verification code.
      */
-    private static String generateRandomCode(int length) {
+    public static String generateRandomCode(int length) {
         Random random = new Random();
         int min = (int) Math.pow(10, length - 1); 
         int max = (int) Math.pow(10, length) - 1;  
@@ -96,14 +96,14 @@ public class EmailService {
      * Calculates the expiry time for the verificationCode.
      * @return
      */
-    private static long calculateExpiryTime() {
+    public static long calculateExpiryTime() {
         return System.currentTimeMillis() + EXPIRY_DURATION;
     }
 
     public VerificationCode createAndStoreVerificationCode(String email) {
         VerificationCode code = new VerificationCode(email, generateRandomCode(6), calculateExpiryTime());
-        int codeID = db.insertVerificationCode(email, code.getStoredCode(), code.getExpiryTime());
-        if (codeID == -1) {
+        boolean isInserted = db.insertVerificationCode(email, code.getStoredCode(), code.getExpiryTime());
+        if (!isInserted) {
             throw new RuntimeException("Failed to store verification code in the database.");
         }
         return code;

@@ -10,6 +10,7 @@ import cs102groupproject.SharedObjects.ActionType;
 import cs102groupproject.SharedObjects.ProtocolMessage;
 import cs102groupproject.SharedObjects.User;
 import cs102groupproject.SharedObjects.UserCredentials;
+import cs102groupproject.SharedObjects.VerificationCode;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -31,7 +32,25 @@ public class LoginController{
     private static final AuthService manager = new AuthService();
 
     @FXML
-    public void initialize() {}
+    public void initialize() {
+        WebSocketClient.addListener(ActionType.LOGIN_SUCCESS, (payload) -> {
+            
+            // 2. We are now "inside" the logic triggered by WebSocketClient
+            // 3. We can reach variables directly:
+            Platform.runLater(() -> {
+                    try {
+                        App.setRoot("secondary");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+        });
+
+        WebSocketClient.addListener(ActionType.VERIFY_CODE, (payload) -> {
+            
+            System.out.println("" + ((VerificationCode)payload).getStoredCode());
+        });
+    }
 
     @FXML
     public void handleRegisterButton() { 

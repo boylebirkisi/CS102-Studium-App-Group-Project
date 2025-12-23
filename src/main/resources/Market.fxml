@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
 
-<Pane xmlns="http://javafx.com/javafx/25"
+<VBox xmlns="http://javafx.com/javafx/17"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="cs102groupproject.MarketController"
-      prefWidth="600"
-      prefHeight="400"
+      spacing="10"
       style="-fx-background-color: blue;">
 
-    <Label fx:id="moneyLabel"
-           layoutX="20"
-           layoutY="60"
-           text="Solo: 0 | Group: 0"/>
+    <ScrollPane fitToWidth="true">
+        <content>
+            <VBox fx:id="marketBox"
+                  spacing="10"
+                  fillWidth="true"/>
+        </content>
+    </ScrollPane>
 
-    <Button text="Back"
-            layoutX="20"
-            layoutY="20"
-            onAction="#goBack"/>
-
-</Pane>
+</VBox>

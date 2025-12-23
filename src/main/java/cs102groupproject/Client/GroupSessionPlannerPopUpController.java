@@ -2,8 +2,6 @@ package cs102groupproject.Client;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import cs102groupproject.SharedObjects.ActionType;
 import cs102groupproject.SharedObjects.GroupSession;
@@ -36,10 +34,6 @@ public class GroupSessionPlannerPopUpController implements UIController {
     private DatePicker startDatePicker;
     @FXML
     private TextField timeTextField;
-
-    @FXML
-    private void initialize(){
-    }
 
     public void setOwnerController(SocializationController ownerController) {
         this.ownerController = ownerController;

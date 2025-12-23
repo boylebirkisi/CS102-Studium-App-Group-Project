@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import cs102groupproject.App;
 import cs102groupproject.SharedObjects.ActionType;
 import cs102groupproject.SharedObjects.ChatMessage;
+import cs102groupproject.SharedObjects.ProtocolMessage;
 import cs102groupproject.SharedObjects.Session;
 import cs102groupproject.SharedObjects.User;
 import javafx.application.Platform;
@@ -380,13 +381,13 @@ public class SocializationController implements UIController {
                         ChatMessage newMessage = new ChatMessage(ClientSession.getUserId(), user.getId(), messageText);
                         WebSocketClient.send(new ProtocolMessage(ActionType.SEND_PRIVATE_MESSAGE, newMessage));
                         chatMessages.add(newMessage);
-                        renderMessage(newMessage, true); // Mesajı sağa yasla (sender biziz)
-                        // Label messageTextNode = new Label(newMessage.getMessage());
-                        // LocalDateTime timestamp = newMessage.getTimestamp();
-                        // Label messageTime = new Label(timestamp.getHour() + ":" + timestamp.getMinute());
-                        // HBox messageBox = new HBox(messageTextNode, messageTime);
-                        // messageBox.setAlignment(Pos.CENTER_RIGHT);
-                        // chatVBox.getChildren().add(messageBox);
+                        //renderMessage(newMessage, true); // Mesajı sağa yasla (sender biziz)
+                        Label messageTextNode = new Label(newMessage.getMessage());
+                        LocalDateTime timestamp = newMessage.getTimestamp();
+                        Label messageTime = new Label(timestamp.getHour() + ":" + timestamp.getMinute());
+                        HBox messageBox = new HBox(messageTextNode, messageTime);
+                        messageBox.setAlignment(Pos.CENTER_RIGHT);
+                        chatVBox.getChildren().add(messageBox);
                         sendMessageTextField.clear();
                     }
                 );
@@ -394,26 +395,26 @@ public class SocializationController implements UIController {
                 {
                     if (msg.getSenderID() == user.getId() || msg.getReceiverID() == user.getId()) {
                         boolean isMine = (msg.getSenderID() == ClientSession.getUserId());
-                        renderMessage(msg, isMine);
+                        //renderMessage(msg, isMine);
                     }
-                    // if ((msg.getSenderID() == user.getId() && msg.getReceiverID() == ClientSession.getUserId()) ||
-                    //     (msg.getReceiverID() == user.getId() && msg.getSenderID() == ClientSession.getUserId()))
-                    // {
-                    //     Label messageText = new Label(msg.getMessage());
-                    //     LocalDateTime timestamp = msg.getTimestamp();
-                    //     Label messageTime = new Label(timestamp.getHour() + ":" + timestamp.getMinute());
-                    //     HBox messageBox = new HBox(messageText, messageTime);
-                    //     if (msg.getSenderID() == user.getId())
-                    //     {
-                    //         messageBox.setAlignment(Pos.CENTER_LEFT);
-                    //     }
-                    //     else
-                    //     {
-                    //         messageBox.setAlignment(Pos.CENTER_RIGHT);
-                    //     }
-                    //     chatVBox.getChildren().add(messageBox);
-                    //     sendMessageTextField.clear();
-                    // }
+                    if ((msg.getSenderID() == user.getId() && msg.getReceiverID() == ClientSession.getUserId()) ||
+                        (msg.getReceiverID() == user.getId() && msg.getSenderID() == ClientSession.getUserId()))
+                    {
+                        Label messageText = new Label(msg.getMessage());
+                        LocalDateTime timestamp = msg.getTimestamp();
+                        Label messageTime = new Label(timestamp.getHour() + ":" + timestamp.getMinute());
+                        HBox messageBox = new HBox(messageText, messageTime);
+                        if (msg.getSenderID() == user.getId())
+                        {
+                            messageBox.setAlignment(Pos.CENTER_LEFT);
+                        }
+                        else
+                        {
+                            messageBox.setAlignment(Pos.CENTER_RIGHT);
+                        }
+                        chatVBox.getChildren().add(messageBox);
+                        sendMessageTextField.clear();
+                    }
                 }
             });
             userBox.getChildren().add(sendMessageButton);

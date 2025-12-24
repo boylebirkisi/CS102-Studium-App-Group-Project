@@ -40,6 +40,7 @@ public class SocializationController implements UIController {
     ArrayList<User> onlineUsers;
     ArrayList<ChatMessage> chatMessages;
     ArrayList<User> allUsers;
+    ArrayList<Session> allGroupSessions;
     @FXML
     private Text currencyEarnedLabel;
     @FXML
@@ -162,11 +163,12 @@ public class SocializationController implements UIController {
     }
 
     public void setFields(ArrayList<User> friendsList, ArrayList<User> onlineUsers,
-        ArrayList<ChatMessage> chatMessages, ArrayList<User> allUsers) {
+        ArrayList<ChatMessage> chatMessages, ArrayList<User> allUsers, ArrayList<Session> allGroupSessions) {
         this.friendsList = friendsList;
         this.onlineUsers = onlineUsers;
         this.chatMessages = chatMessages;
         this.allUsers = allUsers;
+        this.allGroupSessions = allGroupSessions;
         if (onlineUsers == null) {
             this.onlineUsers = new ArrayList<>();
         }
@@ -179,7 +181,23 @@ public class SocializationController implements UIController {
         if (friendsList == null) {
             this.friendsList = new ArrayList<>();
         }
+        if (allGroupSessions == null) {
+            this.allGroupSessions = new ArrayList<>();
+        }
         refreshUI();
+    }
+
+    public void updateAllUsers(ArrayList<User> allUsers) {
+        this.allUsers = allUsers;
+    }
+    public void updateAllGroupSessions(ArrayList<Session> allGroupSessions) {
+        this.allGroupSessions = allGroupSessions;
+    }
+    public void updateOnlineUsers(ArrayList<User> onlineUsers) {
+        this.onlineUsers = onlineUsers;
+    }
+    public void updateFriendsList(ArrayList<User> friendsList) {
+        this.friendsList = friendsList;
     }
 
     private void refreshUI() {

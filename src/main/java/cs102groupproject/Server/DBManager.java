@@ -43,7 +43,7 @@ public class DBManager {
 
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sqlQuery)) {
 
-            if (conn == null) return -1; // Connection failed
+            if (conn == null) return -1; 
             
             pstmt.setString(1, name);
             pstmt.setString(2, email);
@@ -55,7 +55,7 @@ public class DBManager {
             if (rowsAffected > 0) {
             try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    return generatedKeys.getInt(1); // Returns the new INT id
+                    return generatedKeys.getInt(1); 
                 }
             }
         }
@@ -775,7 +775,7 @@ public class DBManager {
      */
     public VerificationCode getVerificationCode (String email) {
         String sqlCommand = "SELECT * FROM verification_codes WHERE email = ?";
-
+        System.out.println("Searching for: [" + email + "] in " + new java.io.File(".").getAbsolutePath());
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sqlCommand)) {
 
             if (conn == null) {

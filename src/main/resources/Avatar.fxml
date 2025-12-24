@@ -63,7 +63,7 @@
                   </StackPane>
                </children>
             </HBox>
-            <Button mnemonicParsing="false" onAction="#saveButtonFunction" prefHeight="45.0" prefWidth="180.0" style="-fx-background-radius: 25; -fx-background-color: #8D7F7A; -fx-text-fill: white;" text="Save">
+            <Button mnemonicParsing="false" onAction="#handleRegistration" prefHeight="45.0" prefWidth="180.0" style="-fx-background-radius: 25; -fx-background-color: #8D7F7A; -fx-text-fill: white;" text="Save">
                <font>
                   <Font size="16.0" />
                </font>

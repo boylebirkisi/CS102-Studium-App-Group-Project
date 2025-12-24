@@ -190,7 +190,7 @@
                      </toggleGroup>
                   </RadioButton>
                   <RadioButton fx:id="weeklyRadioButton" layoutX="55.0" layoutY="11.0" mnemonicParsing="false" onAction="#updateDate" text="Weekly" toggleGroup="$diffSortGroup" />
-                  <AnchorPane fx:id="paneWeekly" layoutY="104.0" prefHeight="558.0" prefWidth="820.0" style="-fx-background-color: E7D3A8; -fx-background-radius: 25;" visible="false">
+                  <AnchorPane fx:id="paneWeekly" layoutY="116.0" prefHeight="546.0" prefWidth="810.0" style="-fx-background-color: E7D3A8; -fx-background-radius: 25;" visible="false">
                      <children>
                         <Circle fill="#efe6d8" layoutX="726.0" layoutY="91.0" radius="45.0" stroke="BLACK" strokeType="INSIDE" />
                         <Circle fill="#ede5d800" layoutX="726.0" layoutY="91.0" radius="60.0" stroke="BLACK" strokeType="INSIDE" />
@@ -349,9 +349,9 @@
             </AnchorPane>
             <AnchorPane prefHeight="424.0" prefWidth="459.0" style="-fx-background-color: #E7D3A8; -fx-background-radius: 20;" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.rowSpan="2147483647" GridPane.vgrow="ALWAYS">
                <children>
-                  <ScrollPane prefHeight="352.0" prefWidth="368.0" stylesheets="@roundedScroll.css">
+                  <ScrollPane prefHeight="497.0" prefWidth="368.0" stylesheets="@roundedScroll.css">
                      <content>
-                        <VBox fx:id="eventsVBox" prefHeight="310.0" prefWidth="304.0" />
+                        <VBox fx:id="eventsVBox" prefHeight="453.0" prefWidth="304.0" />
                      </content>
                      <styleClass>
                         <String fx:value="rounded-scroll" />

@@ -5,6 +5,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import cs102groupproject.SharedObjects.ActionType;
 import cs102groupproject.SharedObjects.AppEvent;
@@ -229,64 +230,13 @@ public class PlannerController implements UIController {
             {sortByDate = true;}
         else
             {sortByDate = false;}
-        ArrayList<AppEvent> sortedEvents = new ArrayList<>();
         if (sortByDate)
         {
-            LocalDateTime smallestDate = LocalDateTime.now();
-            int index = -1;
-            while (sortedEvents.size() < events.size())
-            {
-                System.out.println("SortByDate sortedEvents size: " + sortedEvents.size() + ", events size: " + events.size());
-                if (events.size() == 1)
-                {
-                    sortedEvents.add(events.get(0));
-                    break;
-                }
-                for (int i = 0; i < events.size(); i++)
-                {
-                    if (sortedEvents.contains(events.get(i))) continue;
-                    for (int j = 0; j < events.size(); j++)
-                    {
-                        if (sortedEvents.contains(events.get(j))) continue;
-                        AppEvent event1 = events.get(i);
-                        AppEvent event2 = events.get(j);
-                        if ((event1.getStart().isBefore(event2.getStart()) || event1.getStart().isEqual(event2.getStart())) && (event1.getStart().isBefore(smallestDate) || event1.getStart().isEqual(smallestDate)))
-                        {
-                            smallestDate = event1.getStart();
-                            index = i;
-                        }
-                        else if ((event2.getStart().isBefore(event1.getStart()) || event2.getStart().isEqual(event1.getStart())) && (event2.getStart().isBefore(smallestDate) || event2.getStart().isEqual(smallestDate)))
-                        {
-                            smallestDate = event2.getStart();
-                            index = j;
-                        }
-                    }
-                    if (index != -1) {
-                        sortedEvents.add(events.get(index));
-                        index = -1;
-                    }
-                }
-            }
+            events.sort(Comparator.comparing(AppEvent::getStart));
         }
         else
         {
-            while (sortedEvents.size() < events.size())
-            {
-                System.out.println("SortByImportance sortedEvents size: " + sortedEvents.size() + ", events size: " + events.size());
-                int highestImportance = -1;
-                int index = -1;
-                for (int i = 0; i < events.size(); i++)
-                {
-                    if (sortedEvents.contains(events.get(i))) continue;
-                    AppEvent event1 = events.get(i);
-                    if (event1.getImportance() > highestImportance)
-                    {
-                        highestImportance = event1.getImportance();
-                        index = i;
-                    }
-                }
-                sortedEvents.add(events.get(index));
-            }
+           events.sort(Comparator.comparingInt(AppEvent::getImportance).reversed());
         }
         for (int i = 0; i < events.size(); i++)
         {

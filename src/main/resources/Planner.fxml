@@ -340,13 +340,9 @@
       <RadioButton fx:id="importanceRadioButton" layoutX="76.0" layoutY="291.0" mnemonicParsing="false" onAction="#populateEvents" text="Importance" toggleGroup="$sortGroup" />
       <RadioButton fx:id="dailyRadioButton" layoutX="335.0" layoutY="30.0" mnemonicParsing="false" onAction="#updateDate" selected="true" text="Daily">
          <toggleGroup>
-            <ToggleGroup fx:id="sortGroup1" />
+            <ToggleGroup fx:id="diffSortGroup" />
          </toggleGroup>
       </RadioButton>
-      <RadioButton fx:id="weeklyRadioButton" layoutX="382.0" layoutY="30.0" mnemonicParsing="false" onAction="#updateDate" text="Weekly">
-         <toggleGroup>
-            <ToggleGroup fx:id="sortGroup1" />
-         </toggleGroup>
-      </RadioButton>
+      <RadioButton fx:id="weeklyRadioButton" layoutX="382.0" layoutY="30.0" mnemonicParsing="false" onAction="#updateDate" text="Weekly" toggleGroup="$diffSortGroup" />
    </children>
 </AnchorPane>

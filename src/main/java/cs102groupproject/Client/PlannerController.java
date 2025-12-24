@@ -80,9 +80,6 @@ public class PlannerController implements UIController {
         Habit savedHabit = (Habit) payload;
         Platform.runLater(() -> {
                 // habits.add(savedHabit);
-                habitTrackerComboBox.getItems().add(savedHabit);
-                habitTrackerComboBox.setValue(savedHabit);
-                selectedHabit = savedHabit;
                 System.out.println("habit is added to the list after the approval of server");
             });
         });
@@ -108,7 +105,6 @@ public class PlannerController implements UIController {
                 updateDate();
             });
         });
-        System.out.println("FX thread: " + Platform.isFxApplicationThread() + " (in PlannerController initialize) ");
     }
 
     public void setFields(ArrayList<Habit> habits, ArrayList<AppEvent> events, ArrayList<Task> tasks) {
@@ -131,10 +127,9 @@ public class PlannerController implements UIController {
             System.err.println("Error: habitTrackerComboBox is null. Check fx:id in Planner.fxml");
         }
         });
-        System.out.println("FX thread: " + Platform.isFxApplicationThread() + " (in PlannerController setFields) ");
     }
 
-    private void refreshUI()
+    public void refreshUI()
     {
         updateHabitTracker(selectedHabit);
         populateEvents();
@@ -144,7 +139,7 @@ public class PlannerController implements UIController {
                 if (newVal != null)
                     {updateHabitTracker(newVal);}
             });
-        System.out.println("FX thread: " + Platform.isFxApplicationThread() + " (in PlannerController refreshUI) ");
+        updateDate();
     }
 
     private void updateHabitTracker(Habit habit)
@@ -179,7 +174,6 @@ public class PlannerController implements UIController {
         {
             ((CheckBox)habitCircleFlowPane.getChildren().get(i)).setSelected(habitCompletionArray[i]);;
         }
-        System.out.println("FX thread: " + Platform.isFxApplicationThread() + " (in PlannerController updateHabitTracker) ");
     }
 
     private void clearHabitTrackerCircles()
@@ -188,7 +182,6 @@ public class PlannerController implements UIController {
         {
             ((CheckBox)habitCircleFlowPane.getChildren().get(i)).setSelected(false);
         }
-        System.out.println("FX thread: " + Platform.isFxApplicationThread() + " (in PlannerController clearHabitTrackerCircles) ");
     }
 
     @FXML
@@ -201,7 +194,6 @@ public class PlannerController implements UIController {
         habitTrackerComboBox.setDisable(true);
         habitTrackerComboBox.setVisible(false);
         updateHabitTracker(selectedHabit);
-        System.out.println("FX thread: " + Platform.isFxApplicationThread() + " (in PlannerController addHabitCircleClicked) ");
     }
 
     @FXML
@@ -212,18 +204,19 @@ public class PlannerController implements UIController {
         Habit newHabit = new Habit(habitName, ClientSession.getUserId());
         habits.add(newHabit);
         habitTrackerComboBox.getItems().add(newHabit);
+        habitTrackerComboBox.setValue(newHabit);
+        selectedHabit = newHabit;
         habitTrackerComboBox.setDisable(false);
         habitTrackerComboBox.setVisible(true);
         addHabitTextField.setVisible(false);
         addHabitTextField.setDisable(true);
         addHabitTextField.clear();
-        System.out.println("FX thread: " + Platform.isFxApplicationThread() + " (in PlannerController addHabitTextFieldAction) ");
+        updateHabitTracker(newHabit);
     }
 
     @FXML
     private void populateEvents()
     {
-        System.out.println("entered FX thread: " + Platform.isFxApplicationThread() + " (in PlannerController populateEvents) ");
         eventsVBox.getChildren().clear();
         boolean sortByDate = true;
         if (dateRadioButton.isSelected())
@@ -248,7 +241,6 @@ public class PlannerController implements UIController {
             eventBox.setSpacing(15);
             eventsVBox.getChildren().add(eventBox);
         }
-        System.out.println("FX thread: " + Platform.isFxApplicationThread() + " (in PlannerController populateEvents) ");
     }
 
     @FXML
@@ -309,7 +301,6 @@ public class PlannerController implements UIController {
 
     private void drawTasksForDate(LocalDate date, boolean daily)
     {
-        System.out.println("entered FX thread: " + Platform.isFxApplicationThread() + " (in PlannerController drawTasksForDate) ");
         dailyTasksVBoxHBox.setVisible(false);
         dailyTasksVBoxHBox.setManaged(false);
         weeklyScrollPane.setVisible(false);
@@ -378,6 +369,5 @@ public class PlannerController implements UIController {
             }
             donePercentTextField.setText("%" + (int)((double)completedTasks / totalTasks * 100));
         }
-        System.out.println("FX thread: " + Platform.isFxApplicationThread() + " (in PlannerController drawTasksForDate) ");
     }
 }

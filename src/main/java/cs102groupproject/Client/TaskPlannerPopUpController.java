@@ -42,6 +42,7 @@ public class TaskPlannerPopUpController implements UIController {
         }
         Task task = new Task(taskName, color, importance, ClientSession.getUserId(),
             ownerController.getSelectedDate(), null);
+        ownerController.refreshUI();
         ownerController.closePopUp();
     }
 

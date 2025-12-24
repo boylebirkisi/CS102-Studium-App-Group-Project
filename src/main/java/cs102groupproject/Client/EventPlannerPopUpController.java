@@ -75,8 +75,12 @@ public class EventPlannerPopUpController implements UIController {
                 ClientSession.getUserId(), importance, ""); // String png null olmasın boş olsun
 
         WebSocketClient.send(new ProtocolMessage(ActionType.CREATE_EVENT, event));
+<<<<<<< HEAD
+        // ownerController.refreshUI();
+=======
         ownerController.addEvent(event);
         ownerController.refreshUI();
+>>>>>>> 2dfd009a468dceafa784d342a172c3acdd3ee2c2
         ownerController.closePopUp();
         } catch (Exception e) {
         System.err.println("Zaman formatı hatası! Lütfen HH:mm şeklinde girin.");

@@ -332,6 +332,8 @@ public class PlannerController implements UIController {
         }
         if (daily)
         {
+            ((VBox)dailyTasksVBoxHBox.getChildren().get(0)).getChildren().clear();
+            ((VBox)dailyTasksVBoxHBox.getChildren().get(1)).getChildren().clear();
             if (dateLabel.getScene() != null)
             {
                 Scene scene = dateLabel.getScene();
@@ -380,16 +382,10 @@ public class PlannerController implements UIController {
                     VBox.setVgrow(taskBox, Priority.NEVER);
                     System.out.println(task.getColor());
                     taskBox.setPadding(new Insets(8, 14, 8, 14));
-                    String colorString = task.getColor();
-                    Color bgColor = Color.web("0x" + colorString.substring(2));
-                    taskBox.setBackground(
-                        new Background(
-                            new BackgroundFill(
-                                bgColor,
-                                new CornerRadii(20),
-                                Insets.EMPTY
-                            )
-                        )
+                    String cssColor = toCssColor(task.getColor());
+                    taskBox.setStyle(
+                        "-fx-background-color: " + cssColor + ";" +
+                        "-fx-background-radius: 20;"
                     );
                     if (i % 2 == 0)
                     {
@@ -407,13 +403,23 @@ public class PlannerController implements UIController {
         }
         else
         {
+            LocalDate startOfWeek = date.minusDays(date.getDayOfWeek().getValue() - 1);
+            for (int i = 0; i < weeklyTasksVBoxFlowPane.getChildren().size(); i++)
+            {
+                VBox dayBox = (VBox) weeklyTasksVBoxFlowPane.getChildren().get(i);
+                dayBox.getChildren().clear();
+                LocalDate currentDate = startOfWeek.plusDays(i);
+                DayOfWeek day = currentDate.getDayOfWeek();
+                Label dayLabel = new Label(day.toString());
+                Label dateLabel = new Label(currentDate.toString());
+                dayBox.getChildren().addAll(dayLabel, dateLabel);
+            }
             weeklyScrollPane.setVisible(true);
             weeklyScrollPane.setManaged(true);
             for (int i = 0; i < tasks.size(); i++)
             {
                 Task task = tasks.get(i);
                 LocalDate taskDueDate = task.getDueDate();
-                LocalDate startOfWeek = date.minusDays(date.getDayOfWeek().getValue() - 1);
                 LocalDate endOfWeek = startOfWeek.plusDays(6);
                 if ((taskDueDate.isEqual(startOfWeek) || taskDueDate.isAfter(startOfWeek)) &&
                     (taskDueDate.isEqual(endOfWeek) || taskDueDate.isBefore(endOfWeek)))
@@ -431,5 +437,23 @@ public class PlannerController implements UIController {
             }
             donePercentTextField.setText("%" + (int)((double)completedTasks / totalTasks * 100));
         }
+    }
+    private String toCssColor(String color) {
+        if (color.startsWith("0x")) {
+            String a = color.substring(2, 4);
+            String r = color.substring(4, 6);
+            String g = color.substring(6, 8);
+            String b = color.substring(8, 10);
+
+            int alpha = Integer.parseInt(a, 16);
+            return String.format(
+                "rgba(%d,%d,%d,%.2f)",
+                Integer.parseInt(r, 16),
+                Integer.parseInt(g, 16),
+                Integer.parseInt(b, 16),
+                alpha / 255.0
+            );
+        }
+        return color;
     }
 }

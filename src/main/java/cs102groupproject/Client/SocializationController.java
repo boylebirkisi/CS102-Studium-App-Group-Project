@@ -120,14 +120,6 @@ public class SocializationController implements UIController {
             });
         });
 
-        if (ClientSession.getLoginResponse() != null) {
-            this.friendsList = new ArrayList<>(ClientSession.getLoginResponse().getFriends());
-            this.chatMessages = new ArrayList<>(ClientSession.getLoginResponse().getMessages());
-        } else {
-
-            this.friendsList = new ArrayList<>();
-            this.chatMessages = new ArrayList<>();
-        }
         // Böyle data alınacak
         //this.friendsList = new ArrayList<>(ClientSession.getLoginResponse().getFriends());
         //this.chatMessages = new ArrayList<>(ClientSession.getLoginResponse().getMessages());

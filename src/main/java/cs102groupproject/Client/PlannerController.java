@@ -144,25 +144,25 @@ public class PlannerController implements UIController {
 
     private void updateHabitTracker(Habit habit)
     {
-        // for (int i = 0; i < habitCircleFlowPane.getChildren().size(); i++) {
-        //     CheckBox cb = (CheckBox) habitCircleFlowPane.getChildren().get(i);
-        //     final int index = i; // Lambda içinde kullanmak için final olmalı
-
-        //     cb.setSelected(habit.getCompletionString().charAt(i) == '1');
-
-        //     // clicking
-        //     cb.setOnAction(e -> {
-        //         // calling insert
-        //         habit.invertCompletedAtIndex(index); 
-                
-        //         // send the recent one to server
-        //         WebSocketClient.send(new ProtocolMessage(ActionType.UPDATE_HABIT, habit));
-                
-        //         System.out.println("Habit güncellendi, yeni completion: " + habit.getCompletionString());
-        //     });
-        // }
         clearHabitTrackerCircles();
         if (habit == null) return;
+        for (int i = 0; i < habitCircleFlowPane.getChildren().size(); i++) {
+            CheckBox cb = (CheckBox) habitCircleFlowPane.getChildren().get(i);
+            final int index = i; // Lambda içinde kullanmak için final olmalı
+
+            cb.setSelected(habit.getCompletionString().charAt(i) == '1');
+
+            // clicking
+            cb.setOnAction(e -> {
+                // calling insert
+                habit.invertCompletedAtIndex(index); 
+                
+                // send the recent one to server
+                WebSocketClient.send(new ProtocolMessage(ActionType.UPDATE_HABIT, habit));
+                
+                System.out.println("Habit güncellendi, yeni completion: " + habit.getCompletionString());
+            });
+        }
         boolean[] habitCompletionArray = new boolean[habit.getCompletionString().length()];
         for (int i = 0; i < habit.getCompletionString().length(); i++)
         {

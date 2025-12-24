@@ -37,120 +37,122 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cs102groupproject.Client.SocializationController">
-  <children>
-    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+<GridPane prefHeight="636.0" prefWidth="938.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cs102groupproject.Client.SocializationController">
+   <columnConstraints>
+      <ColumnConstraints hgrow="ALWAYS" maxWidth="443.0" minWidth="0.0" prefWidth="443.0" />
+      <ColumnConstraints hgrow="ALWAYS" maxWidth="470.0" minWidth="0.0" prefWidth="0.0" />
+      <ColumnConstraints hgrow="ALWAYS" maxWidth="355.39996337890625" minWidth="10.0" prefWidth="86.3999633789063" />
+      <ColumnConstraints hgrow="ALWAYS" maxWidth="403.2000366210938" minWidth="10.0" prefWidth="403.2000366210938" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints maxHeight="187.00001373291016" minHeight="10.0" prefHeight="187.00001373291016" vgrow="ALWAYS" />
+      <RowConstraints maxHeight="206.60001220703126" minHeight="10.0" prefHeight="56.59998626708986" vgrow="ALWAYS" />
+      <RowConstraints maxHeight="392.1999877929688" minHeight="10.0" prefHeight="392.1999877929688" vgrow="ALWAYS" />
+   </rowConstraints>
+   <children>
+      <Pane prefHeight="464.0" prefWidth="774.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS" />
+      <Pane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="105.0" prefWidth="312.0" style="-fx-background-color: EFE6D8; -fx-background-radius: 15;">
          <children>
-            <Pane prefHeight="374.0" prefWidth="640.0">
-               <children>
-                  <VBox layoutY="179.0" prefHeight="195.0" prefWidth="312.0" style="-fx-background-color: EFE6D8;">
-                     <children>
-                        <HBox alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="312.0" spacing="10.0">
-                           <children>
-                              <Button fx:id="searchUsersButton" mnemonicParsing="false" onAction="#searchUsers" text="Users" />
-                              <Button fx:id="searchSessionsButton" mnemonicParsing="false" onAction="#searchSessions" text="Sessions" />
-                           </children>
-                           <padding>
-                              <Insets right="10.0" />
-                           </padding>
-                        </HBox>
-                        <HBox fx:id="searchParameters" alignment="CENTER_LEFT" prefHeight="31.0" prefWidth="322.0">
-                           <children>
-                              <HBox fx:id="userSearchParameters" alignment="CENTER" prefHeight="31.0" prefWidth="316.0" style="-fx-managed: true;">
-                                 <children>
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Name: " />
-                                    <TextField fx:id="userNameTextField" prefHeight="26.0" prefWidth="74.0" promptText="______" />
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Department: " />
-                                    <TextField fx:id="departmentTextField" prefHeight="26.0" prefWidth="74.0" promptText="______" />
-                                 </children>
-                              </HBox>
-                              <HBox fx:id="sessionSearchParameters" alignment="CENTER" prefHeight="31.0" prefWidth="384.0" style="-fx-managed: false;" visible="false">
-                                 <children>
-                                    <CheckBox fx:id="aboutToStartCheckBox" mnemonicParsing="false" text="About to start" />
-                                    <CheckBox fx:id="hasStartedCheckBox" mnemonicParsing="false" text="Has started" />
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Name: " />
-                                    <TextField fx:id="sessionNameTextField" prefHeight="26.0" prefWidth="87.0" promptText="______" />
-                                 </children>
-                              </HBox>
-                           </children>
-                        </HBox>
-                        <ScrollPane fx:id="user">
-                           <content>
-                              <HBox fx:id="searchResultsHBox" prefHeight="135.0" prefWidth="312.0">
-                                 <children>
-                                    <VBox prefHeight="135.0" prefWidth="155.0" />
-                                    <VBox prefHeight="135.0" prefWidth="156.0" />
-                                 </children>
-                              </HBox>
-                           </content>
-                        </ScrollPane>
-                     </children>
-                  </VBox>
-                  <Pane layoutY="62.0" prefHeight="105.0" prefWidth="312.0" style="-fx-background-color: EFE6D8; -fx-background-radius: 15;">
-                     <children>
-                        <Text fx:id="currencyEarnedLabel" layoutX="42.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="You have earned currencyAmount so far. Study more, earn more." wrappingWidth="92.1331787109375" />
-                        <Pane layoutX="198.0" layoutY="9.0" onMouseClicked="#showPopUp" prefHeight="87.0" prefWidth="92.0" style="-fx-background-color: E7D3A8; -fx-background-radius: 15;">
-                           <children>
-                              <Text layoutX="8.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Create Group Study Session" wrappingWidth="74.39999999999998" />
-                           </children>
-                        </Pane>
-                     </children>
-                  </Pane>
-                  <VBox fx:id="friendsTotalVBox" layoutX="415.0" layoutY="62.0" prefHeight="315.0" prefWidth="225.0" style="-fx-background-color: E7D3A8;">
-                     <children>
-                        <HBox alignment="CENTER_LEFT" prefHeight="26.0" prefWidth="226.0" style="-fx-background-color: EFE6D8;">
-                           <children>
-                              <Button fx:id="goBackButton" mnemonicParsing="false" onAction="#handleGoBackButton" prefHeight="26.0" prefWidth="68.0" style="-fx-managed: false;" text="Go Back" visible="false" />
-                              <Text fx:id="friendsText" strokeType="OUTSIDE" strokeWidth="0.0" text="Friends">
-                                 <font>
-                                    <Font size="20.0" />
-                                 </font>
-                              </Text>
-                              <HBox fx:id="friendNameTextHBox" alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" style="-fx-managed: false;" visible="false">
-                                 <children>
-                                    <Text fx:id="friendNameText" strokeType="OUTSIDE" strokeWidth="0.0" text="Text">
-                                       <font>
-                                          <Font size="20.0" />
-                                       </font>
-                                    </Text>
-                                 </children>
-                              </HBox>
-                           </children>
-                        </HBox>
-                        <ScrollPane fx:id="friendsScrollPane">
-                           <content>
-                              <VBox fx:id="friendsVBox" prefHeight="262.0" prefWidth="226.0" style="-fx-background-color: E7D3A8;" />
-                           </content>
-                        </ScrollPane>
-                        <ScrollPane fx:id="chatScrollPane" prefHeight="267.0" prefWidth="226.0">
-                           <content>
-                              <VBox prefHeight="262.0" prefWidth="222.0">
-                                 <children>
-                                    <VBox fx:id="chatVBox" prefHeight="200.0" prefWidth="210.0" />
-                                    <TextField fx:id="sendMessageTextField" prefHeight="60.0" prefWidth="222.0" />
-                                 </children>
-                              </VBox>
-                           </content>
-                        </ScrollPane>
-                        <HBox alignment="CENTER_LEFT" prefHeight="22.0" prefWidth="226.0" style="-fx-background-color: EFE6D8;">
-                           <children>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Online: " />
-                              <HBox fx:id="onlineFriendsHBox" prefHeight="100.0" prefWidth="200.0" />
-                           </children>
-                        </HBox>
-                     </children>
-                  </VBox>
-                  <Button layoutX="415.0" layoutY="37.0" mnemonicParsing="false" onAction="#refreshButtonFunctionality" text="Refresh" />
-               </children>
-            </Pane>
+            <Text fx:id="currencyEarnedLabel" layoutX="40.0" layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text="You have earned currencyAmount so far. Study more, earn more." wrappingWidth="92.1331787109375" />
+            <Button layoutX="247.0" layoutY="50.0" mnemonicParsing="false" onAction="#showPopUp" prefHeight="87.0" prefWidth="114.0" style="-fx-background-radius: 20; -fx-background-color: E7D3A8;" text="Create Group Study Session" textAlignment="CENTER" wrapText="true" />
          </children>
-    </AnchorPane>
-  </children>
-</VBox>
+      </Pane>
+      <VBox fx:id="friendsTotalVBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="259.0" prefWidth="312.0" style="-fx-background-color: E7D3A8;" GridPane.columnIndex="3" GridPane.rowIndex="2">
+         <children>
+            <HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="226.0" style="-fx-background-color: EFE6D8;">
+               <children>
+                  <Button fx:id="goBackButton" mnemonicParsing="false" onAction="#handleGoBackButton" prefHeight="26.0" prefWidth="68.0" style="-fx-managed: false;" text="Go Back" visible="false" />
+                  <Text fx:id="friendsText" strokeType="OUTSIDE" strokeWidth="0.0" text="Friends">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Text>
+                  <HBox fx:id="friendNameTextHBox" alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" style="-fx-managed: false;" visible="false">
+                     <children>
+                        <Text fx:id="friendNameText" strokeType="OUTSIDE" strokeWidth="0.0" text="Text">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+            <ScrollPane fx:id="friendsScrollPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+               <content>
+                  <VBox fx:id="friendsVBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="170.0" prefWidth="388.0" style="-fx-background-color: E7D3A8;" />
+               </content>
+            </ScrollPane>
+            <ScrollPane fx:id="chatScrollPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="267.0" prefWidth="226.0">
+               <content>
+                  <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="262.0" prefWidth="222.0">
+                     <children>
+                        <VBox fx:id="chatVBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="210.0" />
+                        <TextField fx:id="sendMessageTextField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="60.0" prefWidth="222.0" />
+                     </children>
+                  </VBox>
+               </content>
+            </ScrollPane>
+            <HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="22.0" prefWidth="226.0" style="-fx-background-color: EFE6D8;">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Online: " />
+                  <HBox fx:id="onlineFriendsHBox" prefHeight="100.0" prefWidth="200.0" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#refreshButtonFunctionality" text="Refresh" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+      <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="393.0" prefWidth="312.0" style="-fx-background-color: EFE6D8;" GridPane.rowIndex="2">
+         <children>
+            <HBox alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="28.0" prefWidth="312.0" spacing="10.0">
+               <children>
+                  <Button fx:id="searchUsersButton" mnemonicParsing="false" onAction="#searchUsers" text="Users" />
+                  <Button fx:id="searchSessionsButton" mnemonicParsing="false" onAction="#searchSessions" text="Sessions" />
+               </children>
+               <padding>
+                  <Insets right="10.0" />
+               </padding>
+            </HBox>
+            <HBox fx:id="searchParameters" alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="31.0" prefWidth="322.0">
+               <children>
+                  <HBox fx:id="userSearchParameters" alignment="CENTER" prefHeight="31.0" prefWidth="316.0" style="-fx-managed: true;">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Name: " />
+                        <TextField fx:id="userNameTextField" prefHeight="26.0" prefWidth="74.0" promptText="______" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Department: " />
+                        <TextField fx:id="departmentTextField" prefHeight="26.0" prefWidth="74.0" promptText="______" />
+                     </children>
+                  </HBox>
+                  <HBox fx:id="sessionSearchParameters" alignment="CENTER" prefHeight="31.0" prefWidth="384.0" style="-fx-managed: false;" visible="false">
+                     <children>
+                        <CheckBox fx:id="aboutToStartCheckBox" mnemonicParsing="false" text="About to start" />
+                        <CheckBox fx:id="hasStartedCheckBox" mnemonicParsing="false" text="Has started" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Name: " />
+                        <TextField fx:id="sessionNameTextField" prefHeight="26.0" prefWidth="87.0" promptText="______" />
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+            <ScrollPane fx:id="user" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="331.0" prefWidth="312.0">
+               <content>
+                  <HBox fx:id="searchResultsHBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="311.0" prefWidth="307.0">
+                     <children>
+                        <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="279.0" prefWidth="155.0" />
+                        <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="135.0" prefWidth="156.0" />
+                     </children>
+                  </HBox>
+               </content>
+            </ScrollPane>
+         </children>
+      </VBox>
+   </children>
+</GridPane>

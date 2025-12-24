@@ -524,9 +524,9 @@ public class SocializationController implements UIController {
     public void showPopUp() throws IOException
     {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/GroupSessionPlannerPopUp.fxml"));
+        Parent popUpRoot = loader.load();
         GroupSessionPlannerPopUpController controller = loader.getController();
         controller.setOwnerController(this);
-        Parent popUpRoot = loader.load();
         Scene scene = new Scene(popUpRoot);
         popUpStage = new Stage();
         popUpStage.setScene(scene);

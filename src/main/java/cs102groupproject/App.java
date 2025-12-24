@@ -32,6 +32,7 @@ public class App extends Application {
         scene = new Scene(loadFXML("Login1TEST"), 640, 480); // to use login test, change primary to Login1TEST 
         stage.setScene(scene);
         stage.show();
+        stage.setMaximized(true);
 
         try {
             WebSocketClient.connect();

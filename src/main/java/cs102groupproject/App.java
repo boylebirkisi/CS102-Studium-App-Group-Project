@@ -13,7 +13,6 @@ import cs102groupproject.Client.SocializationController;
 import cs102groupproject.Client.WebSocketClient;
 import cs102groupproject.SharedObjects.AppEvent;
 import cs102groupproject.SharedObjects.ChatMessage;
-import cs102groupproject.SharedObjects.GroupSession;
 import cs102groupproject.SharedObjects.Habit;
 import cs102groupproject.SharedObjects.Task;
 import cs102groupproject.SharedObjects.User;
@@ -68,7 +67,7 @@ public class App extends Application {
 
     public static void loadScrollableScene(ArrayList<Habit> habits,
         ArrayList<AppEvent> events, ArrayList<Task> tasks, ArrayList<User> friendsList,
-        ArrayList<User> onlineUsers, ArrayList<ChatMessage> chatMessages, ArrayList<User> allUsers, ArrayList<GroupSession> allGroupSessions) throws IOException
+        ArrayList<User> onlineUsers, ArrayList<ChatMessage> chatMessages, ArrayList<User> allUsers) throws IOException
     {
         ScrollPane scrollPane = new ScrollPane();
         VBox contentBox = new VBox();
@@ -93,7 +92,7 @@ public class App extends Application {
         Parent socializationView = socializationLoader.load();
         contentBox.getChildren().add(socializationView);
         SocializationController socializationController = socializationLoader.getController();
-        socializationController.setFields(friendsList, onlineUsers, chatMessages, allUsers, allGroupSessions);
+        socializationController.setFields(friendsList, onlineUsers, chatMessages, allUsers);
 
         scene.setRoot(scrollPane);
     }

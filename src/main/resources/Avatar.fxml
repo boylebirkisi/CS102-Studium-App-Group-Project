@@ -29,7 +29,7 @@
                      <children>
                         <ImageView fitHeight="100.0" fitWidth="100.0" onMouseClicked="#selectAvatar1" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../OneDrive/Resimler/Ekran%20Görüntüleri/Ekran%20görüntüsü%202025-11-11%20200007.png" />
+                              <Image url="@images/Avatar1.png" />
                            </image>
                         </ImageView>
                      </children>
@@ -38,7 +38,7 @@
                      <children>
                         <ImageView fitHeight="100.0" fitWidth="100.0" onMouseClicked="#selectAvatar2" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../OneDrive/Resimler/Ekran%20Görüntüleri/Ekran%20görüntüsü%202025-11-11%20200000.png" />
+                              <Image url="@images/Avatar2.png" />
                            </image>
                         </ImageView>
                      </children>
@@ -47,7 +47,7 @@
                      <children>
                         <ImageView fitHeight="100.0" fitWidth="100.0" onMouseClicked="#selectAvatar3" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../OneDrive/Resimler/Ekran%20Görüntüleri/Ekran%20görüntüsü%202025-11-11%20200017.png" />
+                              <Image url="@images/Avatar3.png" />
                            </image>
                         </ImageView>
                      </children>
@@ -56,7 +56,7 @@
                      <children>
                         <ImageView fitHeight="100.0" fitWidth="100.0" onMouseClicked="#selectAvatar4" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../OneDrive/Resimler/Ekran%20Görüntüleri/Ekran%20görüntüsü%202025-11-11%20200024.png" />
+                              <Image url="@images/Avatar4.png" />
                            </image>
                         </ImageView>
                      </children>
@@ -70,9 +70,9 @@
             </Button>
             <StackPane prefHeight="150.0" prefWidth="200.0">
                <children>
-                  <ImageView blendMode="DARKEN" fitHeight="115.0" fitWidth="285.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView blendMode="DARKEN" fitHeight="115.0" fitWidth="207.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@tempImage0aQx5N%202.png" />
+                        <Image url="@images/logo.png" />
                      </image>
                   </ImageView>
                </children>

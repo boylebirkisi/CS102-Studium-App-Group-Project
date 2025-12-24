@@ -58,4 +58,9 @@ public class Habit extends TransferObject{
             invertCompletedAtIndex(daysBetween);
         }
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

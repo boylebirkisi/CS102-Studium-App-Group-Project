@@ -17,12 +17,12 @@ public class ChatMessage {
         this.timestamp = LocalDateTime.now();
     }
 
-    public ChatMessage(int senderID, int receiverID, String message, long timestamp)
+    public ChatMessage(int senderID, int receiverID, String message, LocalDateTime timestamp)
     {
         this.senderID = senderID;
         this.receiverID = receiverID;
         this.message = message;
-        this.timestamp = LocalDateTime.ofEpochSecond(timestamp, 0, java.time.ZoneOffset.UTC);
+        this.timestamp = timestamp;
     }
 
     public int getSenderID() {return senderID;}

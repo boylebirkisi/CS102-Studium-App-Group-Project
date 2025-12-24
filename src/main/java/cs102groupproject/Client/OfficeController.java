@@ -4,6 +4,7 @@ import cs102groupproject.App;
 import cs102groupproject.SharedObjects.Furniture;
 import cs102groupproject.SharedObjects.PlaceType;
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

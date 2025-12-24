@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 cs102groupproject\Server\ClientConnection$1.class
 cs102groupproject\SharedObjects\Furniture.class
 cs102groupproject\SharedObjects\TransferObject.class
@@ -11,7 +10,6 @@ cs102groupproject\Server\HabitService.class
 cs102groupproject\SharedObjects\AppEvent.class
 cs102groupproject\Client\GoogleOAuthClient.class
 cs102groupproject\SharedObjects\GroupSession.class
-cs102groupproject\Client\AvatarController.class
 cs102groupproject\Server\UserService.class
 cs102groupproject\SharedObjects\Notification.class
 cs102groupproject\Client\SidePanelController.class
@@ -64,5 +62,3 @@ cs102groupproject\Client\GoogleCalendarAPI.class
 cs102groupproject\Client\SocializationController.class
 cs102groupproject\Server\WebSocketServer.class
 cs102groupproject\SharedObjects\UserCredentials.class
-=======
->>>>>>> 2dfd009a468dceafa784d342a172c3acdd3ee2c2

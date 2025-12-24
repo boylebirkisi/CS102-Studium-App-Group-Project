@@ -143,6 +143,7 @@ public class AuthService {
 
     public static boolean verifyCode(String email, String code) {
         VerificationCode vCode = dbManager.getVerificationCode(email);
+        System.out.println("vCode: " + vCode);
         if (vCode != null) {
             if (code.equals(vCode.getStoredCode())) {
                 return true;

@@ -152,6 +152,18 @@ public class SocializationController implements UIController {
         this.onlineUsers = onlineUsers;
         this.chatMessages = chatMessages;
         this.allUsers = allUsers;
+        if (onlineUsers == null) {
+            this.onlineUsers = new ArrayList<>();
+        }
+        if (chatMessages == null) {
+            this.chatMessages = new ArrayList<>();
+        }
+        if (allUsers == null) {
+            this.allUsers = new ArrayList<>();
+        }
+        if (friendsList == null) {
+            this.friendsList = new ArrayList<>();
+        }
         refreshUI();
     }
 

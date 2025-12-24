@@ -828,7 +828,7 @@ public class DBManager {
                 int senderId = rs.getInt("sender_id");
                 int receiverId = rs.getInt("receiver_id");
                 String content = rs.getString("message_text"); // Adjust column name to match your DB
-                long timestamp = rs.getLong("timestamp");
+                LocalDateTime timestamp = rs.getTimestamp("timestamp").toLocalDateTime();
 
                 // Create the object using the database values
                 messages.add(new ChatMessage(senderId, receiverId, content, timestamp));

@@ -76,33 +76,64 @@ public class PlannerController implements UIController {
     @FXML
     private void initialize()
     {
+        // HABIT_CREATED
         WebSocketClient.addListener(ActionType.HABIT_CREATED, (payload) -> {
-        Habit savedHabit = (Habit) payload;
-        Platform.runLater(() -> {
-                // habits.add(savedHabit);
-                System.out.println("habit is added to the list after the approval of server");
+            String json = WebSocketClient.getGson().toJson(payload);
+            Habit savedHabit = WebSocketClient.getGson().fromJson(json, Habit.class);
+            Platform.runLater(() -> {
+                if (habits == null) habits = new ArrayList<>();
+                habits.add(savedHabit);
+                habitTrackerComboBox.getItems().add(savedHabit);
+                habitTrackerComboBox.setValue(savedHabit);
+                refreshUI();
             });
         });
 
+        // TASK_CREATED
         WebSocketClient.addListener(ActionType.TASK_CREATED, (payload) -> {
-            Task newTask = (Task) payload;
+            String json = WebSocketClient.getGson().toJson(payload);
+            Task newTask = WebSocketClient.getGson().fromJson(json, Task.class);
             Platform.runLater(() -> {
+                if (tasks == null) tasks = new ArrayList<>();
                 tasks.add(newTask);
                 updateDate();
-                System.out.println("new task is added " + newTask.getName());
             });
         });
 
+        // TASK_UPDATED
         WebSocketClient.addListener(ActionType.TASK_UPDATED, (payload) -> {
-            Task updatedTask = (Task) payload;
-            Platform.runLater(() -> {
-                for (int i = 0; i < tasks.size(); i++) {
-                    if (tasks.get(i).getId() == updatedTask.getId()) {
-                        tasks.set(i, updatedTask);
-                        break;
+            try {
+                String json = WebSocketClient.getGson().toJson(payload);
+                Task updatedTask = WebSocketClient.getGson().fromJson(json, Task.class);
+
+                Platform.runLater(() -> {
+                    if (tasks != null) {
+                        for (int i = 0; i < tasks.size(); i++) {
+                            if (tasks.get(i).getId() == updatedTask.getId()) {
+                                tasks.set(i, updatedTask);
+                                break;
+                            }
+                        }
+                        updateDate(); 
                     }
-                }
-                updateDate();
+                });
+            } catch (Exception e) {
+                System.err.println("Task Update hatası: " + e.getMessage());
+            }
+        });
+
+        WebSocketClient.addListener(ActionType.EVENT_CREATED, (payload) -> {
+            // Yanlış: AppEvent ev = (AppEvent) payload; 
+            
+            // Doğru: Önce JSON stringine çevir, sonra AppEvent olarak oku
+            String json = WebSocketClient.getGson().toJson(payload);
+            AppEvent newEvent = WebSocketClient.getGson().fromJson(json, AppEvent.class);
+
+            Platform.runLater(() -> {
+                if (events == null) events = new ArrayList<>();
+                events.add(newEvent);
+                populateEvents();
+                System.out.println("Başarıyla eklendi: " + newEvent.getName());
             });
         });
     }
@@ -149,18 +180,14 @@ public class PlannerController implements UIController {
         for (int i = 0; i < habitCircleFlowPane.getChildren().size(); i++) {
             CheckBox cb = (CheckBox) habitCircleFlowPane.getChildren().get(i);
             final int index = i; // Lambda içinde kullanmak için final olmalı
-
+            cb.setOnAction(null);
             cb.setSelected(habit.getCompletionString().charAt(i) == '1');
 
             // clicking
-            cb.setOnAction(e -> {
-                // calling insert
-                habit.invertCompletedAtIndex(index); 
-                
-                // send the recent one to server
-                WebSocketClient.send(new ProtocolMessage(ActionType.UPDATE_HABIT, habit));
-                
-                System.out.println("Habit güncellendi, yeni completion: " + habit.getCompletionString());
+            cb.setOnAction(e -> { // 2. Şimdi tertemiz yeni aksiyonu ata
+                        habit.invertCompletedAtIndex(index); 
+                        WebSocketClient.send(new ProtocolMessage(ActionType.UPDATE_HABIT, habit));
+                        System.out.println("Habit güncellendi: " + habit.getCompletionString());
             });
         }
         boolean[] habitCompletionArray = new boolean[habit.getCompletionString().length()];
@@ -241,6 +268,7 @@ public class PlannerController implements UIController {
             eventBox.setSpacing(15);
             eventsVBox.getChildren().add(eventBox);
         }
+        eventsVBox.requestLayout();
     }
 
     @FXML
@@ -341,7 +369,12 @@ public class PlannerController implements UIController {
                         ((VBox)dailyTasksVBoxHBox.getChildren().get(1)).getChildren().add(taskBox);
                 }
             }
-            donePercentTextField.setText("%" + (int)((double)completedTasks / totalTasks * 100));
+            if (totalTasks > 0) {
+                int percent = (int) (((double) completedTasks / totalTasks) * 100);
+                donePercentTextField.setText("%" + percent);
+            } else {
+                donePercentTextField.setText("%0");
+            }        
         }
         else
         {

@@ -427,7 +427,7 @@ public class DBManager {
      * @return
      */
     public int addTask(String name, String color, int importance, int userId, String googleCalendarID, LocalDate dueDate) {
-        String sqlCommand = "INSERT INTO tasks(name, color, importance, user_id, google_calendar_id, due_date) VALUES(?, ?, ?, ?, ?, *)";
+        String sqlCommand = "INSERT INTO tasks(name, color, importance, user_id, google_calendar_id, due_date) VALUES(?, ?, ?, ?, ?, ?)";
 
         return insertAndGetID(sqlCommand, name, color, importance, userId, googleCalendarID, dueDate);
     }

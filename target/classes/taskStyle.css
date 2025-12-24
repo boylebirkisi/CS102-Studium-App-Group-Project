@@ -1,0 +1,12 @@
+.task-pill {
+    -fx-background-radius: 20;
+    -fx-padding: 10 14 10 14;
+    -fx-border-color: black;
+    -fx-border-radius: 20;
+    -fx-border-width: 1;
+}
+
+.task-label {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}

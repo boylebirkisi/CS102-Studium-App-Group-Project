@@ -2,6 +2,7 @@ package cs102groupproject.Client;
 
 import cs102groupproject.SharedObjects.Task;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
@@ -42,6 +43,7 @@ public class TaskPlannerPopUpController implements UIController {
         }
         Task task = new Task(taskName, color, importance, ClientSession.getUserId(),
             ownerController.getSelectedDate(), null);
+        ownerController.addTask(task);
         ownerController.refreshUI();
         ownerController.closePopUp();
     }

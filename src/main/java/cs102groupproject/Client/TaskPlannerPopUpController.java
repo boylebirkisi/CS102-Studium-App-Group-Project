@@ -45,7 +45,12 @@ public class TaskPlannerPopUpController implements UIController {
         }
         Task task = new Task(taskName, color, importance, ClientSession.getUserId(),
             ownerController.getSelectedDate(), null);
+<<<<<<< HEAD
         WebSocketClient.send(new ProtocolMessage(ActionType.CREATE_TASK, task));
+=======
+        ownerController.addTask(task);
+        ownerController.refreshUI();
+>>>>>>> 2dfd009a468dceafa784d342a172c3acdd3ee2c2
         ownerController.closePopUp();
     }
 

@@ -63,4 +63,17 @@ public class Habit extends TransferObject{
     public String toString() {
         return name;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Habit)) return false;
+        Habit habit = (Habit) o;
+        return name == habit.name;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(id);
+    }
 }

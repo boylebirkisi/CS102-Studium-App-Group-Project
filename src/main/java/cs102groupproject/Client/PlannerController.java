@@ -302,8 +302,8 @@ public class PlannerController implements UIController {
     public UIController showPopUp(String fxmlPath) throws IOException
     {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/" + fxmlPath + ".fxml"));
-        UIController controller = loader.getController();
         Parent popUpRoot = loader.load();
+        UIController controller = loader.getController();
         Scene scene = new Scene(popUpRoot);
         popUpStage = new Stage();
         popUpStage.setScene(scene);

@@ -77,8 +77,13 @@ public class LoginController implements UIController {
             Platform.runLater(() -> {
                     try {
                         // Online userlar ekelenecek
-                        App.loadScrollableScene(new ArrayList<>(rs.getHabits()), new ArrayList<>(rs.getEventsOfUser()), new ArrayList<>(rs.getTasksOfUser()), new ArrayList<>(rs.getFriends()), userList,
-                                                new ArrayList<>(rs.getMessages()), new ArrayList<>(rs.getAllUsers()));
+                        App.loadScrollableScene(rs.getHabits() != null ? new ArrayList<>(rs.getHabits()) : new ArrayList<>(),
+                                                rs.getEventsOfUser() != null ? new ArrayList<>(rs.getEventsOfUser()) : new ArrayList<>(),
+                                                rs.getTasksOfUser() != null ? new ArrayList<>(rs.getTasksOfUser()) : new ArrayList<>(),
+                                                rs.getFriends() != null ? new ArrayList<>(rs.getFriends()) : new ArrayList<>(),
+                                                userList, // This one is created locally, so it should be fine
+                                                rs.getMessages() != null ? new ArrayList<>(rs.getMessages()) : new ArrayList<>(),
+                                                rs.getAllUsers() != null ? new ArrayList<>(rs.getAllUsers()) : new ArrayList<>());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -91,13 +96,22 @@ public class LoginController implements UIController {
 
             User loggedInUser = rs.getUser(); 
             ClientSession.login(loggedInUser);
-            ClientSession.setLoginResponse((LoginResponse) payload);
-            
+            ClientSession.setLoginResponse(rs);
+
+            ArrayList<User> userList = new ArrayList<>();
+            userList.add(loggedInUser);
+
             Platform.runLater(() -> {
                     try {
+                        ClientSession.login(loggedInUser);
                         // Online userlar ekelenecek
-                        App.loadScrollableScene(new ArrayList<>(rs.getHabits()), new ArrayList<>(rs.getEventsOfUser()), new ArrayList<>(rs.getTasksOfUser()), new ArrayList<>(rs.getFriends()), null,
-                                                new ArrayList<>(rs.getMessages()), new ArrayList<>(rs.getAllUsers()));
+                        App.loadScrollableScene(rs.getHabits() != null ? new ArrayList<>(rs.getHabits()) : new ArrayList<>(),
+                                                rs.getEventsOfUser() != null ? new ArrayList<>(rs.getEventsOfUser()) : new ArrayList<>(),
+                                                rs.getTasksOfUser() != null ? new ArrayList<>(rs.getTasksOfUser()) : new ArrayList<>(),
+                                                rs.getFriends() != null ? new ArrayList<>(rs.getFriends()) : new ArrayList<>(),
+                                                userList, // This one is created locally, so it should be fine
+                                                rs.getMessages() != null ? new ArrayList<>(rs.getMessages()) : new ArrayList<>(),
+                                                rs.getAllUsers() != null ? new ArrayList<>(rs.getAllUsers()) : new ArrayList<>());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -223,13 +237,21 @@ public class LoginController implements UIController {
     @FXML
     public void verifyCode() {
         if (!codeField.getText().isEmpty()) {
-            String codeEntered = codeField.getText();
-            WebSocketClient.send(new ProtocolMessage(
-                ActionType.VERIFY_CODE,
-                // In order not to create a new object
-                new UserCredentials(null, email, null, codeEntered, true, "")
-            ));
+        String codeEntered = codeField.getText();
+        
+        // Try to get email from field; if empty, use the saved static 'email'
+        String emailToUse = emailField.getText();
+        if (emailToUse == null || emailToUse.isEmpty()) {
+            emailToUse = LoginController.email; // Use the static one we saved earlier
         }
+
+        System.out.println("DEBUG: Verifying for Email -> " + emailToUse);
+
+        WebSocketClient.send(new ProtocolMessage(
+            ActionType.VERIFY_CODE,
+            new UserCredentials(null, emailToUse, null, codeEntered, true, "")
+        ));
+    }
     }
 
     @FXML

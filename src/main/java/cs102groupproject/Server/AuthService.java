@@ -107,15 +107,19 @@ public class AuthService {
     * @return
     */
     public static User register(UserCredentials credentials) {
+        System.out.println("dsfsaf register");
         if (credentials == null) {
             throw new IllegalArgumentException("Credentials cannot be null");
         } else {
             if (dbManager.getUserByEmail(credentials.getEmail()) == null) {
-                int userID = dbManager.insertUser(credentials.getUsername(), credentials.getEmail(), hasher.hashPassword(credentials.getPassword()), null, credentials.getDepartment());
-                return dbManager.getUserByID(userID);
+                System.out.println("INSERT USER DB");
+                dbManager.insertUser(credentials.getUsername(), credentials.getEmail(), hasher.hashPassword(credentials.getPassword()), null, credentials.getDepartment());
+            
+                return dbManager.getUserByEmail(credentials.getEmail());
+            } else {
+                throw new IllegalArgumentException("User already exists.");
             }
         }
-        return null;
     }
 
     /**

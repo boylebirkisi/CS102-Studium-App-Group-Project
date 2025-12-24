@@ -238,15 +238,21 @@ public class ClientConnection {
 
             case REGISTER: {
                 UserCredentials credentials = message.getPayloadAs(UserCredentials.class);
-
+                System.out.println("CREDENTIALS: " + credentials);
                 User user = AuthService.register(credentials);
+                
+                this.loggedInUser = user;
+                this.userId = user.getId();
+                sessionManager.login(user.getId(), this);
+
+                LoginResponse loginResponse = authService.loginResponse(userId, user);
 
                 if (user != null) {
                     this.loggedInUser = user;
                     this.userId = user.getId();
                     send(new ProtocolMessage(
                         ActionType.REGISTER_SUCCESS,
-                        user
+                        loginResponse
                     ));
                 }
                 break;
@@ -256,12 +262,18 @@ public class ClientConnection {
                 UserCredentials credentials = message.getPayloadAs(UserCredentials.class);
 
                 User user = AuthService.registerWithGoogle(credentials);
+
+                this.loggedInUser = user;
+                this.userId = user.getId();
+                sessionManager.login(user.getId(), this);
+
+                LoginResponse loginResponse = authService.loginResponse(userId, user);
                 if (user != null) {
                     this.loggedInUser = user;
                     this.userId = user.getId();
                     send(new ProtocolMessage(
                         ActionType.REGISTER_SUCCESS,
-                        user
+                        loginResponse
                     ));
                 }
                 break;
@@ -283,9 +295,10 @@ public class ClientConnection {
 
             case VERIFY_CODE: {
                 UserCredentials credentials = message.getPayloadAs(UserCredentials.class);
-                String email = credentials.getUsername();
+                String email = credentials.getEmail();
                 String code = credentials.getPassword();
 
+                System.out.println("email" + email + " code " + code);
                 boolean success = AuthService.verifyCode(email, code);
 
                 if (success) {

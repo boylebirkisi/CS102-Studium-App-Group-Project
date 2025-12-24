@@ -3,7 +3,6 @@ package cs102groupproject.Client;
 import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -15,23 +14,30 @@ import cs102groupproject.SharedObjects.Task;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -260,11 +266,14 @@ public class PlannerController implements UIController {
         }
         for (int i = 0; i < events.size(); i++)
         {
+            
+            Region spacer = new Region();
+            HBox.setHgrow(spacer, Priority.ALWAYS);
             AppEvent event = events.get(i);
             Label eventLabel = new Label(event.getName());
             VBox dateAndTimeBox = new VBox(new Label(event.getStart().toLocalDate().toString()), new Label(event.getStart().toLocalTime().toString()));
             Circle circle = new Circle(24, event.getColor().isEmpty() ? Color.BLACK : Color.web(event.getColor()));
-            HBox eventBox = new HBox(eventLabel, dateAndTimeBox, circle);
+            HBox eventBox = new HBox(eventLabel, spacer, dateAndTimeBox, circle);
             eventBox.setSpacing(15);
             eventsVBox.getChildren().add(eventBox);
         }
@@ -304,6 +313,16 @@ public class PlannerController implements UIController {
         return controller;
     }
 
+    public void addTask(Task task)
+    {
+        tasks.add(task);
+    }
+
+    public void addEvent(AppEvent event)
+    {
+        events.add(event);
+    }
+
     public void closePopUp()
     {
         popUpStage.close();
@@ -341,6 +360,11 @@ public class PlannerController implements UIController {
         }
         if (daily)
         {
+            if (dateLabel.getScene() != null)
+            {
+                Scene scene = dateLabel.getScene();
+                scene.getStylesheets().add(getClass().getResource("/taskStyle.css").toExternalForm());
+            }
             dailyTasksVBoxHBox.setVisible(true);
             dailyTasksVBoxHBox.setManaged(true);
             for (int i = 0; i < tasks.size(); i++)
@@ -348,11 +372,15 @@ public class PlannerController implements UIController {
                 Task task = tasks.get(i);
                 if (task.getDueDate().isEqual(date))
                 {
+                    Text taskLabel = new Text(task.getName());
+                    taskLabel.getStyleClass().add("task-label");
                     if (task.getIsCompleted())
                         {completedTasks++;}
                     totalTasks++;
                     CheckBox taskCheckBox = new CheckBox("");
                     taskCheckBox.setSelected(task.getIsCompleted());
+                    if (task.getIsCompleted())
+                        {taskLabel.setStyle("-fx-strikethrough: true;");}
                     taskCheckBox.setOnAction(e -> {
                         if (taskCheckBox.isSelected())
                             {task.completeTask();}
@@ -361,12 +389,46 @@ public class PlannerController implements UIController {
                         WebSocketClient.send(new ProtocolMessage(ActionType.UPDATE_TASK, task));     
                         updateDate();
                     });
-                    Circle colorCircle = new Circle(8, Color.web(task.getColor()));
-                    HBox taskBox = new HBox(new Label(task.getName()), taskCheckBox, colorCircle);
+                    Color importance = Color.GRAY;
+                    if (task.getImportance() == 1) {importance = Color.LIGHTGREEN;}
+                    else if (task.getImportance() == 2) {importance = Color.YELLOW;}
+                    else if (task.getImportance() == 3) {importance = Color.ORANGE;}
+                    else if (task.getImportance() == 4) {importance = Color.RED;}
+                    Circle colorCircle = new Circle(8, importance);
+                    Region spacer = new Region();
+                    HBox.setHgrow(spacer, Priority.ALWAYS);
+                    HBox taskBox = new HBox(taskLabel, spacer, taskCheckBox, colorCircle);
+                    taskBox.getStyleClass().add("task-pill");
+                    taskBox.setAlignment(Pos.CENTER_LEFT);
+                    taskBox.setSpacing(10);
+                    taskBox.setMinHeight(40);
+                    taskBox.setPrefHeight(40);
+                    taskBox.setMaxWidth(Double.MAX_VALUE);
+                    HBox.setHgrow(taskBox, Priority.ALWAYS);
+                    VBox.setVgrow(taskBox, Priority.NEVER);
+                    System.out.println(task.getColor());
+                    taskBox.setPadding(new Insets(8, 14, 8, 14));
+                    String colorString = task.getColor();
+                    Color bgColor = Color.web("0x" + colorString.substring(2));
+                    taskBox.setBackground(
+                        new Background(
+                            new BackgroundFill(
+                                bgColor,
+                                new CornerRadii(20),
+                                Insets.EMPTY
+                            )
+                        )
+                    );
                     if (i % 2 == 0)
+                    {
                         ((VBox)dailyTasksVBoxHBox.getChildren().get(0)).getChildren().add(taskBox);
+                        HBox.setHgrow((VBox)dailyTasksVBoxHBox.getChildren().get(0), Priority.ALWAYS);
+                    }
                     else
+                    {
                         ((VBox)dailyTasksVBoxHBox.getChildren().get(1)).getChildren().add(taskBox);
+                        HBox.setHgrow((VBox)dailyTasksVBoxHBox.getChildren().get(1), Priority.ALWAYS);
+                    }
                 }
             }
             if (totalTasks > 0) {
@@ -394,7 +456,7 @@ public class PlannerController implements UIController {
                         {completedTasks++;}
                     totalTasks++;
                     DayOfWeek dayOfWeek = taskDueDate.getDayOfWeek().minus(DayOfWeek.MONDAY.getValue());
-                    Label label = new Label(task.getName());
+                    Text label = new Text(task.getName());
                     if (task.getIsCompleted())
                         {label.setStyle("-fx-strikethrough: true;");}
                     ((VBox)weeklyTasksVBoxFlowPane.getChildren().get(dayOfWeek.getValue())).getChildren().add(label);

@@ -1,5 +1,7 @@
 package cs102groupproject.Client;
 
+import cs102groupproject.SharedObjects.ActionType;
+import cs102groupproject.SharedObjects.ProtocolMessage;
 import cs102groupproject.SharedObjects.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.ColorPicker;
@@ -42,7 +44,7 @@ public class TaskPlannerPopUpController implements UIController {
         }
         Task task = new Task(taskName, color, importance, ClientSession.getUserId(),
             ownerController.getSelectedDate(), null);
-        ownerController.refreshUI();
+        WebSocketClient.send(new ProtocolMessage(ActionType.CREATE_TASK, task));
         ownerController.closePopUp();
     }
 

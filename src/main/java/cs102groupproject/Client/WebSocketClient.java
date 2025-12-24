@@ -1,6 +1,13 @@
 package cs102groupproject.Client;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializer;
 
 import java.net.URI;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +30,22 @@ import javafx.application.Platform;
 public class WebSocketClient {
     private static Session session;
 
+    private static final Gson gson = new GsonBuilder()
+    // LocalDateTime Adaptörü (Mevcut olan)
+        .registerTypeAdapter(java.time.LocalDateTime.class, (JsonSerializer<java.time.LocalDateTime>) (src, typeOfSrc, context) ->
+                new JsonPrimitive(src.format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME)))
+        .registerTypeAdapter(java.time.LocalDateTime.class, (JsonDeserializer<java.time.LocalDateTime>) (json, typeOfT, context) ->
+                java.time.LocalDateTime.parse(json.getAsString(), java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+        // LocalDate Adaptörü (EKLENECEK OLAN - %... hatasını bu çözer)
+        .registerTypeAdapter(java.time.LocalDate.class, (JsonSerializer<java.time.LocalDate>) (src, typeOfSrc, context) ->
+                new JsonPrimitive(src.format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE)))
+        .registerTypeAdapter(java.time.LocalDate.class, (JsonDeserializer<java.time.LocalDate>) (json, typeOfT, context) ->
+                java.time.LocalDate.parse(json.getAsString(), java.time.format.DateTimeFormatter.ISO_LOCAL_DATE))
+        .create();
+
+    public static Gson getGson() {
+        return gson;
+    }
     // A map to hold listeners for specific ActionTypes
     private static final Map<ActionType, List<MessageListener>> listeners = new HashMap<>();
 
@@ -63,19 +86,51 @@ public class WebSocketClient {
 
     @OnMessage
     public void onMessage(String json) {
-        System.out.println("⬅️ Message from server: " + json);
+        try {
+            System.out.println("⬅️ Sunucudan Veri Geldi: " + json);
 
-        ProtocolMessage msg = ProtocolMessage.fromJson(json);
+            // ProtocolMessage.fromJson yerine doğrudan buradaki yapılandırılmış GSON'u kullanıyoruz
+            ProtocolMessage msg = getGson().fromJson(json, ProtocolMessage.class);
 
-        System.out.println("➡️ Action parsed: " + msg.getAction());
-        ActionType action = msg.getAction();
-        // Find and notify all registered listeners for this action
-        if (listeners.containsKey(action)) {
-            for (MessageListener listener : listeners.get(action)) {
-                // Use Platform.runLater because UI updates must happen on the FX thread
-                Platform.runLater(() -> listener.handle(msg.getPayload()));
+            if (msg == null || msg.getAction() == null) {
+                System.err.println("❌ Hata: Mesaj veya Action boş!");
+                return;
             }
+
+            System.out.println("➡️ İşlenen Aksiyon: " + msg.getAction());
+            ActionType action = msg.getAction();
+
+            if (listeners.containsKey(action)) {
+                for (MessageListener listener : listeners.get(action)) {
+                    Platform.runLater(() -> {
+                        try {
+                            listener.handle(msg.getPayload());
+                        } catch (Exception e) {
+                            System.err.println("❌ UI Güncelleme Hatası (Listener): " + e.getMessage());
+                            e.printStackTrace();
+                        }
+                    });
+                }
+            } else {
+                System.out.println("⚠️ Bu aksiyon için kayıtlı bir dinleyici yok: " + action);
+            }
+        } catch (Exception e) {
+            System.err.println("❌ onMessage metodunda KRİTİK HATA: " + e.getMessage());
+            e.printStackTrace(); // Hatanın kaynağını tam burada göreceğiz
         }
+        // System.out.println("⬅️ Message from server: " + json);
+
+        // ProtocolMessage msg = ProtocolMessage.fromJson(json);
+
+        // System.out.println("➡️ Action parsed: " + msg.getAction());
+        // ActionType action = msg.getAction();
+        // // Find and notify all registered listeners for this action
+        // if (listeners.containsKey(action)) {
+        //     for (MessageListener listener : listeners.get(action)) {
+        //         // Use Platform.runLater because UI updates must happen on the FX thread
+        //         Platform.runLater(() -> listener.handle(msg.getPayload()));
+        //     }
+        // }
     }
 
     public static boolean isConnected() {

@@ -94,6 +94,14 @@ public class SocializationController implements UIController {
     @FXML
     private void initialize()
     {
+        this.allUsers = new ArrayList<>();
+        this.friendsList = new ArrayList<>();
+        this.onlineUsers = new ArrayList<>();
+        this.chatMessages = new ArrayList<>();
+
+        userNameTextField.setOnAction(e -> searchUsers());
+        departmentTextField.setOnAction(e -> searchUsers());
+        allUsers.add(new User(99, "testuser", "CS", "Avatar", "true", true, ""));
         WebSocketClient.addListener(ActionType.ERROR, (payload) -> {
             String errorMessage = (String) payload;
             
@@ -107,15 +115,30 @@ public class SocializationController implements UIController {
         });
         
         WebSocketClient.addListener(ActionType.RECEIVE_PRIVATE_MESSAGE, (payload) -> {
-            ChatMessage incomingMsg = (ChatMessage) payload;
+            // Güvenli dönüşüm
+            String json = WebSocketClient.getGson().toJson(payload);
+            ChatMessage incomingMsg = WebSocketClient.getGson().fromJson(json, ChatMessage.class);
+            
             Platform.runLater(() -> {
+                if (chatMessages == null) chatMessages = new ArrayList<>();
                 chatMessages.add(incomingMsg);
                 
-                // Eğer şu an mesajı gönderen kişiyle chat sayfamız açıksa ekrana bas
-                if (friendNameText.getText().equals(getUserNameFromId(incomingMsg.getSenderID()))) {
-                    renderMessage(incomingMsg, false); // Sola yasla (sender karşı taraf)
+                if (friendNameText.isVisible() && getUserNameFromId(incomingMsg.getSenderID()).equals(friendNameText.getText())) {
+                    renderMessage(incomingMsg, false);
                 } else {
-                    System.out.println("Yeni mesaj geldi: " + incomingMsg.getMessage());
+                    System.out.println("new message arrived" + incomingMsg.getMessage());
+                }
+            });
+        });
+
+        WebSocketClient.addListener(ActionType.FRIEND_ADDED, (payload) -> {
+            String json = WebSocketClient.getGson().toJson(payload);
+            User newFriend = WebSocketClient.getGson().fromJson(json, User.class);
+            
+            Platform.runLater(() -> {
+                if (!friendsList.contains(newFriend)) {
+                    friendsList.add(newFriend);
+                    refreshUI(); // Listeyi güncelle
                 }
             });
         });
@@ -178,26 +201,34 @@ public class SocializationController implements UIController {
     }
 
     @FXML
-    private void searchUsers()
-    {
-        String name = userNameTextField.getText();
-        String department = departmentTextField.getText();
-        ArrayList<User> allUsers = new ArrayList<>(onlineUsers);
-        ArrayList<User> filteredUsers = filterUsersByNameAndDepartment(name, department, allUsers);
-        for (Node node: searchParameters.getChildren())
-        {
-            node.setVisible(false);
-            node.setManaged(false);
-        }
-        searchParameters.getChildren().get(searchParameters.getChildren().indexOf(userSearchParameters)).setVisible(true);
-        searchParameters.getChildren().get(searchParameters.getChildren().indexOf(userSearchParameters)).setManaged(true);
+    private void searchUsers() {
+        String name = userNameTextField.getText().toLowerCase().trim();
+        
         searchResultsHBox.getChildren().clear();
-        searchResultsHBox.getChildren().addAll(new VBox(), new VBox());
-        for (int i = 0; i < filteredUsers.size(); i++)
-        {
-            User user = filteredUsers.get(i);
-            HBox userBox = createUserDisplayBox(user, false);
-            ((VBox)searchResultsHBox.getChildren().get(i % 2)).getChildren().add(userBox);
+        VBox leftCol = new VBox(10);
+        VBox rightCol = new VBox(10);
+        searchResultsHBox.getChildren().addAll(leftCol, rightCol);
+
+        // DİKKAT: onlineUsers yerine sunucudan gelen allUsers'ı kullanıyoruz
+        if (allUsers == null || allUsers.isEmpty()) {
+            System.out.println("Hata: Gösterilecek kullanıcı bulunamadı (allUsers boş).");
+            return;
+        }
+
+        int count = 0;
+        for (User user : allUsers) {
+            // Kendini ve mevcut arkadaşlarını arama sonuçlarında gösterme
+            if (user.getId() == ClientSession.getUserId() || friendsList.contains(user)) {
+                continue;
+            }
+
+            // Filtreleme: İsim eşleşiyorsa ekle
+            if (name.isEmpty() || user.getUsername().toLowerCase().contains(name)) {
+                HBox userBox = createUserDisplayBox(user, false);
+                if (count % 2 == 0) leftCol.getChildren().add(userBox);
+                else rightCol.getChildren().add(userBox);
+                count++;
+            }
         }
     }
 
@@ -359,13 +390,16 @@ public class SocializationController implements UIController {
         idLabel.setVisible(false);
         Label userLabel = new Label(user.getUsername() + " / " + user.getDepartment());
         HBox userBox = new HBox(idLabel, avatarLabel, userLabel);
-        if (!isFriend)
-        {
-            Button addFriendButton = new Button("Add Friend");
-            addFriendButton.onMouseClickedProperty().set(e -> {
-                addFriend(user);
-            });
-            userBox.getChildren().add(addFriendButton);
+        if (!isFriend) {
+                // Arama sonucunda çıkan ve arkadaş olmayan kullanıcılar için
+                Button addFriendButton = new Button("Add Friend");
+                addFriendButton.setOnAction(e -> {
+                    // Sunucuya arkadaş ekleme protokolünü gönder
+                    WebSocketClient.send(new ProtocolMessage(ActionType.ADD_FRIEND, user));
+                    addFriendButton.setDisable(true);
+                    addFriendButton.setText("Request Sent");
+                });
+                userBox.getChildren().add(addFriendButton);
         }
         else
         {
@@ -375,6 +409,11 @@ public class SocializationController implements UIController {
                 chatVBox.getChildren().clear();
                 toggleOnChatMenu();
                 friendNameText.setText(user.getUsername());
+                
+                sendMessageTextField.setOnAction(null);
+                // chatVBox.getChildren().clear();
+                // toggleOnChatMenu();
+                // friendNameText.setText(user.getUsername());
                 sendMessageTextField.setOnAction(v ->
                     {
                         String messageText = sendMessageTextField.getText();
@@ -385,40 +424,40 @@ public class SocializationController implements UIController {
                         ChatMessage newMessage = new ChatMessage(ClientSession.getUserId(), user.getId(), messageText);
                         WebSocketClient.send(new ProtocolMessage(ActionType.SEND_PRIVATE_MESSAGE, newMessage));
                         chatMessages.add(newMessage);
-                        //renderMessage(newMessage, true); // Mesajı sağa yasla (sender biziz)
-                        Label messageTextNode = new Label(newMessage.getMessage());
-                        LocalDateTime timestamp = newMessage.getTimestamp();
-                        Label messageTime = new Label(timestamp.getHour() + ":" + timestamp.getMinute());
-                        HBox messageBox = new HBox(messageTextNode, messageTime);
-                        messageBox.setAlignment(Pos.CENTER_RIGHT);
-                        chatVBox.getChildren().add(messageBox);
+                        renderMessage(newMessage, true); // Mesajı sağa yasla (sender biziz)
+                        // Label messageTextNode = new Label(newMessage.getMessage());
+                        // LocalDateTime timestamp = newMessage.getTimestamp();
+                        // Label messageTime = new Label(timestamp.getHour() + ":" + timestamp.getMinute());
+                        // HBox messageBox = new HBox(messageTextNode, messageTime);
+                        // messageBox.setAlignment(Pos.CENTER_RIGHT);
+                        // chatVBox.getChildren().add(messageBox);
                         sendMessageTextField.clear();
                     }
                 );
                 for (ChatMessage msg : chatMessages)
                 {
-                    if (msg.getSenderID() == user.getId() || msg.getReceiverID() == user.getId()) {
-                        boolean isMine = (msg.getSenderID() == ClientSession.getUserId());
-                        //renderMessage(msg, isMine);
-                    }
                     if ((msg.getSenderID() == user.getId() && msg.getReceiverID() == ClientSession.getUserId()) ||
-                        (msg.getReceiverID() == user.getId() && msg.getSenderID() == ClientSession.getUserId()))
-                    {
-                        Label messageText = new Label(msg.getMessage());
-                        LocalDateTime timestamp = msg.getTimestamp();
-                        Label messageTime = new Label(timestamp.getHour() + ":" + timestamp.getMinute());
-                        HBox messageBox = new HBox(messageText, messageTime);
-                        if (msg.getSenderID() == user.getId())
-                        {
-                            messageBox.setAlignment(Pos.CENTER_LEFT);
-                        }
-                        else
-                        {
-                            messageBox.setAlignment(Pos.CENTER_RIGHT);
-                        }
-                        chatVBox.getChildren().add(messageBox);
-                        sendMessageTextField.clear();
-                    }
+                                (msg.getReceiverID() == user.getId() && msg.getSenderID() == ClientSession.getUserId())) {
+                                renderMessage(msg, msg.getSenderID() == ClientSession.getUserId());
+                            }
+                    // if ((msg.getSenderID() == user.getId() && msg.getReceiverID() == ClientSession.getUserId()) ||
+                    //     (msg.getReceiverID() == user.getId() && msg.getSenderID() == ClientSession.getUserId()))
+                    // {
+                    //     Label messageText = new Label(msg.getMessage());
+                    //     LocalDateTime timestamp = msg.getTimestamp();
+                    //     Label messageTime = new Label(timestamp.getHour() + ":" + timestamp.getMinute());
+                    //     HBox messageBox = new HBox(messageText, messageTime);
+                    //     if (msg.getSenderID() == user.getId())
+                    //     {
+                    //         messageBox.setAlignment(Pos.CENTER_LEFT);
+                    //     }
+                    //     else
+                    //     {
+                    //         messageBox.setAlignment(Pos.CENTER_RIGHT);
+                    //     }
+                    //     chatVBox.getChildren().add(messageBox);
+                    //     sendMessageTextField.clear();
+                    // }
                 }
             });
             userBox.getChildren().add(sendMessageButton);
@@ -447,28 +486,29 @@ public class SocializationController implements UIController {
     private void renderMessage(ChatMessage msg, boolean isMine) {
         Label textLabel = new Label(msg.getMessage());
         textLabel.setWrapText(true);
-        textLabel.setMaxWidth(200);
+        textLabel.setMaxWidth(250);
         
-        // Basit bir stil: Bizimkiler mavi, gelenler gri olsun
-        String style = isMine ? "-fx-background-color: #0084ff; -fx-text-fill: white; -fx-background-radius: 10; -fx-padding: 8;" 
-                            : "-fx-background-color: #e4e6eb; -fx-text-fill: black; -fx-background-radius: 10; -fx-padding: 8;";
-        textLabel.setStyle(style);
+        // Modern Chat Baloncuğu Stili
+        String color = isMine ? "#0084ff" : "#e4e6eb";
+        String textColor = isMine ? "white" : "black";
+        textLabel.setStyle("-fx-background-color: " + color + "; " +
+                        "-fx-text-fill: " + textColor + "; " +
+                        "-fx-background-radius: 15; -fx-padding: 10; -fx-font-size: 13px;");
 
-        Label timeLabel = new Label(msg.getTimestamp().getHour() + ":" + msg.getTimestamp().getMinute());
+        Label timeLabel = new Label(msg.getTimestamp().getHour() + ":" + String.format("%02d", msg.getTimestamp().getMinute()));
         timeLabel.setStyle("-fx-font-size: 9px; -fx-text-fill: gray;");
 
         VBox bubble = new VBox(textLabel, timeLabel);
-        HBox messageBox = new HBox(bubble);
+        bubble.setSpacing(2);
         
-        if (isMine) {
-            messageBox.setAlignment(Pos.CENTER_RIGHT);
-        } else {
-            messageBox.setAlignment(Pos.CENTER_LEFT);
-        }
+        HBox messageRow = new HBox(bubble);
+        messageRow.setPadding(new javafx.geometry.Insets(5, 10, 5, 10));
+        messageRow.setAlignment(isMine ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
         
-        chatVBox.getChildren().add(messageBox);
-        // Otomatik aşağı kaydır
-        chatScrollPane.setVvalue(1.0);
+        chatVBox.getChildren().add(messageRow);
+        
+        // Otomatik aşağı kaydırma
+        Platform.runLater(() -> chatScrollPane.setVvalue(1.0));
     }
 
     @FXML

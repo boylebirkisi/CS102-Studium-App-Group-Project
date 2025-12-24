@@ -728,29 +728,67 @@ public class DBManager {
      * @return
      */
     public List<GroupSession> getAllGroupSessions() {
-        String sqlCommand = "SELECT * FROM group_sessions";
-        List<GroupSession> sessions = new ArrayList<>();
+    // Join sessions and group_sessions tables immediately
+    String sqlCommand = "SELECT s.*, g.is_public FROM sessions s " +
+                        "JOIN group_sessions g ON s.id = g.session_id " +
+                        "WHERE s.type = 'GROUP_SESSION'";
+    
+    List<GroupSession> groupSessionsList = new ArrayList<>();
 
-        try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
+    try (Connection conn = connect(); 
+         Statement stmt = conn.createStatement();
+         ResultSet rs = stmt.executeQuery(sqlCommand)) {
 
-            if (conn == null) return sessions; 
+        while (rs.next()) {
+            int id = rs.getInt("id");
+            int ownerId = rs.getInt("owner_id");
+            String name = rs.getString("name");
+            String type = rs.getString("type");
+            int no = rs.getInt("no");
+            int length = rs.getInt("length");
+            int breakLength = rs.getInt("break_length");
+            LocalDateTime startDate = rs.getTimestamp("start_date").toLocalDateTime();
+            boolean completedInDB = rs.getBoolean("is_completed");
+
+            // 2. Instantiate the Session object
+            Session session = new Session(
+                getUserByID(ownerId), // Owner object
+                name, 
+                type, 
+                no, 
+                id, 
+                length, 
+                breakLength, 
+                startDate
+            );
+
+            ArrayList<User> participants = getParticipantsForSession(session.getId());
             
-            ResultSet rs = stmt.executeQuery(sqlCommand);
-            while (rs.next()) {
-                Session session = getIndividualSessionByID(rs.getInt("session_id"));
+            GroupSession gs = new GroupSession(session, participants, rs.getBoolean("is_public"));
+            groupSessionsList.add(gs);
+        }
+    } catch (SQLException e) {
+        System.err.println("Database operation failed: " + e.getMessage());
+    }
+    return groupSessionsList;
+}
 
-                ResultSet participantRS = getObject("SELECT * FROM session_participants WHERE session_id = " + rs.getInt("session_id"));
-                ArrayList<User> participants = new ArrayList<>();
-                while (participantRS.next()) {
-                    participants.add(getUserByID(participantRS.getInt("user_id")));
+    private ArrayList<User> getParticipantsForSession(int sessionId) {
+        ArrayList<User> users = new ArrayList<>();
+        String sql = "SELECT user_id FROM session_participants WHERE session_id = ?";
+        
+        try (Connection conn = connect(); 
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, sessionId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs != null && rs.next()) {
+                    users.add(getUserByID(rs.getInt("user_id")));
                 }
-                GroupSession groupSession = new GroupSession(session, participants, rs.getBoolean("is_public"));
-                sessions.add(groupSession);
             }
         } catch (SQLException e) {
-            System.err.println("Database operation failed: " + e.getMessage());
+            e.printStackTrace();
         }
-        return sessions;
+        return users;
     }
 
     /**
@@ -973,6 +1011,6 @@ public class DBManager {
 
     public static void main(String[] args) {
         DBManager dbManager = new DBManager();
-        System.out.println(dbManager.getVerificationCode("deryilmaz06@gmail.com").getStoredCode());
+        System.out.println(dbManager.getAllGroupSessions().get(0).getName());
     }
 }

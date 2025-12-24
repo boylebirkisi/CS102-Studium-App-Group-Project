@@ -71,6 +71,7 @@ public class EventPlannerPopUpController implements UIController {
         AppEvent event = new AppEvent(eventName, color, startDate, endDate,
             ClientSession.getUserId(), importance, null);
         WebSocketClient.send(new ProtocolMessage(ActionType.CREATE_EVENT, event));
+        ownerController.addEvent(event);
         ownerController.refreshUI();
         ownerController.closePopUp();
     }

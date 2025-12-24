@@ -83,7 +83,8 @@ public class LoginController implements UIController {
                                                 rs.getFriends() != null ? new ArrayList<>(rs.getFriends()) : new ArrayList<>(),
                                                 userList, // This one is created locally, so it should be fine
                                                 rs.getMessages() != null ? new ArrayList<>(rs.getMessages()) : new ArrayList<>(),
-                                                rs.getAllUsers() != null ? new ArrayList<>(rs.getAllUsers()) : new ArrayList<>());
+                                                rs.getAllUsers() != null ? new ArrayList<>(rs.getAllUsers()) : new ArrayList<>(),
+                                                rs.getAllGroupSessions() != null ? new ArrayList<>(rs.getAllGroupSessions()) : new ArrayList<>() );
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -111,7 +112,8 @@ public class LoginController implements UIController {
                                                 rs.getFriends() != null ? new ArrayList<>(rs.getFriends()) : new ArrayList<>(),
                                                 userList, // This one is created locally, so it should be fine
                                                 rs.getMessages() != null ? new ArrayList<>(rs.getMessages()) : new ArrayList<>(),
-                                                rs.getAllUsers() != null ? new ArrayList<>(rs.getAllUsers()) : new ArrayList<>());
+                                                rs.getAllUsers() != null ? new ArrayList<>(rs.getAllUsers()) : new ArrayList<>(),
+                                                rs.getAllGroupSessions() != null ? new ArrayList<>(rs.getAllGroupSessions()) : new ArrayList<>());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

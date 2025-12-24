@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-import cs102groupproject.App;
 import cs102groupproject.SharedObjects.ActionType;
 import cs102groupproject.SharedObjects.ChatMessage;
+import cs102groupproject.SharedObjects.GroupSession;
 import cs102groupproject.SharedObjects.ProtocolMessage;
 import cs102groupproject.SharedObjects.Session;
 import cs102groupproject.SharedObjects.User;
@@ -40,7 +40,7 @@ public class SocializationController implements UIController {
     ArrayList<User> onlineUsers;
     ArrayList<ChatMessage> chatMessages;
     ArrayList<User> allUsers;
-    ArrayList<Session> allGroupSessions;
+    ArrayList<GroupSession> allGroupSessions;
     @FXML
     private Text currencyEarnedLabel;
     @FXML
@@ -163,7 +163,7 @@ public class SocializationController implements UIController {
     }
 
     public void setFields(ArrayList<User> friendsList, ArrayList<User> onlineUsers,
-        ArrayList<ChatMessage> chatMessages, ArrayList<User> allUsers, ArrayList<Session> allGroupSessions) {
+        ArrayList<ChatMessage> chatMessages, ArrayList<User> allUsers, ArrayList<GroupSession> allGroupSessions) {
         this.friendsList = friendsList;
         this.onlineUsers = onlineUsers;
         this.chatMessages = chatMessages;
@@ -190,7 +190,7 @@ public class SocializationController implements UIController {
     public void updateAllUsers(ArrayList<User> allUsers) {
         this.allUsers = allUsers;
     }
-    public void updateAllGroupSessions(ArrayList<Session> allGroupSessions) {
+    public void updateAllGroupSessions(ArrayList<GroupSession> allGroupSessions) {
         this.allGroupSessions = allGroupSessions;
     }
     public void updateOnlineUsers(ArrayList<User> onlineUsers) {

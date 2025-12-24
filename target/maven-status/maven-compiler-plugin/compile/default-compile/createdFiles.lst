@@ -36,7 +36,6 @@ cs102groupproject\Client\ClientSession.class
 cs102groupproject\SharedObjects\Storage.class
 cs102groupproject\SharedObjects\MarketPlace.class
 cs102groupproject\Server\EmailService$1.class
-cs102groupproject\App.class
 cs102groupproject\SharedObjects\User.class
 cs102groupproject\Client\WebSocketClient.class
 cs102groupproject\Server\SessionService.class

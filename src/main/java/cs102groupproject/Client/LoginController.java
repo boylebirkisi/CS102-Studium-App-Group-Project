@@ -70,10 +70,13 @@ public class LoginController implements UIController {
             ClientSession.login(loggedInUser);
             ClientSession.setLoginResponse(rs);
 
+            ArrayList<User> userList = new ArrayList<>();
+            userList.add(loggedInUser);
+
             Platform.runLater(() -> {
                     try {
                         // Online userlar ekelenecek
-                        App.loadScrollableScene(new ArrayList<>(rs.getHabits()), new ArrayList<>(rs.getEventsOfUser()), new ArrayList<>(rs.getTasksOfUser()), new ArrayList<>(rs.getFriends()), null,
+                        App.loadScrollableScene(new ArrayList<>(rs.getHabits()), new ArrayList<>(rs.getEventsOfUser()), new ArrayList<>(rs.getTasksOfUser()), new ArrayList<>(rs.getFriends()), userList,
                                                 new ArrayList<>(rs.getMessages()), new ArrayList<>(rs.getAllUsers()));
                     } catch (Exception e) {
                         e.printStackTrace();

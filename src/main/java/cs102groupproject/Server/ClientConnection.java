@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import cs102groupproject.SharedObjects.*;
+import cs102groupproject.Client.ClientSession;
 import cs102groupproject.Server.AuthService;
 import cs102groupproject.Server.SessionService;
 
@@ -69,7 +70,25 @@ public class ClientConnection {
                 ));
                 break;
             }
-                
+             case ADD_FRIEND: {
+                User targetUser = message.getPayloadAs(User.class);
+                int currentUserId = userId; // O anki bağlantıdan ID'yi al
+
+                DBManager db = new DBManager();
+                // 1. Veritabanına kaydet (DBManager'da bu metodun olduğunu varsayıyoruz)
+                db.addFriend(currentUserId, targetUser.getId());
+
+                // 2. Ekleyen kişiye onay gönder
+                send(new ProtocolMessage(ActionType.FRIEND_ADDED, targetUser));
+
+                // 3. Eklene kişiye (eğer online ise) bildirim gönder
+                ClientConnection targetConn = sessionManager.getConnection(targetUser.getId());
+                if (targetConn != null) {
+                    User currentUser = loggedInUser;
+                    targetConn.send(new ProtocolMessage(ActionType.FRIEND_REQUEST_RECEIVED, currentUser));
+                }
+                break;
+            }   
             case SEND_PRIVATE_MESSAGE: {
                 ChatMessage chatMsg = message.getPayloadAs(ChatMessage.class);
                 chatService.saveMessage(chatMsg);

@@ -33,12 +33,12 @@ public class EventPlannerPopUpController implements UIController {
     @FXML
     private void initialize()
     {
-        WebSocketClient.addListener(ActionType.EVENT_CREATED, (payload) -> {
-            AppEvent newEvent = (AppEvent) payload;
-            Platform.runLater(() -> {
-                System.out.println("new event is added " + newEvent.getName());
-            });
-        });
+        // WebSocketClient.addListener(ActionType.EVENT_CREATED, (payload) -> {
+        //     AppEvent newEvent = (AppEvent) payload;
+        //     Platform.runLater(() -> {
+        //         System.out.println("new event is added " + newEvent.getName());
+        //     });
+        // });
     }
 
     public void setFields(PlannerController ownerController)
@@ -49,6 +49,7 @@ public class EventPlannerPopUpController implements UIController {
     @FXML
     private void handleCreateEventButton()
     {
+        try {
         String eventName = eventNameTextField.getText();
         String color = colorPicker.getValue().toString();
         int importance = 1;
@@ -61,19 +62,29 @@ public class EventPlannerPopUpController implements UIController {
             }
         }
         String[] startTimeParts = startTimeTextField.getText().split(":");
-        int startHour = Integer.parseInt(startTimeParts[0]);
-        int startMinute = Integer.parseInt(startTimeParts[1]);
+        int startHour = Integer.parseInt(startTimeParts[0].trim());
+        int startMinute = Integer.parseInt(startTimeParts[1].trim());
         LocalDateTime startDate = startDatePicker.getValue().atTime(startHour, startMinute);
+
         String[] endTimeParts = endTimeTextField.getText().split(":");
-        int endHour = Integer.parseInt(endTimeParts[0]);
-        int endMinute = Integer.parseInt(endTimeParts[1]);
+        int endHour = Integer.parseInt(endTimeParts[0].trim());
+        int endMinute = Integer.parseInt(endTimeParts[1].trim());
         LocalDateTime endDate = endDatePicker.getValue().atTime(endHour, endMinute);
+
         AppEvent event = new AppEvent(eventName, color, startDate, endDate,
-            ClientSession.getUserId(), importance, null);
+                ClientSession.getUserId(), importance, ""); // String png null olmasın boş olsun
+
         WebSocketClient.send(new ProtocolMessage(ActionType.CREATE_EVENT, event));
+<<<<<<< HEAD
+        // ownerController.refreshUI();
+=======
         ownerController.addEvent(event);
         ownerController.refreshUI();
+>>>>>>> 2dfd009a468dceafa784d342a172c3acdd3ee2c2
         ownerController.closePopUp();
+        } catch (Exception e) {
+        System.err.println("Zaman formatı hatası! Lütfen HH:mm şeklinde girin.");
+    }
     }
 
     @FXML

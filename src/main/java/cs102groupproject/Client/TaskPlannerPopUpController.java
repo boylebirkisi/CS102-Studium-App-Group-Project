@@ -1,5 +1,7 @@
 package cs102groupproject.Client;
 
+import cs102groupproject.SharedObjects.ActionType;
+import cs102groupproject.SharedObjects.ProtocolMessage;
 import cs102groupproject.SharedObjects.Task;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -43,8 +45,12 @@ public class TaskPlannerPopUpController implements UIController {
         }
         Task task = new Task(taskName, color, importance, ClientSession.getUserId(),
             ownerController.getSelectedDate(), null);
+<<<<<<< HEAD
+        WebSocketClient.send(new ProtocolMessage(ActionType.CREATE_TASK, task));
+=======
         ownerController.addTask(task);
         ownerController.refreshUI();
+>>>>>>> 2dfd009a468dceafa784d342a172c3acdd3ee2c2
         ownerController.closePopUp();
     }
 

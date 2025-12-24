@@ -25,6 +25,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 
 public class LoginController implements UIController {
+    String selectedAvatar;
     @FXML
     private TextField usernameField;
     @FXML
@@ -270,6 +271,31 @@ public class LoginController implements UIController {
     }
 
     //! AVATAR PAGE
+
+       @FXML
+    private void selectAvatar1() {
+        selectedAvatar = "Avatar1";
+        System.out.println("Selected Avatar 1");
+    }
+
+    @FXML
+    private void selectAvatar2() {
+        selectedAvatar = "Avatar2";
+        System.out.println("Selected Avatar 2");
+    }
+
+    @FXML
+    private void selectAvatar3() {
+        selectedAvatar = "Avatar3";
+        System.out.println("Selected Avatar 3");
+    }
+
+    @FXML
+    private void selectAvatar4() {
+        selectedAvatar = "Avatar4";
+        System.out.println("Selected Avatar 4");
+    }
+
 
     @FXML
     public void handleRegistration() {

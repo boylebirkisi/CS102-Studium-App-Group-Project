@@ -778,13 +778,18 @@ public class DBManager {
 
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sqlCommand)) {
 
-            if (conn == null) return null; 
+            if (conn == null) {
+                System.err.println("CRITICAL: Connection is null in getVerificationCode!");
+                return null;
+            }
             
             pstmt.setString(1, email);
 
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                return new VerificationCode(rs.getString("stored_code"), rs.getString("email"), rs.getLong("expiry_time"));
+                VerificationCode code = new VerificationCode(rs.getString("stored_code"), rs.getString("email"), rs.getLong("expiry_time"));
+                System.out.println(code.getStoredCode());
+                return code;
             } else {
                 return null; 
             }
@@ -968,6 +973,6 @@ public class DBManager {
 
     public static void main(String[] args) {
         DBManager dbManager = new DBManager();
-        
+        System.out.println(dbManager.getVerificationCode("deryilmaz06@gmail.com").getStoredCode());
     }
 }

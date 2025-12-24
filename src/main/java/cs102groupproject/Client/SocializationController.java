@@ -554,7 +554,6 @@ public class SocializationController implements UIController {
 
     @FXML
     public void refreshButtonFunctionality() {
-        ClientSession.login(onlineUsers.get(1)); // Dummy login for testing
         refreshUI();
     }
 

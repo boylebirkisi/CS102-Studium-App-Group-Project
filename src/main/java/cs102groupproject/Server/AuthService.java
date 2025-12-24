@@ -202,8 +202,7 @@ public class AuthService {
             events, 
             tasks, 
             habits, 
-            sessions,
-            dbManager.getAllGroupSessions()
+            sessions
         );
 
         System.out.println("--- LoginResponse Successfully Built ---\n");

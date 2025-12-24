@@ -15,7 +15,6 @@ public class LoginResponse {
     private List<Task> tasksOfUser;
     private List<Habit> habits;
     private List<Session> individualSessions;
-    private List<GroupSession> allGroupSessions;
 
     // 
     public LoginResponse() {
@@ -25,7 +24,6 @@ public class LoginResponse {
         this.eventsOfUser = new ArrayList<>();
         this.habits = new ArrayList<>();
         this.individualSessions = new ArrayList<>();
-        this.allGroupSessions = new ArrayList<>();
     }
 
     /**
@@ -40,7 +38,7 @@ public class LoginResponse {
      */
     public LoginResponse(User user, List<User> friends, List<User> allUsers, List<Notification> notifications, 
                          List<ChatMessage> messages, List<AppEvent> eventsOfUser, List<Task> tasksOfUser,
-                         List<Habit> habits, List<Session> individualSessions, List<GroupSession> allGroupSessions) {
+                         List<Habit> habits, List<Session> individualSessions) {
         this.user = user;
         this.friends = friends;
         this.allUsers = allUsers;
@@ -50,7 +48,6 @@ public class LoginResponse {
         this.tasksOfUser = tasksOfUser;
         this.habits = habits;
         this.individualSessions = individualSessions;
-        this.allGroupSessions = allGroupSessions;
     }
 
     // --- GETTERS AND SETTERS ---
@@ -75,13 +72,6 @@ public class LoginResponse {
 
     public List<Session> getIndividualSessions() { return individualSessions; }
     public void setIndividualSessions(List<Session> individualSessions) { this.individualSessions = individualSessions; }
-
-    public List<GroupSession> getAllGroupSessions() {
-        return allGroupSessions;
-    }
-    public void setAllGroupSessions(List<GroupSession> allGroupSessions) {
-        this.allGroupSessions = allGroupSessions;
-    }
 
     public List<Task> getTasksOfUser() {
         return tasksOfUser;

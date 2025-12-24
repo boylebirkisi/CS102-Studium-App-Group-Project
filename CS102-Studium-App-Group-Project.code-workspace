@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": "../../../git/CS102-Studium-App-Group-Project"
+		}
+	],
+	"settings": {
+		"java.configuration.updateBuildConfiguration": "interactive",
+		"java.compile.nullAnalysis.mode": "disabled"
+	}
+}

@@ -8,11 +8,15 @@ import cs102groupproject.SharedObjects.GroupSession;
 import cs102groupproject.SharedObjects.ProtocolMessage;
 import cs102groupproject.SharedObjects.User;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 
@@ -56,9 +60,21 @@ public class GroupSessionPlannerPopUpController implements UIController {
             User friend = friendsList.get(i);
 
             Label friendLabel =
-                    new Label(friend.getUsername() + " / " + friend.getDepartment());
+                new Label(friend.getUsername() + " / " + friend.getDepartment());
 
+            Region spacer = new Region();
+            HBox.setHgrow(spacer, Priority.ALWAYS);
             HBox friendBox = new HBox(friendLabel);
+            VBox.setVgrow(friendBox, Priority.ALWAYS);
+            friendBox.setMaxWidth(Double.MAX_VALUE);
+            friendBox.setSpacing(10);
+            friendBox.setAlignment(Pos.CENTER_LEFT);
+            Button inviteButton = new Button("Invite");
+            inviteButton.setOnAction(e -> {
+                // Handle invite action
+                System.out.println("Invited " + friend.getUsername());
+            });
+            friendBox.getChildren().addAll(spacer, inviteButton);
 
             if (i % 2 == 0)
                 ((VBox) friendsTilePane.getChildren().get(0))

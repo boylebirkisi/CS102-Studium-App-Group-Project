@@ -39,10 +39,15 @@ public class GroupSessionPlannerPopUpController implements UIController {
     @FXML
     private TextField timeTextField;
 
+    /**
+     * Sets the owner controller, doing the same thing as setFields in other controllers.
+     * @param ownerController The SocializationController that owns this popup.
+     */
     public void setOwnerController(SocializationController ownerController) {
         this.ownerController = ownerController;
         populateFriendsList();
     }
+
     @FXML
     public void initialize(){
         WebSocketClient.addListener(
@@ -53,6 +58,7 @@ public class GroupSessionPlannerPopUpController implements UIController {
             }
         );
     }
+    // Populates the friends list in the popup for inviting friends
     private void populateFriendsList() {
         ArrayList<User> friendsList = ownerController.getFriendsList();
 
@@ -84,7 +90,7 @@ public class GroupSessionPlannerPopUpController implements UIController {
                         .getChildren().add(friendBox);
         }
     }
-
+    // Create Session button action
     @FXML
     private void handleCreateSessionButton() {
 
@@ -120,7 +126,7 @@ public class GroupSessionPlannerPopUpController implements UIController {
         // Popup closing
         ownerController.closePopUp();
     }
-
+    // Cancel button action
     @FXML
     private void handleCancelButton() {
         ownerController.closePopUp();

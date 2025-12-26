@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import cs102groupproject.SharedObjects.ActionType;
 import cs102groupproject.SharedObjects.AppEvent;
 import cs102groupproject.SharedObjects.ProtocolMessage;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.DatePicker;
@@ -41,11 +40,15 @@ public class EventPlannerPopUpController implements UIController {
         // });
     }
 
+    /**
+     * Sets the fields of the popup controller.
+     * @param ownerController The PlannerController that owns this popup.
+     */
     public void setFields(PlannerController ownerController)
     {
         this.ownerController = ownerController;
     }
-
+    // Create Event button action
     @FXML
     private void handleCreateEventButton()
     {
@@ -81,7 +84,7 @@ public class EventPlannerPopUpController implements UIController {
         System.err.println("Zaman formatı hatası! Lütfen HH:mm şeklinde girin.");
     }
     }
-
+    // Cancel button action
     @FXML
     private void handleCancelButton()
     {

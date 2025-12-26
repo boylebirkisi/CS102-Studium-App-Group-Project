@@ -16,7 +16,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
@@ -27,9 +26,6 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -144,6 +140,12 @@ public class PlannerController implements UIController {
         });
     }
 
+    /**
+     * Sets the data fields for the planner.
+     * @param habits the list of habits
+     * @param events the list of events
+     * @param tasks the list of tasks
+     */
     public void setFields(ArrayList<Habit> habits, ArrayList<AppEvent> events, ArrayList<Task> tasks) {
 
         this.habits = (habits != null) ? habits : new ArrayList<>();
@@ -166,6 +168,7 @@ public class PlannerController implements UIController {
         });
     }
 
+    // Refreshes the UI components of the planner
     public void refreshUI()
     {
         updateHabitTracker(selectedHabit);
@@ -179,6 +182,10 @@ public class PlannerController implements UIController {
         updateDate();
     }
 
+    /**
+     * Updates the habit tracker display based on the selected habit.
+     * @param habit the selected habit to display
+     */
     private void updateHabitTracker(Habit habit)
     {
         clearHabitTrackerCircles();
@@ -209,6 +216,7 @@ public class PlannerController implements UIController {
         }
     }
 
+    // Clears all habit tracker checkboxes
     private void clearHabitTrackerCircles()
     {
         for (int i = 0; i < habitCircleFlowPane.getChildren().size(); i++)
@@ -217,6 +225,7 @@ public class PlannerController implements UIController {
         }
     }
 
+    // Called when add habit circle is clicked, shows text field to add new habit
     @FXML
     private void addHabitCircleClicked()
     {
@@ -229,6 +238,7 @@ public class PlannerController implements UIController {
         updateHabitTracker(selectedHabit);
     }
 
+    // Called when enter is pressed in add habit text field, adds new habit
     @FXML
     private void addHabitTextFieldAction()
     {
@@ -247,6 +257,7 @@ public class PlannerController implements UIController {
         updateHabitTracker(newHabit);
     }
 
+    // Updates the events list display
     @FXML
     private void populateEvents()
     {
@@ -266,7 +277,7 @@ public class PlannerController implements UIController {
         }
         for (int i = 0; i < events.size(); i++)
         {
-            
+            // Create event box
             Region spacer = new Region();
             HBox.setHgrow(spacer, Priority.ALWAYS);
             AppEvent event = events.get(i);
@@ -280,6 +291,7 @@ public class PlannerController implements UIController {
         eventsVBox.requestLayout();
     }
 
+    // Called when add event button is clicked
     @FXML
     private void addEventButtonClicked() throws IOException
     {
@@ -288,6 +300,7 @@ public class PlannerController implements UIController {
         popUpStage.setTitle("Add Event Pop-Up Menu");
     }
 
+    // Called when add task button is clicked
     @FXML
     private void addTaskButtonClicked() throws IOException
     {
@@ -296,6 +309,12 @@ public class PlannerController implements UIController {
         popUpStage.setTitle("Add Task Pop-Up Menu");
     }
 
+    /**
+     * Shows a pop-up window with the given FXML file.
+     * @param fxmlPath the path to the FXML file without .fxml extension and starting slash
+     * @return the controller of the pop-up window
+     * @throws IOException if the FXML file cannot be loaded
+     */
     public UIController showPopUp(String fxmlPath) throws IOException
     {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/" + fxmlPath + ".fxml"));
@@ -333,6 +352,7 @@ public class PlannerController implements UIController {
         return datePicker.getValue();
     }
 
+    // called when date is changed by date picker
     @FXML
     private void updateDate()
     {
@@ -346,29 +366,36 @@ public class PlannerController implements UIController {
             {drawTasksForDate(datePicker.getValue(), false);}
     }
 
+    /**
+     * Draws tasks for either a given date or the week of that date.
+     * @param date the date to draw tasks for
+     * @param daily whether to draw daily tasks (true) or weekly tasks (false)
+     */
     private void drawTasksForDate(LocalDate date, boolean daily)
     {
+        // Set visibility of components to false
         dailyTasksVBoxHBox.setVisible(false);
         dailyTasksVBoxHBox.setManaged(false);
         weeklyScrollPane.setVisible(false);
         weeklyScrollPane.setManaged(false);
         int completedTasks = 0;
         int totalTasks = 0;
-        for (Node node : dailyTasksVBoxHBox.getChildren())
-        {
-            ((VBox)node).getChildren().clear();
-        }
+        // Draw tasks for a given day
         if (daily)
         {
+            // Clear previous daily tasks
             ((VBox)dailyTasksVBoxHBox.getChildren().get(0)).getChildren().clear();
             ((VBox)dailyTasksVBoxHBox.getChildren().get(1)).getChildren().clear();
             if (dateLabel.getScene() != null)
             {
+                // Add stylesheet to scene
                 Scene scene = dateLabel.getScene();
                 scene.getStylesheets().add(getClass().getResource("/taskStyle.css").toExternalForm());
             }
+            // Set visibility of daily tasks components to true
             dailyTasksVBoxHBox.setVisible(true);
             dailyTasksVBoxHBox.setManaged(true);
+            // Draw each task for the given date
             for (int i = 0; i < tasks.size(); i++)
             {
                 Task task = tasks.get(i);
@@ -383,6 +410,7 @@ public class PlannerController implements UIController {
                     taskCheckBox.setSelected(task.getIsCompleted());
                     if (task.getIsCompleted())
                         {taskLabel.setStyle("-fx-strikethrough: true;");}
+                    // Handle checkbox action for completing/uncompleting task
                     taskCheckBox.setOnAction(e -> {
                         if (taskCheckBox.isSelected())
                             {task.completeTask();}
@@ -391,12 +419,14 @@ public class PlannerController implements UIController {
                         WebSocketClient.send(new ProtocolMessage(ActionType.UPDATE_TASK, task));     
                         updateDate();
                     });
+                    // Handle importance color circle
                     Color importance = Color.GRAY;
                     if (task.getImportance() == 1) {importance = Color.LIGHTGREEN;}
                     else if (task.getImportance() == 2) {importance = Color.YELLOW;}
                     else if (task.getImportance() == 3) {importance = Color.ORANGE;}
                     else if (task.getImportance() == 4) {importance = Color.RED;}
                     Circle colorCircle = new Circle(8, importance);
+                    // Create and format task box
                     Region spacer = new Region();
                     HBox.setHgrow(spacer, Priority.ALWAYS);
                     HBox taskBox = new HBox(taskLabel, spacer, taskCheckBox, colorCircle);
@@ -410,11 +440,13 @@ public class PlannerController implements UIController {
                     VBox.setVgrow(taskBox, Priority.NEVER);
                     System.out.println(task.getColor());
                     taskBox.setPadding(new Insets(8, 14, 8, 14));
+                    // Set aesthetic color of task box based on task color
                     String cssColor = toCssColor(task.getColor());
                     taskBox.setStyle(
                         "-fx-background-color: " + cssColor + ";" +
                         "-fx-background-radius: 20;"
                     );
+                    // Add task box to left or right VBox based on index
                     if (i % 2 == 0)
                     {
                         ((VBox)dailyTasksVBoxHBox.getChildren().get(0)).getChildren().add(taskBox);
@@ -427,6 +459,7 @@ public class PlannerController implements UIController {
                     }
                 }
             }
+            // Update done percentage text
             if (totalTasks > 0) {
                 int percent = (int) (((double) completedTasks / totalTasks) * 100);
                 donePercentTextField.setText("%" + percent);
@@ -434,8 +467,10 @@ public class PlannerController implements UIController {
                 donePercentTextField.setText("%0");
             }        
         }
+        // Draw tasks for the week of a given date
         else
         {
+            // Clear previous weekly tasks and set day labels
             LocalDate startOfWeek = date.minusDays(date.getDayOfWeek().getValue() - 1);
             for (int i = 0; i < weeklyTasksVBoxFlowPane.getChildren().size(); i++)
             {
@@ -447,8 +482,10 @@ public class PlannerController implements UIController {
                 Label dateLabel = new Label(currentDate.toString());
                 dayBox.getChildren().addAll(dayLabel, dateLabel);
             }
+            // Set visibility of weekly tasks components to true
             weeklyScrollPane.setVisible(true);
             weeklyScrollPane.setManaged(true);
+            // Draw each task for the given week
             for (int i = 0; i < tasks.size(); i++)
             {
                 Task task = tasks.get(i);
@@ -457,7 +494,6 @@ public class PlannerController implements UIController {
                 if ((taskDueDate.isEqual(startOfWeek) || taskDueDate.isAfter(startOfWeek)) &&
                     (taskDueDate.isEqual(endOfWeek) || taskDueDate.isBefore(endOfWeek)))
                 {
-                    
                     if (task.getIsCompleted())
                         {completedTasks++;}
                     totalTasks++;
@@ -468,9 +504,16 @@ public class PlannerController implements UIController {
                     ((VBox)weeklyTasksVBoxFlowPane.getChildren().get(dayOfWeek.getValue())).getChildren().add(label);
                 }
             }
+            // Update done percentage text
             donePercentTextField.setText("%" + (int)((double)completedTasks / totalTasks * 100));
         }
     }
+
+    /**
+     * Converts a color string in the ARGB format to RGBA format, so CSS can use it.
+     * @param color ARGB color string starting with "0x"
+     * @return CSS-compatible color string in RGBA format
+     */
     private String toCssColor(String color) {
         if (color.startsWith("0x")) {
             String a = color.substring(2, 4);

@@ -13,8 +13,8 @@ import cs102groupproject.SharedObjects.GroupSession;
 import cs102groupproject.SharedObjects.Habit;
 import cs102groupproject.SharedObjects.Session;
 
+// Controller for the profile page UI
 public class UserController implements UIController {
-    ClientSession manager;
     ArrayList<Habit> habits;
     ArrayList<Session> sessions;
     @FXML
@@ -29,14 +29,19 @@ public class UserController implements UIController {
     {
     }
 
-    public void setFields(ClientSession manager, ArrayList<Habit> habits, ArrayList<Session> sessions)
+    /**
+     * Sets the fields of the UserController.
+     * @param habits
+     * @param sessions
+     */
+    public void setFields(ArrayList<Habit> habits, ArrayList<Session> sessions)
     {
-        this.manager = manager;
         this.habits = habits;
         this.sessions = sessions;
         refreshUI();
     }
 
+    // Refreshes the UI elements
     private void refreshUI()
     {
         // displayUserInfo();
@@ -105,6 +110,7 @@ public class UserController implements UIController {
     //     userInfo.setContent(userInfoContent);
     // }
 
+    // Called when the dropdown menu for session stats is opened
     @FXML
     private void displaySessionStats()
     {
@@ -129,6 +135,7 @@ public class UserController implements UIController {
         sessionStats.setContent(sessionStatsContent);
     }
 
+    // Called when the dropdown menu for habit stats is opened
     @FXML
     private void displayHabitStats()
     {

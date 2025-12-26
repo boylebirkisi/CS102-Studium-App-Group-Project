@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-import cs102groupproject.App;
 import cs102groupproject.SharedObjects.ActionType;
 import cs102groupproject.SharedObjects.ChatMessage;
 import cs102groupproject.SharedObjects.ProtocolMessage;
@@ -161,6 +160,13 @@ public class SocializationController implements UIController {
         //onlineUsers.add(anotherNotFriend);
     }
 
+    /**
+     * Sets the fields of the SocializationController.
+     * @param friendsList The list of friends
+     * @param onlineUsers The list of online users
+     * @param chatMessages The list of all chat messages of all users
+     * @param allUsers The list of all users
+     */
     public void setFields(ArrayList<User> friendsList, ArrayList<User> onlineUsers,
         ArrayList<ChatMessage> chatMessages, ArrayList<User> allUsers) {
         this.friendsList = friendsList;
@@ -182,6 +188,7 @@ public class SocializationController implements UIController {
         refreshUI();
     }
 
+    // Refreshes the UI elements
     private void refreshUI() {
         displayCurrencyEarned();
         listFriends();
@@ -200,6 +207,7 @@ public class SocializationController implements UIController {
         showPopUp();
     }
 
+    // Search users button action
     @FXML
     private void searchUsers() {
         String name = userNameTextField.getText().toLowerCase().trim();
@@ -232,6 +240,7 @@ public class SocializationController implements UIController {
         }
     }
 
+    // Get sessions button action
     @FXML
     private void searchSessions()
     {
@@ -257,6 +266,7 @@ public class SocializationController implements UIController {
         }
     }
 
+    // List friends in the friends list
     @FXML
     private void listFriends()
     {
@@ -268,6 +278,14 @@ public class SocializationController implements UIController {
         }
     }
 
+    /**
+     * Filters sessions by name and status.
+     * @param name The name to filter by
+     * @param aboutToStart Whether to include sessions that are about to start
+     * @param hasStarted Whether to include sessions that have started
+     * @param allSessions The list of all sessions to filter
+     * @return A list of sessions filtered by the given criteria
+     */
     private ArrayList<Session> filterSessionsByNameAndStatus(String name, boolean aboutToStart, boolean hasStarted, ArrayList<Session> allSessions)
     {
         ArrayList<Session> filteredSessions = new ArrayList<>();
@@ -296,6 +314,11 @@ public class SocializationController implements UIController {
         return filteredSessions;
     }
 
+    /**
+     * Creates a session display box for a given session.
+     * @param session The session to create a display box for
+     * @return An HBox containing the session display
+     */
     private HBox createSessionDisplayBox(Session session)
     {
         Label sessionLabel = new Label(session.getName() + " / " + session.getType());
@@ -327,6 +350,13 @@ public class SocializationController implements UIController {
         return sessionBox;
     }
 
+    /**
+     * Filters users by name and department.
+     * @param name The name to filter by
+     * @param department The department to filter by
+     * @param allUsers The list of all users to filter
+     * @return An array list of users filtered by the given criteria
+     */
     private ArrayList<User> filterUsersByNameAndDepartment(String name, String department, ArrayList<User> allUsers)
     {
         
@@ -382,6 +412,12 @@ public class SocializationController implements UIController {
         }
     }
 
+    /**
+     * Creates a user display box for a given user.
+     * @param user The user to create a display box for
+     * @param isFriend Whether the user is a friend
+     * @return An HBox containing the user display
+     */
     private HBox createUserDisplayBox(User user, boolean isFriend)
     {
         Label avatarLabel = new Label(user.getAvatar());
@@ -390,6 +426,7 @@ public class SocializationController implements UIController {
         idLabel.setVisible(false);
         Label userLabel = new Label(user.getUsername() + " / " + user.getDepartment());
         HBox userBox = new HBox(idLabel, avatarLabel, userLabel);
+        // Eğer arkadaş değilse "Add Friend" butonu ekle
         if (!isFriend) {
                 // Arama sonucunda çıkan ve arkadaş olmayan kullanıcılar için
                 Button addFriendButton = new Button("Add Friend");
@@ -401,6 +438,7 @@ public class SocializationController implements UIController {
                 });
                 userBox.getChildren().add(addFriendButton);
         }
+        // Eğer arkadaşsa "Send Message" butonu ekle
         else
         {
             Button sendMessageButton = new Button("Send Message");
@@ -461,6 +499,7 @@ public class SocializationController implements UIController {
                 }
             });
             userBox.getChildren().add(sendMessageButton);
+            // Arkadaşlıktan çıkarma için sağ tıklama menüsü ekle
             ContextMenu contextMenu = new ContextMenu();
             MenuItem removeFriendItem = new MenuItem("Remove Friend");
             removeFriendItem.setOnAction(e ->
@@ -477,12 +516,17 @@ public class SocializationController implements UIController {
 
         Button visitOfficeButton = new Button("Visit Office");
         visitOfficeButton.onMouseClickedProperty().set(e -> {
-            //Call method to visit user's office
+            //Call method to visit user's office (it is not implemented)
         });
         userBox.setSpacing(10);
         return userBox;
     }
 
+    /**
+     * Renders a chat message in the chat UI.
+     * @param msg The chat message to render
+     * @param isMine Whether the message was sent by the current user
+     */
     private void renderMessage(ChatMessage msg, boolean isMine) {
         Label textLabel = new Label(msg.getMessage());
         textLabel.setWrapText(true);
@@ -511,22 +555,29 @@ public class SocializationController implements UIController {
         Platform.runLater(() -> chatScrollPane.setVvalue(1.0));
     }
 
+    // Go back button action
     @FXML
     private void handleGoBackButton()
     {
         toggleOnFriendsList();
     }
 
+    // Toggle friends menu instead of chat menu
     private void toggleOnFriendsList()
     {
         toggleFriendMenuVsChatMenu(true);
     }
 
+    // Toggle chat menu instead of friends menu
     private void toggleOnChatMenu()
     {
         toggleFriendMenuVsChatMenu(false);
     }
 
+    /**
+     * Toggles between the friend menu and chat menu.
+     * @param state If true, shows the friend menu. If false, shows the chat menu
+     */
     private void toggleFriendMenuVsChatMenu(boolean state)
     {
         friendsScrollPane.setVisible(state);
@@ -541,6 +592,7 @@ public class SocializationController implements UIController {
         chatScrollPane.setManaged(!state);
     }
 
+    // Display online friends in the online friends section
     @FXML
     private void displayOnlineFriends()
     {
@@ -561,6 +613,10 @@ public class SocializationController implements UIController {
         onlineFriendsHBox.setSpacing(10);
     }
 
+    /**
+     * Shows the group session planner popup.
+     * @throws IOException if the FXML file cannot be loaded
+     */
     public void showPopUp() throws IOException
     {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/GroupSessionPlannerPopUp.fxml"));
@@ -579,16 +635,23 @@ public class SocializationController implements UIController {
         popUpStage.centerOnScreen();
     }
 
+    // Close the popup window
     public void closePopUp()
     {
         popUpStage.close();
     }
 
+    // Refresh button action
     @FXML
     public void refreshButtonFunctionality() {
         refreshUI();
     }
 
+    /**
+     * Gets the username from a user ID.
+     * @param id The user ID
+     * @return The username for the given user ID
+     */
     private String getUserNameFromId(int id) {
         for (User u : friendsList) {
             if (u.getId() == id) return u.getUsername();

@@ -4,7 +4,6 @@ import cs102groupproject.SharedObjects.ActionType;
 import cs102groupproject.SharedObjects.ProtocolMessage;
 import cs102groupproject.SharedObjects.Task;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
@@ -24,11 +23,16 @@ public class TaskPlannerPopUpController implements UIController {
     {
     }
 
+    /**
+     * Sets the fields of the popup controller.
+     * @param ownerController The PlannerController that owns this popup.
+     */
     public void setFields(PlannerController ownerController)
     {
         this.ownerController = ownerController;
     }
 
+    // Create Task button action
     @FXML
     private void handleCreateTaskButton()
     {
@@ -49,6 +53,7 @@ public class TaskPlannerPopUpController implements UIController {
         ownerController.closePopUp();
     }
 
+    // Cancel button action
     @FXML
     private void handleCancelButton()
     {

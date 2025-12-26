@@ -2,10 +2,8 @@ package cs102groupproject.Client;
 
 import java.util.ArrayList;
 
-import cs102groupproject.SharedObjects.ActionType;
 import cs102groupproject.SharedObjects.GroupSession;
 import cs102groupproject.SharedObjects.Notification;
-import cs102groupproject.SharedObjects.ProtocolMessage;
 import cs102groupproject.SharedObjects.User;
 import cs102groupproject.SharedObjects.Notification.Status;
 import cs102groupproject.SharedObjects.Notification.Type;
@@ -27,6 +25,12 @@ public class NotificationsController implements UIController {
     {
     }
 
+    /**
+     * Sets the fields of the NotificationsController.
+     * @param notifications The list of notifications to display
+     * @param users The list of users that notifications may reference
+     * @param groupSessions The list of group sessions that notifications may reference
+     */
     public void setFields(ArrayList<Notification> notifications, ArrayList<User> users, ArrayList<GroupSession> groupSessions)
     {
         this.users = users;
@@ -35,6 +39,7 @@ public class NotificationsController implements UIController {
         drawNotifications();
     }
 
+    // Draws the notifications on the UI
     private void drawNotifications()
     {
         notificationsVBox.getChildren().clear();
@@ -47,12 +52,10 @@ public class NotificationsController implements UIController {
             if (notification.getType() == Type.FRIEND_REQUEST)
             {
                 int otherUserID = notification.getReferenceID();
-                User otherUser = null;
                 for (User user : users)
                 {
                     if (user.getId() == otherUserID)
                     {
-                        otherUser = user;
                         notificationSubBox.getChildren().add(0, new Label(user.getAvatar().toCharArray()[0] + ""));
                         break;
                     }
@@ -77,12 +80,10 @@ public class NotificationsController implements UIController {
             else if (notification.getType() == Type.SESSION_INVITE)
             {
                 int sessionID = notification.getReferenceID();
-                GroupSession otherSession = null;
                 for (GroupSession session : groupSessions)
                 {
                     if (session.getId() == sessionID)
                     {
-                        otherSession = session;
                         break;
                     }
                 }
@@ -106,12 +107,10 @@ public class NotificationsController implements UIController {
             else if (notification.getType() == Type.SESSION_ACCESS_REQUEST)
             {
                 int userID = notification.getReferenceID();
-                User otherUser = null;
                 for (User user : users)
                 {
                     if (user.getId() == userID)
                     {
-                        otherUser = user;
                         break;
                     }
                 }
@@ -135,12 +134,10 @@ public class NotificationsController implements UIController {
             else if (notification.getType() == Type.PDF_REQUEST)
             {
                 int userID = notification.getReferenceID();
-                User otherUser = null;
                 for (User user : users)
                 {
                     if (user.getId() == userID)
                     {
-                        otherUser = user;
                         break;
                     }
                 }

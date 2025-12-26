@@ -1,22 +1,15 @@
 package cs102groupproject.Client;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 import cs102groupproject.SharedObjects.ActionType;
-import cs102groupproject.SharedObjects.GroupSession;
 import cs102groupproject.SharedObjects.ProtocolMessage;
 import cs102groupproject.SharedObjects.Session;
 import cs102groupproject.SharedObjects.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class SessionPopupController {
@@ -47,6 +40,7 @@ public class SessionPopupController {
         );
     }
 
+    // Confirm button action
     @FXML
     private void onConfirm() {
         // data from UI
@@ -80,11 +74,13 @@ public class SessionPopupController {
         close();
     }
 
+    // Cancel button action
     @FXML
     private void onCancel() {
         close();
     }
 
+    // Close the popup window
     private void close() {
         Stage stage = (Stage) confirmButton.getScene().getWindow();
         stage.close();

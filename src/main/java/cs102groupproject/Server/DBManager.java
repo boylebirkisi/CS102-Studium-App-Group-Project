@@ -1,7 +1,6 @@
 package cs102groupproject.Server;
-import cs102groupproject.App;
 import cs102groupproject.SharedObjects.*;
-import javafx.scene.Group;
+import io.github.cdimascio.dotenv.Dotenv;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -9,11 +8,19 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DBManager class handles all the operations connected to database, which 
+ * connected to database located in the Google Cloud with using PostgreSQL.
+ * Author: Delfin Eryılmaz
+ * Date: 27.12.2025
+ */
 public class DBManager {
+    // Create an instance to reach environemntal variables.
+    private static Dotenv dotenv = Dotenv.load();
      // Connection Details
-    private static final String DB_URL = "jdbc:postgresql://34.59.31.201:5432/studium";
-    private static final String USER = "postgres";
-    private static final String PASS = "P3c,YKR[a~}THbM9";
+    private static final String DB_URL = dotenv.get("DB_URL");
+    private static final String USER = dotenv.get("DB_USER");
+    private static final String PASSWORD = dotenv.get("DB_PASSWORD");
     
     /**
      * Establishes a database connection.
@@ -22,7 +29,7 @@ public class DBManager {
     private static Connection connect() {
         Connection conn = null;
         try {
-            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
             System.out.println("Connected to the database!"); 
         } catch (SQLException e) {
             System.err.println("Connection failed! Check credentials and network. Error: " + e.getMessage());
@@ -41,10 +48,10 @@ public class DBManager {
         // Use PreparedStatement for security (prevents SQL Injection)
         String sqlQuery = "INSERT INTO users(username, email, password_hash, google_id, department) VALUES(?, ?, ?, ?, ?)"; 
 
+        // By writing these into the try statement software automatically closes the connection even if we do not write a finally statement.
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sqlQuery)) {
-
-            if (conn == null) return -1; 
             
+            // Passing all the parameters
             pstmt.setString(1, name);
             pstmt.setString(2, email);
             pstmt.setString(3, password);
@@ -53,12 +60,12 @@ public class DBManager {
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
-            try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    return generatedKeys.getInt(1); 
+                try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        return generatedKeys.getInt(1); 
+                    }
                 }
             }
-        }
         return -1;
             
         } catch (SQLException e) {
@@ -70,22 +77,22 @@ public class DBManager {
     /**
      * Gets user by its username.
      * @param username
-     * @return
+     * @return user with given username.
      */
     public User getUserByUsername(String username) {
         String sqlQuery = "SELECT * FROM users WHERE username = ?";
 
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sqlQuery)) {
-
-            if (conn == null) return null; // Connection failed
             
             pstmt.setString(1, username);
 
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                return new User(rs.getInt("id"), rs.getString("username"), rs.getString("department"),
-                    rs.getString("email"), rs.getString("google_id"), rs.getInt("solo_currency"),
-                    rs.getInt("group_currency"), rs.getBoolean("is_verified"), rs.getString("avatar"));
+                return new User(rs.getInt("id"), rs.getString("username"), 
+                    rs.getString("department"), rs.getString("email"), 
+                    rs.getString("google_id"), rs.getInt("solo_currency"),
+                    rs.getInt("group_currency"), rs.getBoolean("is_verified"), 
+                    rs.getString("avatar"));
             } else {
                 return null; // No user found
             }
@@ -99,24 +106,24 @@ public class DBManager {
     /**
      * Gets user by its email.
      * @param email
-     * @return
+     * @return user with email given.
      */
     public User getUserByEmail(String email) {
         String sqlQuery = "SELECT * FROM users WHERE email = ?";
 
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sqlQuery)) {
-
-            if (conn == null) return null; // Connection failed
             
             pstmt.setString(1, email);
 
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                return new User(rs.getInt("id"), rs.getString("username"), rs.getString("department"),
-                    rs.getString("email"), rs.getString("google_id"), rs.getInt("solo_currency"),
-                    rs.getInt("group_currency"), rs.getBoolean("is_verified"), rs.getString("avatar"));
+                return new User(rs.getInt("id"), rs.getString("username"),
+                    rs.getString("department"), rs.getString("email"), 
+                    rs.getString("google_id"), rs.getInt("solo_currency"),
+                    rs.getInt("group_currency"), rs.getBoolean("is_verified"), 
+                    rs.getString("avatar"));
             } else {
-                return null; // No user found
+                return null; 
             }
             
         } catch (SQLException e) {
@@ -128,27 +135,22 @@ public class DBManager {
     /**
      * Gets user by its googleID.
      * @param googleId
-     * @return
+     * @return user with googleId given.
      */
     public User getUserByGoogleID(String googleId) {
         String sqlQuery = "SELECT * FROM users WHERE google_id = ?";
 
-        try (Connection conn = connect(); 
-            PreparedStatement pstmt = conn.prepareStatement(sqlQuery)) {
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sqlQuery)) {
             
-            pstmt.setString(1, googleId); // This replaces the '?' with the actual ID
+            pstmt.setString(1, googleId); 
             
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     return new User(
-                        rs.getInt("id"), 
-                        rs.getString("username"), 
-                        rs.getString("department"),
-                        rs.getString("email"), 
-                        rs.getString("google_id"), 
-                        rs.getInt("solo_currency"),
-                        rs.getInt("group_currency"), 
-                        rs.getBoolean("is_verified"), 
+                        rs.getInt("id"), rs.getString("username"), 
+                        rs.getString("department"), rs.getString("email"), 
+                        rs.getString("google_id"), rs.getInt("solo_currency"),
+                        rs.getInt("group_currency"), rs.getBoolean("is_verified"), 
                         rs.getString("avatar")
                     );
                 }
@@ -156,33 +158,28 @@ public class DBManager {
         } catch (SQLException e) {
             System.err.println("Database operation failed: " + e.getMessage()); 
         }
-        return null; // Return null if no user exists
+        return null; 
     }
 
     /**
      * Get user by ID.
      * @param id
-     * @return
+     * @return user with id given.
      */
     public User getUserByID(int id) {
         String sqlCommand = "SELECT * FROM users WHERE id = ?";
 
-        try (Connection conn = connect(); 
-            PreparedStatement pstmt = conn.prepareStatement(sqlCommand)) {
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sqlCommand)) {
             
-            pstmt.setInt(1, id); // This replaces the '?' with the actual ID
+            pstmt.setInt(1, id); 
             
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     return new User(
-                        rs.getInt("id"), 
-                        rs.getString("username"), 
-                        rs.getString("department"),
-                        rs.getString("email"), 
-                        rs.getString("google_id"), 
-                        rs.getInt("solo_currency"),
-                        rs.getInt("group_currency"), 
-                        rs.getBoolean("is_verified"), 
+                        rs.getInt("id"), rs.getString("username"), 
+                        rs.getString("department"), rs.getString("email"), 
+                        rs.getString("google_id"), rs.getInt("solo_currency"),
+                        rs.getInt("group_currency"), rs.getBoolean("is_verified"), 
                         rs.getString("avatar")
                     );
                 }
@@ -190,20 +187,18 @@ public class DBManager {
         } catch (SQLException e) {
             System.err.println("Database operation failed: " + e.getMessage()); 
         }
-        return null; // Return null if no user exists
+        return null;
     }
 
     /**
      * Get password of the user.
      * @param username
-     * @return
+     * @return password_hash of the user.
      */
     public String getPasswordByUsername(String username) {
         String sqlQuery = "SELECT password_hash FROM users WHERE username = ?";
 
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sqlQuery)) {
-
-            if (conn == null) return null; // Connection failed
             
             pstmt.setString(1, username);
 
@@ -211,7 +206,7 @@ public class DBManager {
             if (rs.next()) {
                 return rs.getString("password_hash");
             } else {
-                return null; // No user found
+                return null; 
             }
             
         } catch (SQLException e) {
@@ -221,10 +216,10 @@ public class DBManager {
     }
 
     /**
-     * Update user avatar path.
+     * Updates user's avatar path.
      * @param userID
      * @param avatarPath
-     * @return
+     * @return wheter the proccess was succefful or not.
      */
     public boolean updateUserAvatar(int userID, String avatarPath) {
         String sqlCommand = "UPDATE users SET avatar = ? WHERE id = ?";
@@ -237,7 +232,7 @@ public class DBManager {
      * @param userID
      * @param currency
      * @param isGroup
-     * @return
+     * @return whether the proccess was succefful or not.
      */
     public boolean updateUserCurrency(int userID, int currency, boolean isGroup) {
         String sqlCommand = "";
@@ -250,22 +245,23 @@ public class DBManager {
     }
 
     /**
-     * Create a friendship between two users.
+     * Creates a friendship between two users.
      * @param userID
      * @param friendID
-     * @return
+     * @return whether the proccess was succefful or not.
      */
     public boolean addFriend(int userID, int friendID) {        
         String sqlCommand = "INSERT INTO friendships(user_id, friend_id) VALUES(?, ?)";
 
+        // Since these values are int it is always be inserted in an ascending order.
         return executeSqlCommand(sqlCommand, Math.min(userID, friendID), Math.max(userID, friendID));
     }   
 
     /**
-     * Remove a friendship between two users.
+     * Removes a friendship between two users.
      * @param userID
      * @param friendID
-     * @return
+     * @return whether the proccess was succefful or not.
      */
     public boolean removeFriend(int userID, int friendID) {
         String sqlCommand = "DELETE FROM friendships WHERE user_id = ? AND friend_id = ?";
@@ -276,25 +272,24 @@ public class DBManager {
     /**
      * Get friends of a user. (Working)
      * @param currentUserID
-     * @return
+     * @return list of the friends of the user.
      */
     public List<User> getFriends(int currentUserID) {
         List<User> friends = new ArrayList<>();
+
+        // Forcing sql command to be handle id's as integers.
         String sql = "SELECT u.* FROM users u " +
                     "JOIN friendships f ON (u.id::integer = f.friend_id OR u.id::integer = f.user_id) " +
                     "WHERE (f.user_id = ? OR f.friend_id = ?) " +
                     "AND u.id::integer != ?";
         
-        try (Connection conn = connect(); 
-            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
             pstmt.setInt(1, currentUserID);
             pstmt.setInt(2, currentUserID);
             pstmt.setInt(3, currentUserID);
             
-            // Fix: Removed 'sql' from executeQuery()
             ResultSet rs = pstmt.executeQuery(); 
-            
             while (rs.next()) {
                 friends.add(new User(
                     rs.getInt("id"), rs.getString("username"), rs.getString("department"),
@@ -308,6 +303,10 @@ public class DBManager {
         return friends;
     }
 
+    /**
+     * Gets all the users in the app.
+     * @return all users.
+     */
     public List<User> getAllUsers() {
         String sqlCommand = "SELECT * FROM users";
         List<User> users = new ArrayList<>();
@@ -317,10 +316,12 @@ public class DBManager {
             if (conn == null) return users; 
             
             ResultSet rs = stmt.executeQuery(sqlCommand);
+            // While there is another user
             while (rs.next()) {
                 User user = new User(rs.getInt("id"), rs.getString("username"), rs.getString("department"),
                     rs.getString("email"), rs.getString("google_id"), rs.getInt("solo_currency"),
                     rs.getInt("group_currency"), rs.getBoolean("is_verified"), rs.getString("avatar"));
+
                 users.add(user);
             }
         } catch (SQLException e) {
@@ -335,18 +336,19 @@ public class DBManager {
      * Adds a habit for a user.
      * @param name
      * @param userID
-     * @return
+     * @return the habit inserted.
      */
     public Habit addHabit(String name, int userID) {
         String sqlCommand = "INSERT INTO habits(name, user_id) VALUES(?, ?)";
         int id = insertAndGetID(sqlCommand, name, userID);
-        return getHabitByID(id);
+        Habit h = getHabitByID(id);
+        return h;
     }
 
     /**
      * Removes a habit by its ID.
      * @param habitID
-     * @return
+     * @return whether the proccess was succefful or not.
      */
     public boolean removeHabit(int habitID) {
         String sqlCommand = "DELETE FROM habits WHERE id = ?";
@@ -359,7 +361,7 @@ public class DBManager {
      * @param habitID
      * @param completed_arr_data
      * @param isCompleted
-     * @return
+     * @return whether the proccess was succefful or not.
      */
     public boolean updateHabitCompletionString(int habitID, String completed_arr_data, boolean isCompleted) {
         String sqlCommand = "UPDATE habits SET completed_arr_data = ?, is_completed = ? WHERE id = ?";
@@ -370,24 +372,23 @@ public class DBManager {
     /**
      * Get habit by ID.
      * @param habitID
-     * @return
+     * @return whether the proccess was succefful or not.
      */
     public Habit getHabitByID(int habitID) {
         String sqlCommand = "SELECT * FROM habits WHERE id = ?";
 
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sqlCommand)) {
-
-            if (conn == null) return null; // Connection failed
             
             pstmt.setInt(1, habitID);
 
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                return new Habit(rs.getString("name"), rs.getInt("id"), rs.getInt("user_id"), rs.getString("completed_arr_data"));
+                return new Habit(rs.getString("name"), rs.getInt("id"), 
+                                rs.getInt("user_id"), rs.getString("completed_arr_data"));
             } else {
-                return null; // No user found
+                return null;
             }
-            
+    
         } catch (SQLException e) {
             System.err.println("Database operation failed: " + e.getMessage());
             return null;
@@ -396,7 +397,7 @@ public class DBManager {
 
     /**
      * Get all habits of the user.
-     * @return
+     * @return list of all habits of the user.
      */
     public List<Habit> getAllHabits(int userID) {
         String sqlCommand = "SELECT * FROM habits WHERE user_id = ?";
@@ -408,7 +409,9 @@ public class DBManager {
 
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
-                Habit habit = new Habit(rs.getString("name"), rs.getInt("id"), rs.getInt("user_id"), rs.getString("completed_arr_data"));
+                Habit habit = new Habit(rs.getString("name"), rs.getInt("id"), 
+                                rs.getInt("user_id"), rs.getString("completed_arr_data"));
+
                 habits.add(habit);
             }
         } catch (SQLException e) {
@@ -424,7 +427,7 @@ public class DBManager {
      * @param importance
      * @param userId
      * @param googleCalendarID
-     * @return
+     * @return the id of the task inserted.
      */
     public int addTask(String name, String color, int importance, int userId, String googleCalendarID, LocalDate dueDate) {
         String sqlCommand = "INSERT INTO tasks(name, color, importance, user_id, google_calendar_id, due_date) VALUES(?, ?, ?, ?, ?, ?)";
@@ -435,7 +438,7 @@ public class DBManager {
     /**
      * Deletes a task by its ID.
      * @param taskID
-     * @return
+     * @return whether the proccess was succefful or not.
      */
     public boolean deleteTask(int taskID) {
         String sqlCommand = "DELETE FROM tasks WHERE id = ?";
@@ -447,7 +450,7 @@ public class DBManager {
      * Updates the completion status of a task.
      * @param taskID
      * @param isCompleted
-     * @return
+     * @return whether the proccess was succefful or not.
      */
     public boolean updateTaskStatus(int taskID, boolean isCompleted) {
         String sqlCommand = "UPDATE tasks SET is_completed = ? WHERE id = ?";
@@ -458,18 +461,17 @@ public class DBManager {
     /**
      * Get task by ID.
      * @param taskID
-     * @return
+     * @return the task with matching id.
      */
     public Task getTaskByID(int taskID) {
         String sqlCommand = "SELECT * FROM tasks WHERE id = ?";
 
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sqlCommand)) {
-
-            if (conn == null) return null; 
             
             pstmt.setInt(1, taskID);
 
             ResultSet rs = pstmt.executeQuery();
+            // rs.next means at least one row is affected by the query.
             if (rs.next()) {
                 return new Task(rs.getString("name"), rs.getString("color"), rs.getInt("importance"),
                     rs.getInt("user_id"), rs.getInt("id"), rs.getDate("due_date").toLocalDate() ,rs.getString("google_calendar_id"), rs.getBoolean("is_completed"));
@@ -484,8 +486,9 @@ public class DBManager {
     }
 
     /**
-     * Get all tasks. (Working)
-     * @return
+     * Gets all the tasks of the user.
+     * @param userId
+     * @return list of all tasks of the user.
      */
     public List<Task> getAllTasks(int userId) {
         String sqlCommand = "SELECT * FROM tasks WHERE user_id = ?";
@@ -516,7 +519,7 @@ public class DBManager {
      * @param userId
      * @param importance
      * @param googleCalendarID
-     * @return the eventID.
+     * @return the if of the event inserted.
      */
     public int addEvent(String name, String color, LocalDateTime start, LocalDateTime finish, int userId, int importance, String googleCalendarID) {
         String sqlCommand = "INSERT INTO app_events(name, color, start_time, finish_time, user_id, importance, google_calendar_id) VALUES(?, ?, ?, ?, ?, ?, ?)";
@@ -527,7 +530,7 @@ public class DBManager {
     /**
      * Deletes an event by its ID.
      * @param eventID
-     * @return
+     * @return whether the proccess was succefful or not.
      */
     public boolean deleteEvent(int eventID) {
         String sqlCommand = "DELETE FROM app_events WHERE id = ?";
@@ -540,7 +543,7 @@ public class DBManager {
      * @param eventID
      * @param newStart
      * @param newFinish
-     * @return
+     * @return whether the proccess was succefful or not.
      */
     public boolean updateEventDates(int eventID, LocalDateTime newStart, LocalDateTime newFinish) {
         String sqlCommand = "UPDATE app_events SET start_time = ?, finish_time = ? WHERE id = ?";
@@ -551,28 +554,23 @@ public class DBManager {
     /**
      * Get event by ID.
      * @param eventID
-     * @return
+     * @return event with matching id.
      */
     public AppEvent getEventByID(int eventID) {
         String sqlCommand = "SELECT * FROM app_events WHERE id = ?";
 
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sqlCommand)) {
-
-            if (conn == null) return null; 
             
             pstmt.setInt(1, eventID);
 
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 return new AppEvent(
-                    rs.getString("name"),
-                    rs.getString("color"),
+                    rs.getString("name"), rs.getString("color"),
                     rs.getTimestamp("start_time").toLocalDateTime(),  
                     rs.getTimestamp("finish_time").toLocalDateTime(), 
-                    rs.getInt("user_id"),
-                    rs.getInt("importance"),
-                    rs.getInt("id"),
-                    rs.getString("google_calendar_id")
+                    rs.getInt("user_id"), rs.getInt("importance"),
+                    rs.getInt("id"), rs.getString("google_calendar_id")
                 );
             } else {
                 return null; 
@@ -586,7 +584,7 @@ public class DBManager {
 
     /**
      * Get all events.
-     * @return
+     * @return list of all events of the user
      */
     public List<AppEvent> getAllEvents(int userId) {
         String sqlCommand = "SELECT * FROM app_events WHERE user_id = ?";
@@ -595,20 +593,17 @@ public class DBManager {
         try (Connection conn = connect(); PreparedStatement stmt = conn.prepareStatement(sqlCommand)) {
 
             stmt.setInt(1, userId);
-            if (conn == null) return events; 
             
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 AppEvent event = new AppEvent(
-                    rs.getString("name"),
-                    rs.getString("color"),
+                    rs.getString("name"), rs.getString("color"),
                     rs.getTimestamp("start_time").toLocalDateTime(),  
                     rs.getTimestamp("finish_time").toLocalDateTime(), 
-                    rs.getInt("user_id"),
-                    rs.getInt("importance"),
-                    rs.getInt("id"),
-                    rs.getString("google_calendar_id")
+                    rs.getInt("user_id"), rs.getInt("importance"),
+                    rs.getInt("id"),rs.getString("google_calendar_id")
                 );
+
                 events.add(event);
             }
         } catch (SQLException e) {
@@ -619,30 +614,39 @@ public class DBManager {
 
     //! Notification and Session Operations
 
+    /**
+     * Adds a new notifications to the database.
+     * @param title
+     * @param message
+     * @param userId
+     * @return the id of the notification inserted.
+     */
     public int addNotification(String title, String message, int userId) {
         String sqlCommand = "INSERT INTO notifications(title, message, user_id) VALUES(?, ?, ?)";
 
         return insertAndGetID(sqlCommand, title, message, userId);
     }
     
-    public List<Notification> getAllNotifications() {
-        String sqlCommand = "SELECT * FROM notifications";
+    /**
+     * Gets all the notifications.
+     * @return all the notifiacitons of the user.
+     */
+    public List<Notification> getAllNotifications(int userId) {
+        String sqlCommand = "SELECT * FROM notifications WHERE user_id = ?";
         List<Notification> notifications = new ArrayList<>();
 
-        try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
+        try (Connection conn = connect(); PreparedStatement stmt = conn.prepareStatement(sqlCommand)) {
 
-            if (conn == null) return notifications; 
+            stmt.setInt(1, userId);
             
-            ResultSet rs = stmt.executeQuery(sqlCommand);
+            ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Notification notification = new Notification(
-                    rs.getInt("user_id"),
-                    rs.getInt("reference_id"),
-                    rs.getString("message"),
-                    rs.getString("title"),
-                    rs.getString("png"),
-                    Notification.Type.valueOf(rs.getString("type"))
+                    rs.getInt("user_id"), rs.getInt("reference_id"),
+                    rs.getString("message"), rs.getString("title"),
+                    rs.getString("png"), Notification.Type.valueOf(rs.getString("type"))
                 ); 
+
                 notifications.add(notification);
             }
         } catch (SQLException e) {
@@ -654,7 +658,7 @@ public class DBManager {
     /**
      * Add session to the db.
      * @param session
-     * @return
+     * @return the id of the session inserted.
      */
     public int addSession(Session session) {
         String sqlCommand = "INSERT INTO sessions(owner_id, name, type, no, length, break_length, start_date) VALUES(?, ?, ?, ?, ?, ?, ?)";
@@ -666,7 +670,7 @@ public class DBManager {
     /**
      * Get all indiviudal session of the user.
      * @param userId
-     * @return
+     * @return list of sessions of the user.
      */
     public List<Session> getAllIndividualSessions(int userId) {
         String sqlCommand = "SELECT * FROM sessions WHERE owner_id = ?";
@@ -675,19 +679,16 @@ public class DBManager {
         try (Connection conn = connect(); PreparedStatement stmt = conn.prepareStatement(sqlCommand)) {
 
             stmt.setInt(1, userId);
-            if (conn == null) return sessions; 
             
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Session session = new Session(
-                    getUserByID(rs.getInt("owner_id")),
-                    rs.getString("name"),
-                    rs.getString("type"),
-                    rs.getInt("no"),
-                    rs.getInt("length"),
-                    rs.getInt("break_length"),
+                    getUserByID(rs.getInt("owner_id")), rs.getString("name"),
+                    rs.getString("type"), rs.getInt("no"),
+                    rs.getInt("length"), rs.getInt("break_length"),
                     rs.getTimestamp("start_date").toLocalDateTime()
                 ); 
+
                 sessions.add(session);
             }
         } catch (SQLException e) {
@@ -699,7 +700,7 @@ public class DBManager {
     /**
      * Get individual group session of a user.
      * @param sessionID
-     * @return
+     * @return session with matching session id.
      */
     public Session getIndividualSessionByID(int sessionID) {
         String sqlCommand = "SELECT * FROM sessions WHERE id = ?";

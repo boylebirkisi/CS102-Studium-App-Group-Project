@@ -1,5 +1,7 @@
 package cs102groupproject.SharedObjects;
-
+/**
+ * Class representing a notification sent to a user.
+ */
 public class Notification extends TransferObject{
     private String notificationText;
     private String heading;

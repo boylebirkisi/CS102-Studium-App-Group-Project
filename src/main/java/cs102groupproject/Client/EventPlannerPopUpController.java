@@ -11,7 +11,9 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
-
+/**
+ * Controller for the event planner pop-up.
+ */
 public class EventPlannerPopUpController implements UIController {
     PlannerController ownerController;
     @FXML

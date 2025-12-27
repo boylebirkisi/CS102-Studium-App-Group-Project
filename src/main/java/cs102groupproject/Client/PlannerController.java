@@ -37,7 +37,9 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
+/**
+ * Controller for the planner UI.
+ */
 public class PlannerController implements UIController {
     ArrayList<Habit> habits;
     ArrayList<AppEvent> events;

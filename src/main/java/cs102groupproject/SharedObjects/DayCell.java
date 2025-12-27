@@ -2,7 +2,9 @@ package cs102groupproject.SharedObjects;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-
+/**
+ * Class representing a day cell in a calendar with tasks and events.
+ */
 public class DayCell {
     private ArrayList<Task> weeklyTasks;
     private ArrayList<Task> dailyTasks;

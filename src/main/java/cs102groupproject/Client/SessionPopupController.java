@@ -11,7 +11,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
+/**
+ * Controller for the session creation pop-up.
+ */
 public class SessionPopupController {
 
     @FXML

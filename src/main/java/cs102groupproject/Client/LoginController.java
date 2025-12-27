@@ -1,8 +1,6 @@
 package cs102groupproject.Client;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Map;
 
 import com.fatboyindustrial.gsonjavatime.Converters;
 import com.google.api.client.auth.oauth2.Credential;
@@ -12,18 +10,17 @@ import com.google.gson.GsonBuilder;
 import cs102groupproject.App;
 import cs102groupproject.Server.AuthService;
 import cs102groupproject.SharedObjects.ActionType;
-import cs102groupproject.SharedObjects.AppEvent;
 import cs102groupproject.SharedObjects.LoginResponse;
 import cs102groupproject.SharedObjects.ProtocolMessage;
 import cs102groupproject.SharedObjects.User;
 import cs102groupproject.SharedObjects.UserCredentials;
-import cs102groupproject.SharedObjects.VerificationCode;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
-
+/**
+ * Controller for the login UI.
+ */
 public class LoginController implements UIController {
     String selectedAvatar;
     @FXML

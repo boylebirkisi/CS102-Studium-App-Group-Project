@@ -1,5 +1,7 @@
 package cs102groupproject.SharedObjects;
-
+/**
+ * Class representing user credentials for authentication.
+ */
 public class UserCredentials {
     private String username;
     private String email;

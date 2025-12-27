@@ -3,7 +3,9 @@ package cs102groupproject.Client;
 import java.time.LocalDate;
 
 import cs102groupproject.SharedObjects.DayCell;
-
+/**
+ * Class representing a calendar for a user.
+ */
 public class Calendar {
 	private int currentYear;
 	private int currentMonth;

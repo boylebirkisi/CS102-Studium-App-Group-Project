@@ -1,5 +1,7 @@
 package cs102groupproject.SharedObjects;
-
+/**
+ * Class representing a notification with optional user choices.
+ */
 public class OptionalNotification extends Notification{
     private String option1;
     private String option2;	

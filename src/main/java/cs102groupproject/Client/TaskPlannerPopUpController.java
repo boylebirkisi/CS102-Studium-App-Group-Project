@@ -8,7 +8,9 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
-
+/**
+ * Controller for the task planner pop-up.
+ */
 public class TaskPlannerPopUpController implements UIController {
     PlannerController ownerController;
     @FXML

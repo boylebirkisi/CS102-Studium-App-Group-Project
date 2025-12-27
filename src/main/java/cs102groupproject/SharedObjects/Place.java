@@ -1,7 +1,9 @@
 package cs102groupproject.SharedObjects;
 
 import java.util.Set;
-
+/**
+ * Class representing a place where furniture can be placed in an office.
+ */
 public class Place {
 
     private String id;

@@ -8,6 +8,7 @@ import jakarta.websocket.server.ServerEndpoint;
 
 /**
  * WebSocket entry point for clients.
+ * Authors: Delfin Eryılmaz/ Begüm Göktaş
  */
 @ServerEndpoint("/ws")
 public class WebSocketServer {

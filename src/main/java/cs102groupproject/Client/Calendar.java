@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 import cs102groupproject.SharedObjects.DayCell;
 /**
- * Class representing a calendar for a user.
+ * Class representing a calendar for a user per instance.
  */
 public class Calendar {
 	private int currentYear;

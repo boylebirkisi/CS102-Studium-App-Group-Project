@@ -41,7 +41,9 @@ public class NotificationsController implements UIController {
         drawNotifications();
     }
 
-    // Draws the notifications on the UI
+    /**
+     * Draws the notifications on the UI
+     */
     private void drawNotifications()
     {
         notificationsVBox.getChildren().clear();

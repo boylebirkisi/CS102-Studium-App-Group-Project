@@ -55,6 +55,9 @@ public class UserController implements UIController {
     //public int getCurrentSessionID() {return manager.getSessionID();}
 
     // @FXML
+    /**
+     * Called when the dropdown menu for user info is opened
+     */
     // private void displayUserInfo()
     // {
     //     VBox userInfoContent = new VBox();
@@ -112,7 +115,9 @@ public class UserController implements UIController {
     //     userInfo.setContent(userInfoContent);
     // }
 
-    // Called when the dropdown menu for session stats is opened
+    /**
+     * Called when the dropdown menu for session stats is opened
+     */
     @FXML
     private void displaySessionStats()
     {
@@ -137,7 +142,9 @@ public class UserController implements UIController {
         sessionStats.setContent(sessionStatsContent);
     }
 
-    // Called when the dropdown menu for habit stats is opened
+    /**
+     * Called when the dropdown menu for habit stats is opened
+    */
     @FXML
     private void displayHabitStats()
     {

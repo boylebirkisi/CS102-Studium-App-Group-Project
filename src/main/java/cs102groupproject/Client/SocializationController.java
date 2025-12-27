@@ -209,7 +209,9 @@ public class SocializationController implements UIController {
         showPopUp();
     }
 
-    // Search users button action
+    /**
+     * Search users button action
+     */
     @FXML
     private void searchUsers() {
         String name = userNameTextField.getText().toLowerCase().trim();
@@ -239,7 +241,9 @@ public class SocializationController implements UIController {
         }
     }
 
-    // Get sessions button action
+    /**
+     * Get sessions button action
+     */
     @FXML
     private void searchSessions()
     {
@@ -265,7 +269,9 @@ public class SocializationController implements UIController {
         }
     }
 
-    // List friends in the friends list
+    /**
+     * Lists friends in the friends list
+     */
     @FXML
     private void listFriends()
     {
@@ -547,20 +553,27 @@ public class SocializationController implements UIController {
         Platform.runLater(() -> chatScrollPane.setVvalue(1.0));
     }
 
-    // Go back button action
+    /**
+     * Go back button action
+     */
     @FXML
     private void handleGoBackButton()
     {
         toggleOnFriendsList();
     }
 
-    // Toggle friends menu instead of chat menu
+    /**
+     * Toggles the friends menu instead of the chat menu
+     */
     private void toggleOnFriendsList()
     {
         toggleFriendMenuVsChatMenu(true);
     }
 
-    // Toggle chat menu instead of friends menu
+    /**
+     * Toggles the chat menu instead of the friends menu
+     */
+    @FXML
     private void toggleOnChatMenu()
     {
         toggleFriendMenuVsChatMenu(false);
@@ -584,7 +597,9 @@ public class SocializationController implements UIController {
         chatScrollPane.setManaged(!state);
     }
 
-    // Display online friends in the online friends section
+    /**
+     * Displays online friends in the online friends section
+     */
     @FXML
     private void displayOnlineFriends()
     {

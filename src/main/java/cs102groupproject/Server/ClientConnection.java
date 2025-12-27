@@ -1,17 +1,17 @@
 package cs102groupproject.Server;
 
 import jakarta.websocket.Session;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-
 import cs102groupproject.SharedObjects.*;
-import cs102groupproject.Client.ClientSession;
-import cs102groupproject.Server.AuthService;
-import cs102groupproject.Server.SessionService;
-
+/**
+ * ClientConnection class listens the requests coming from the clients and functions as a router
+ * since it handles the requests via server classes which are related to the incoming requests. Thus,
+ * it sends responses to the client to update UI part of the app.
+ * Authors: Begüm Göktaş, Delfin Eryılmaz (Partially)
+ * Date: 27/12/2025
+ */
 public class ClientConnection {
 
     /** WebSocket session associated with the client */
@@ -70,6 +70,7 @@ public class ClientConnection {
                 ));
                 break;
             }
+
              case ADD_FRIEND: {
                 User targetUser = message.getPayloadAs(User.class);
                 int currentUserId = userId; // O anki bağlantıdan ID'yi al
@@ -89,6 +90,7 @@ public class ClientConnection {
                 }
                 break;
             }   
+
             case SEND_PRIVATE_MESSAGE: {
                 ChatMessage chatMsg = message.getPayloadAs(ChatMessage.class);
                 chatService.saveMessage(chatMsg);

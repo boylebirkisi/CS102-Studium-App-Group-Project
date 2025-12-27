@@ -39,6 +39,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 /**
  * Controller for the planner UI.
+ * Authors: Ali Mersin / Begüm Göktaş(partially)
  */
 public class PlannerController implements UIController {
     ArrayList<Habit> habits;
@@ -170,7 +171,9 @@ public class PlannerController implements UIController {
         });
     }
 
-    // Refreshes the UI components of the planner
+    /**
+     * Refreshes the UI components of the planner
+    */
     public void refreshUI()
     {
         updateHabitTracker(selectedHabit);
@@ -218,7 +221,9 @@ public class PlannerController implements UIController {
         }
     }
 
-    // Clears all habit tracker checkboxes
+    /**
+     * Clears all habit tracker checkboxes
+     */
     private void clearHabitTrackerCircles()
     {
         for (int i = 0; i < habitCircleFlowPane.getChildren().size(); i++)
@@ -227,7 +232,9 @@ public class PlannerController implements UIController {
         }
     }
 
-    // Called when add habit circle is clicked, shows text field to add new habit
+    /**
+     * Called when add habit circle is clicked, shows text field to add new habit
+    */
     @FXML
     private void addHabitCircleClicked()
     {
@@ -240,7 +247,9 @@ public class PlannerController implements UIController {
         updateHabitTracker(selectedHabit);
     }
 
-    // Called when enter is pressed in add habit text field, adds new habit
+    /**
+     * Called when enter is pressed in add habit text field, adds new habit
+    */
     @FXML
     private void addHabitTextFieldAction()
     {
@@ -259,7 +268,9 @@ public class PlannerController implements UIController {
         updateHabitTracker(newHabit);
     }
 
-    // Updates the events list display
+    /**
+     * Updates the events list display
+    */
     @FXML
     private void populateEvents()
     {
@@ -293,7 +304,9 @@ public class PlannerController implements UIController {
         eventsVBox.requestLayout();
     }
 
-    // Called when add event button is clicked
+    /**
+     * Called when add event button is clicked
+    */
     @FXML
     private void addEventButtonClicked() throws IOException
     {
@@ -302,7 +315,9 @@ public class PlannerController implements UIController {
         popUpStage.setTitle("Add Event Pop-Up Menu");
     }
 
-    // Called when add task button is clicked
+    /**
+     * Called when add task button is clicked
+    */
     @FXML
     private void addTaskButtonClicked() throws IOException
     {
@@ -354,7 +369,9 @@ public class PlannerController implements UIController {
         return datePicker.getValue();
     }
 
-    // called when date is changed by date picker
+    /**
+     * Called when date is changed by date picker
+    */
     @FXML
     private void updateDate()
     {

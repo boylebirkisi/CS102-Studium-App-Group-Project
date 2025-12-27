@@ -6,18 +6,13 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializer;
 
 import java.net.URI;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cs102groupproject.App;
 import cs102groupproject.SharedObjects.ActionType;
 import cs102groupproject.SharedObjects.ProtocolMessage;
-import cs102groupproject.SharedObjects.User;
-import cs102groupproject.SharedObjects.VerificationCode;
 import jakarta.websocket.Session;
 import jakarta.websocket.ClientEndpoint;
 import jakarta.websocket.ContainerProvider;
@@ -26,17 +21,21 @@ import jakarta.websocket.OnOpen;
 import jakarta.websocket.WebSocketContainer;
 import javafx.application.Platform;
 
+/**
+ * responsible for managing the client-side WebSocket connection.
+ * Establishes and maintains a WebSocket session with the server and
+ * dispatches incoming messages to registered listeners based on their action type
+ * Authors: Delfin Eryılmaz / Begüm Göktaş(partially)
+ */   
 @ClientEndpoint
 public class WebSocketClient {
     private static Session session;
 
     private static final Gson gson = new GsonBuilder()
-    // LocalDateTime Adaptörü (Mevcut olan)
         .registerTypeAdapter(java.time.LocalDateTime.class, (JsonSerializer<java.time.LocalDateTime>) (src, typeOfSrc, context) ->
                 new JsonPrimitive(src.format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME)))
         .registerTypeAdapter(java.time.LocalDateTime.class, (JsonDeserializer<java.time.LocalDateTime>) (json, typeOfT, context) ->
                 java.time.LocalDateTime.parse(json.getAsString(), java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME))
-        // LocalDate Adaptörü (EKLENECEK OLAN - %... hatasını bu çözer)
         .registerTypeAdapter(java.time.LocalDate.class, (JsonSerializer<java.time.LocalDate>) (src, typeOfSrc, context) ->
                 new JsonPrimitive(src.format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE)))
         .registerTypeAdapter(java.time.LocalDate.class, (JsonDeserializer<java.time.LocalDate>) (json, typeOfT, context) ->
@@ -76,28 +75,27 @@ public class WebSocketClient {
 
     public static void send(ProtocolMessage msg) {
         if (session == null) {
-            System.out.println("❌ WebSocket session is NULL, message not sent");
+            System.out.println("WebSocket session is NULL, message not sent");
             return;
         }
 
-        System.out.println("➡️ Sending message: " + msg.getAction());
+        System.out.println("Sending message: " + msg.getAction());
         session.getAsyncRemote().sendText(msg.toJson());
     }
 
     @OnMessage
     public void onMessage(String json) {
         try {
-            System.out.println("⬅️ Sunucudan Veri Geldi: " + json);
+            System.out.println("Data received from the server " + json);
 
-            // ProtocolMessage.fromJson yerine doğrudan buradaki yapılandırılmış GSON'u kullanıyoruz
             ProtocolMessage msg = getGson().fromJson(json, ProtocolMessage.class);
 
             if (msg == null || msg.getAction() == null) {
-                System.err.println("❌ Hata: Mesaj veya Action boş!");
+                System.err.println("Error! Message or action is null");
                 return;
             }
 
-            System.out.println("➡️ İşlenen Aksiyon: " + msg.getAction());
+            System.out.println("Processed action: " + msg.getAction());
             ActionType action = msg.getAction();
 
             if (listeners.containsKey(action)) {
@@ -106,31 +104,18 @@ public class WebSocketClient {
                         try {
                             listener.handle(msg.getPayload());
                         } catch (Exception e) {
-                            System.err.println("❌ UI Güncelleme Hatası (Listener): " + e.getMessage());
+                            System.err.println("There occured a problem during UI update " + e.getMessage());
                             e.printStackTrace();
                         }
                     });
                 }
             } else {
-                System.out.println("⚠️ Bu aksiyon için kayıtlı bir dinleyici yok: " + action);
+                System.out.println("No listener is here to get action " + action);
             }
         } catch (Exception e) {
-            System.err.println("❌ onMessage metodunda KRİTİK HATA: " + e.getMessage());
-            e.printStackTrace(); // Hatanın kaynağını tam burada göreceğiz
+            System.err.println("critical mistake in OnMessage method " + e.getMessage());
+            e.printStackTrace();
         }
-        // System.out.println("⬅️ Message from server: " + json);
-
-        // ProtocolMessage msg = ProtocolMessage.fromJson(json);
-
-        // System.out.println("➡️ Action parsed: " + msg.getAction());
-        // ActionType action = msg.getAction();
-        // // Find and notify all registered listeners for this action
-        // if (listeners.containsKey(action)) {
-        //     for (MessageListener listener : listeners.get(action)) {
-        //         // Use Platform.runLater because UI updates must happen on the FX thread
-        //         Platform.runLater(() -> listener.handle(msg.getPayload()));
-        //     }
-        // }
     }
 
     public static boolean isConnected() {

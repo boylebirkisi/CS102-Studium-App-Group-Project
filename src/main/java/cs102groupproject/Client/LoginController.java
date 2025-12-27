@@ -6,8 +6,7 @@ import com.fatboyindustrial.gsonjavatime.Converters;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import cs102groupproject.App;
-import cs102groupproject.Server.AuthService;
+
 import cs102groupproject.SharedObjects.ActionType;
 import cs102groupproject.SharedObjects.LoginResponse;
 import cs102groupproject.SharedObjects.ProtocolMessage;

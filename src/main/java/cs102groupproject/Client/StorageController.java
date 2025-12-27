@@ -3,7 +3,6 @@ package cs102groupproject.Client;
 
 import java.io.IOException;
 
-import cs102groupproject.App;
 import cs102groupproject.SharedObjects.Furniture;
 import cs102groupproject.SharedObjects.Storage;
 import javafx.event.ActionEvent;

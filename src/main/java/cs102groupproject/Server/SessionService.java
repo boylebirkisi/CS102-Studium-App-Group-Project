@@ -3,7 +3,12 @@ package cs102groupproject.Server;
 import java.util.*;
 
 import cs102groupproject.SharedObjects.GroupSession;
-//not completed yet
+/**
+ * performs part of the session creation-related operations and 
+ * manages interactions with the database.
+ * @author Begüm Göktaş
+ * Date: 27/12/2025
+ */
 public class SessionService {
 
     private final DBManager db;
@@ -12,6 +17,9 @@ public class SessionService {
         this.db = db;
     }
 
+    /**
+     * saves the given GroupSession to the database
+     */
     public GroupSession createGroupSession(GroupSession groupSession) {
 
         int sessionId = db.addSession(groupSession);
@@ -20,13 +28,6 @@ public class SessionService {
         }
 
         groupSession.setId(sessionId);
-
-        // // group_sessions tablosu
-        // db.addGroupSession(sessionId, groupSession.isPublic());
-
-        // // owner participant olarak eklenmeli bence
-        // db.addSessionParticipant(sessionId, groupSession.getOwner().getId());
-
         return groupSession;
     }
 }

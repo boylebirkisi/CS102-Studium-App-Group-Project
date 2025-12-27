@@ -1,7 +1,9 @@
 package cs102groupproject.SharedObjects;
 
 import java.time.LocalDate;
-
+/**
+ * Class representing a task.
+ */
 public class Task extends TransferObject{
 	private String name;
 	private String color;

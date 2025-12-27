@@ -12,7 +12,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-
+/**
+ * Controller for the notifications UI.
+ */
 public class NotificationsController implements UIController {
     ArrayList<Notification> notifications;
     ArrayList<User> users;

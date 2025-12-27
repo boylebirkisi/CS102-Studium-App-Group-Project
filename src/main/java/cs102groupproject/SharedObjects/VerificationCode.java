@@ -1,5 +1,7 @@
 package cs102groupproject.SharedObjects;
-
+/**
+ * Class representing a verification code sent to a user's email.
+ */
 public class VerificationCode {
     private String storedCode;
     private String email;

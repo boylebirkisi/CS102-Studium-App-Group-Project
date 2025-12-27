@@ -1,8 +1,9 @@
 package cs102groupproject.SharedObjects;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-
+/**
+ * Class representing a chat message between users.
+ */
 public class ChatMessage {
     private int senderID;
     private int receiverID;

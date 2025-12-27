@@ -1,5 +1,7 @@
 package cs102groupproject.SharedObjects;
-
+/**
+ * Class representing a user in the application.
+ */
 public class User {
     private int id;
     private String username;

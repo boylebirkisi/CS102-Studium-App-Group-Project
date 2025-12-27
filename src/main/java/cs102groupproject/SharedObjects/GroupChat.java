@@ -1,7 +1,9 @@
 package cs102groupproject.SharedObjects;
 
 import java.util.ArrayList;
-
+/**
+ * Class representing a group chat containing multiple chat messages.
+ */
 public class GroupChat {
     private ArrayList<ChatMessage> messages; 
 

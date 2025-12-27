@@ -3,11 +3,8 @@ package cs102groupproject.Client;
 import cs102groupproject.SharedObjects.Furniture;
 import cs102groupproject.SharedObjects.MarketPlace;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 
 public class MarketController {
 

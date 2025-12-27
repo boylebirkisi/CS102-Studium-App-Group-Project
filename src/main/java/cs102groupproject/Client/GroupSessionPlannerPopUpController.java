@@ -19,7 +19,9 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
-
+/**
+ * Controller for the Group Session Planner Pop-Up.
+ */
 public class GroupSessionPlannerPopUpController implements UIController {
     private SocializationController ownerController;
     @FXML

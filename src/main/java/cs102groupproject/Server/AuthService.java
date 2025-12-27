@@ -169,7 +169,7 @@ public class AuthService {
         System.out.println("Done (" + allUsers.size() + " found)");
 
         System.out.print("3/9 Fetching Notifications... ");
-        List<Notification> notifications = dbManager.getAllNotifications();
+        List<Notification> notifications = dbManager.getAllNotifications(userId);
         System.out.println("Done");
 
         System.out.print("4/9 Fetching Chat Messages... ");

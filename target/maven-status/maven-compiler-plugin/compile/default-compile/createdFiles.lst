@@ -1,3 +1,6 @@
+<<<<<<< HEAD
+cs102groupproject/Server/ClientConnection$1.class
+=======
 cs102groupproject\Server\ClientConnection$1.class
 cs102groupproject\SharedObjects\Furniture.class
 cs102groupproject\SharedObjects\TransferObject.class
@@ -62,3 +65,4 @@ cs102groupproject\Client\GoogleCalendarAPI.class
 cs102groupproject\Client\SocializationController.class
 cs102groupproject\Server\WebSocketServer.class
 cs102groupproject\SharedObjects\UserCredentials.class
+>>>>>>> d1dd5d4f4a76ae6594edd3bc1813d614214cbdfd

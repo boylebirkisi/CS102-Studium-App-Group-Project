@@ -1,10 +1,8 @@
 package cs102groupproject.Client;
 
-import cs102groupproject.App;
 import cs102groupproject.SharedObjects.Furniture;
 import cs102groupproject.SharedObjects.PlaceType;
 import javafx.animation.TranslateTransition;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,9 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;

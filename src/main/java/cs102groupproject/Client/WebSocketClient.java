@@ -6,18 +6,13 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializer;
 
 import java.net.URI;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cs102groupproject.App;
 import cs102groupproject.SharedObjects.ActionType;
 import cs102groupproject.SharedObjects.ProtocolMessage;
-import cs102groupproject.SharedObjects.User;
-import cs102groupproject.SharedObjects.VerificationCode;
 import jakarta.websocket.Session;
 import jakarta.websocket.ClientEndpoint;
 import jakarta.websocket.ContainerProvider;

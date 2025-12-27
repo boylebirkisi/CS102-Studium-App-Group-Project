@@ -24,7 +24,7 @@ public class WebSocketServer {
 
     @OnMessage
     public void onMessage(String message, Session session) {
-        System.out.println("📩 RAW MESSAGE FROM CLIENT: " + message);
+        System.out.println("RAW MESSAGE FROM CLIENT: " + message);
         ClientConnection connection =
                 (ClientConnection) session
                         .getUserProperties()

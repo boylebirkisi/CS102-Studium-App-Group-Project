@@ -60,7 +60,9 @@ public class GroupSessionPlannerPopUpController implements UIController {
             }
         );
     }
-    // Populates the friends list in the popup for inviting friends
+    /**
+     * Populates the friends list in the popup for inviting friends
+     */
     private void populateFriendsList() {
         ArrayList<User> friendsList = ownerController.getFriendsList();
 

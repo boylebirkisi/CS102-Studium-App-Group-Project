@@ -34,7 +34,9 @@ public class TaskPlannerPopUpController implements UIController {
         this.ownerController = ownerController;
     }
 
-    // Create Task button action
+    /**
+     * Create Task button action
+     */
     @FXML
     private void handleCreateTaskButton()
     {
@@ -55,7 +57,9 @@ public class TaskPlannerPopUpController implements UIController {
         ownerController.closePopUp();
     }
 
-    // Cancel button action
+    /**
+     * Cancel button action
+     */
     @FXML
     private void handleCancelButton()
     {

@@ -1,4 +1,4 @@
-package cs102groupproject;
+package cs102groupproject.Client;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -7,10 +7,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import cs102groupproject.Client.OfficeController;
-import cs102groupproject.Client.PlannerController;
-import cs102groupproject.Client.SocializationController;
-import cs102groupproject.Client.WebSocketClient;
 import cs102groupproject.SharedObjects.AppEvent;
 import cs102groupproject.SharedObjects.ChatMessage;
 import cs102groupproject.SharedObjects.Habit;

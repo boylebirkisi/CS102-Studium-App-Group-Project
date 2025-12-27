@@ -4,20 +4,15 @@ import cs102groupproject.SharedObjects.User;
 import cs102groupproject.SharedObjects.LoginResponse;
 
 /**
- * Client-side application context.
- * UI needs this, server does NOT.
+ * Client-side application context to be used by controllers
+ * @author Begüm Göktaş
  */
 public final class ClientSession {
-    //controllers will be added
     private static User currentUser;
     private static LoginResponse loginResponse;
-    private static int activeGroupId; // Group / Study session ID (business)
+    private static int activeGroupId;
 
-    private ClientSession() {
-    }
-
-    /* ===== AUTH ===== */
-
+    private ClientSession() {}
     public static void login(User user) {
         currentUser = user;
     }
@@ -39,7 +34,6 @@ public final class ClientSession {
         return getCurrentUser().getId();
     }
     
-    /* ===== GROUP SESSION ===== */
 
     public static void setActiveGroupId(int groupId) {
         activeGroupId = groupId;

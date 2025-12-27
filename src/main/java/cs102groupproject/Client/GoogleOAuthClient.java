@@ -20,6 +20,7 @@ import java.util.List;
  */
 public class GoogleOAuthClient {
     // Instance variables for HTTP transport and JSON factory
+    private static final int PORT = 8888;
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static final NetHttpTransport HTTP_TRANSPORT = new NetHttpTransport();
 
@@ -76,7 +77,7 @@ public class GoogleOAuthClient {
         LocalServerReceiver receiver =
             new LocalServerReceiver.Builder()
                 .setHost("localhost")
-                .setPort(8888)
+                .setPort(PORT)
                 .setCallbackPath("/callback")
                 .build();
 

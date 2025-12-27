@@ -691,6 +691,7 @@ public class DBManager {
 
                 sessions.add(session);
             }
+
         } catch (SQLException e) {
             System.err.println("Database operation failed: " + e.getMessage());
         }
@@ -703,55 +704,86 @@ public class DBManager {
      * @return session with matching session id.
      */
     public Session getIndividualSessionByID(int sessionID) {
-        String sqlCommand = "SELECT * FROM sessions WHERE id = ?";
+    String sqlCommand = "SELECT * FROM sessions WHERE id = ?";
 
-        ResultSet rs = getObject(sqlCommand);
-        if (rs != null) {
-            try {
-                return new Session(
-                    getUserByID(rs.getInt("owner_id")),
-                    rs.getString("name"),
-                    rs.getString("type"),
-                    rs.getInt("no"),
-                    rs.getInt("length"),
-                    rs.getInt("break_length"),
-                    rs.getTimestamp("start_date").toLocalDateTime()
-                );
-            } catch (SQLException e) {
-                System.err.println("Database operation failed: " + e.getMessage());
-            }
+    try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sqlCommand)) {
+        
+        pstmt.setInt(1, sessionID);
+        
+        ResultSet rs = pstmt.executeQuery();
+        if (rs.next()) {
+            return new Session(
+                getUserByID(rs.getInt("owner_id")), rs.getString("name"),
+                rs.getString("type"), rs.getInt("no"),
+                rs.getInt("length"), rs.getInt("break_length"),
+                rs.getTimestamp("start_date").toLocalDateTime()
+            );
         }
-        return null;
+
+    } catch (SQLException e) {
+        System.err.println("Database operation failed in getIndividualSessionByID: " + e.getMessage());
     }
+    return null;
+}
 
     /**
      * Get all group sessions.
-     * @return
+     * @return list of the group sessions.
      */
     public List<GroupSession> getAllGroupSessions() {
-        String sqlCommand = "SELECT * FROM group_sessions";
-        List<GroupSession> sessions = new ArrayList<>();
+        String sqlCommand = "SELECT s.*, g.is_public FROM sessions s " +
+                            "JOIN group_sessions g ON s.id = g.session_id";
+        
+        List<GroupSession> groupSessions = new ArrayList<>();
 
         try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
-
-            if (conn == null) return sessions; 
             
             ResultSet rs = stmt.executeQuery(sqlCommand);
+            // For every session
             while (rs.next()) {
-                Session session = getIndividualSessionByID(rs.getInt("session_id"));
+                int sessionId = rs.getInt("id");
 
-                ResultSet participantRS = getObject("SELECT * FROM session_participants WHERE session_id = " + rs.getInt("session_id"));
-                ArrayList<User> participants = new ArrayList<>();
-                while (participantRS.next()) {
-                    participants.add(getUserByID(participantRS.getInt("user_id")));
-                }
+                Session session = new Session(
+                    getUserByID(rs.getInt("owner_id")), rs.getString("name"),
+                    rs.getString("type"), rs.getInt("no"),
+                    rs.getInt("length"), rs.getInt("break_length"),
+                    rs.getTimestamp("start_date").toLocalDateTime()
+                );
+
+                // Getting participants of the session
+                ArrayList<User> participants = getParticipants(sessionId);
+                
                 GroupSession groupSession = new GroupSession(session, participants, rs.getBoolean("is_public"));
-                sessions.add(groupSession);
+                groupSessions.add(groupSession);
             }
         } catch (SQLException e) {
-            System.err.println("Database operation failed: " + e.getMessage());
+            System.err.println("Database operation failed in getAllGroupSessions: " + e.getMessage());
         }
-        return sessions;
+        return groupSessions;
+    }
+
+    /**
+     * Gets all the participants for a particular group session.
+     * @param sessionId
+     * @return user list.
+     */
+    private ArrayList<User> getParticipants(int sessionId) {
+        String sql = "SELECT user_id FROM session_participants WHERE session_id = ?";
+        ArrayList<User> users = new ArrayList<>();
+        
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, sessionId);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                users.add(getUserByID(rs.getInt("user_id")));
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Failed to fetch participants: " + e.getMessage());
+        }
+        return users;
     }
 
     /**
@@ -759,12 +791,11 @@ public class DBManager {
      * @param email
      * @param code
      * @param expiryTime
-     * @return
+     * @return whether the proccess was succefful or not.
      */
     public boolean insertVerificationCode(String email, String code, long expiryTime) {
         String sqlCommand = "INSERT INTO verification_codes (email, stored_code, expiry_time) " +
-         "VALUES (?, ?, ?) ON CONFLICT (email) DO UPDATE SET " +
-         "stored_code = EXCLUDED.stored_code, expiry_time = EXCLUDED.expiry_time";
+         "VALUES (?, ?, ?) ON CONFLICT (email) DO UPDATE SET stored_code = EXCLUDED.stored_code, expiry_time = EXCLUDED.expiry_time";
 
         return executeSqlCommand(sqlCommand, email, code, expiryTime);
     }
@@ -772,24 +803,18 @@ public class DBManager {
     /**
      * Get verification code.
      * @param email
-     * @return
+     * @return the verification code object.
      */
     public VerificationCode getVerificationCode (String email) {
         String sqlCommand = "SELECT * FROM verification_codes WHERE email = ?";
         System.out.println("Searching for: [" + email + "] in " + new java.io.File(".").getAbsolutePath());
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sqlCommand)) {
 
-            if (conn == null) {
-                System.err.println("CRITICAL: Connection is null in getVerificationCode!");
-                return null;
-            }
-            
             pstmt.setString(1, email);
 
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 VerificationCode code = new VerificationCode(rs.getString("stored_code"), rs.getString("email"), rs.getLong("expiry_time"));
-                System.out.println(code.getStoredCode());
                 return code;
             } else {
                 return null; 
@@ -807,7 +832,7 @@ public class DBManager {
      * @param receiverID
      * @param text
      * @param timestamp
-     * @return
+     * @return id of the inserted char message.
      */
     public int insertChatMessage(int senderID, int receiverID, String text, LocalDateTime timestamp) {
         String sqlCommand = "INSERT INTO chat_messages (sender_id, receiver_id, message_text, timestamp)" +
@@ -816,27 +841,27 @@ public class DBManager {
         return insertAndGetID(sqlCommand, senderID, receiverID, text, timestamp);        
     }
 
+    /**
+     * Gets all the chat messages a user has.
+     * @param userID
+     * @return a list of chat messages of the user.
+     */
     public List<ChatMessage> getChatMessages(int userID) {
         String sqlCommand = "SELECT * FROM chat_messages WHERE sender_id = ? OR receiver_id = ? ORDER BY timestamp ASC";
         List<ChatMessage> messages = new ArrayList<>();
 
-        try (Connection conn = connect(); 
-         PreparedStatement pstmt = conn.prepareStatement(sqlCommand)) {
-
-        if (conn == null) return messages; 
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sqlCommand)) {
         
         pstmt.setInt(1, userID);
         pstmt.setInt(2, userID);
 
         try (ResultSet rs = pstmt.executeQuery()) {
             while (rs.next()) {
-                // Pull the actual data from the database columns
                 int senderId = rs.getInt("sender_id");
                 int receiverId = rs.getInt("receiver_id");
-                String content = rs.getString("message_text"); // Adjust column name to match your DB
+                String content = rs.getString("message_text"); 
                 LocalDateTime timestamp = rs.getTimestamp("timestamp").toLocalDateTime();
 
-                // Create the object using the database values
                 messages.add(new ChatMessage(senderId, receiverId, content, timestamp));
             }
         }
@@ -847,34 +872,10 @@ public class DBManager {
     }
 
     /**
-     * Get object by SQL command.
-     * @param sqlCommand
-     * @return
-     */
-    private ResultSet getObject(String sqlCommand) {
-        try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
-
-            if (conn == null) return null; 
-
-            // Executes the query
-            ResultSet rs = stmt.executeQuery(sqlCommand);
-            if (rs.next()) {
-                return rs;
-            } else {
-                return null; 
-            }
-
-        } catch (SQLException e) {
-            System.err.println("Database operation failed: " + e.getMessage());
-            return null;
-        }
-    }
-
-    /**
      * Inserts a new object and returns the generated ID.
      * @param sqlCommand
      * @param parameters
-     * @return
+     * @return the id of the inserted object.
      */
     private int insertAndGetID(String sqlCommand, Object... parameters) {
         try (Connection connection = connect()) {
@@ -889,6 +890,7 @@ public class DBManager {
                 if (rowsAffected > 0) {
                     try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
                         if (generatedKeys.next()) {
+                            // Returning the id of the inserted object.
                             return generatedKeys.getInt(1); 
                         }
                     }
@@ -901,18 +903,28 @@ public class DBManager {
         }
     }
 
+    /**
+     * Executes a transaction, which needed to handle notifications realted operations
+     * (Add friend, send pdf etc.)
+     * @param sqlCommands
+     * @param parameters
+     * @return
+     */
     private boolean executeTransaction(String[] sqlCommands, Object[][] parameters) {
         try (Connection connection = connect()) {
             if (connection == null) return false;
 
+            // Closing auto commit
             connection.setAutoCommit(false);
             try {
                 for (int i = 0; i < sqlCommands.length; i++) {
                     executeCoreLogic(connection, sqlCommands[i], parameters[i]);
                 }
+                // Commiting all changes that need to be done.
                 connection.commit();
                 return true;
             } catch (SQLException e) {
+                // If it is not successful undone all changes.
                 connection.rollback();
                 System.err.println("Transaction failed, rolled back: " + e.getMessage());
                 return false;
@@ -970,10 +982,5 @@ public class DBManager {
         int rowsAffected = pstmt.executeUpdate();
         return rowsAffected > 0;
         }
-    }
-
-    public static void main(String[] args) {
-        DBManager dbManager = new DBManager();
-        System.out.println(dbManager.getVerificationCode("deryilmaz06@gmail.com").getStoredCode());
     }
 }

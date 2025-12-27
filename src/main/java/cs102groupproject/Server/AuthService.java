@@ -1,20 +1,24 @@
 package cs102groupproject.Server;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.http.HttpRequestInitializer;
-import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.services.oauth2.Oauth2;
 import com.google.api.services.oauth2.model.Userinfo;
 
 import cs102groupproject.SharedObjects.*;
-
-import java.io.IOException;
 import java.util.List;
-
+/**
+ * AuthService handles the authentication processes and the data required for the starting point 
+ * of the app after login or registration.
+ * Author: Delfin Eryılmaz
+ * Date: 27/12/2025
+ */
 public class AuthService {
     private static DBManager dbManager = new DBManager();
     private static PasswordHasher hasher = new PasswordHasher();
-    // Login with Google
+    /**
+     * Handles the operation of login with google.
+     * @param accessToken
+     * @return the user logged in.
+     */
     public static User loginWithGoogle(String accessToken) {
 
         try {
@@ -86,7 +90,7 @@ public class AuthService {
 
     /**
      * Logs in a user with given username and password.
-     * @return
+     * @return the user logged in.
      */
     public static User login(UserCredentials credentials) {
         if (credentials == null) {
@@ -94,6 +98,7 @@ public class AuthService {
         } else {
             String password = dbManager.getPasswordByUsername(credentials.getUsername());
             PasswordHasher hasher = new PasswordHasher();
+            // Checking the password whether if it is true.
             if (password != null && hasher.checkPassword(credentials.getPassword(), password)) {
                 User user = dbManager.getUserByUsername(credentials.getUsername());
                 return user;
@@ -104,10 +109,9 @@ public class AuthService {
 
     /**
     * Registers a new user with given details.
-    * @return
+    * @return the user registered in.
     */
     public static User register(UserCredentials credentials) {
-        System.out.println("dsfsaf register");
         if (credentials == null) {
             throw new IllegalArgumentException("Credentials cannot be null");
         } else {
@@ -125,7 +129,7 @@ public class AuthService {
     /**
      * Send verification code.
      * @param email
-     * @return
+     * @return the verification code that is sent.
      */
     public static VerificationCode sendVerificationCode(String email) {
 
@@ -145,6 +149,12 @@ public class AuthService {
         return null;
     }
 
+    /**
+     * Verifies the code entered by the user.
+     * @param email
+     * @param code
+     * @return
+     */
     public static boolean verifyCode(String email, String code) {
         VerificationCode vCode = dbManager.getVerificationCode(email);
         System.out.println("vCode: " + vCode);
@@ -156,64 +166,69 @@ public class AuthService {
         return false;
     }
 
+    /**
+     * Constructors the login response object for the data required initially by the app.
+     * @param userId
+     * @param user
+     * @return the login response for a specific user.
+     */
     public LoginResponse loginResponse(int userId, User user) {
-    System.out.println("\n--- Starting LoginResponse Construction for User ID: " + userId + " ---");
+        System.out.println("\n--- Starting LoginResponse Construction for User ID: " + userId + " ---");
 
-    try {
-        System.out.print("1/9 Fetching Friends... ");
-        List<User> friends = dbManager.getFriends(userId);
-        System.out.println("Done (" + friends.size() + " found)");
+        try {
+            System.out.print("1/9 Fetching Friends... ");
+            List<User> friends = dbManager.getFriends(userId);
+            System.out.println("Done (" + friends.size() + " found)");
 
-        System.out.print("2/9 Fetching All Users... ");
-        List<User> allUsers = dbManager.getAllUsers();
-        System.out.println("Done (" + allUsers.size() + " found)");
+            System.out.print("2/9 Fetching All Users... ");
+            List<User> allUsers = dbManager.getAllUsers();
+            System.out.println("Done (" + allUsers.size() + " found)");
 
-        System.out.print("3/9 Fetching Notifications... ");
-        List<Notification> notifications = dbManager.getAllNotifications(userId);
-        System.out.println("Done");
+            System.out.print("3/9 Fetching Notifications... ");
+            List<Notification> notifications = dbManager.getAllNotifications(userId);
+            System.out.println("Done");
 
-        System.out.print("4/9 Fetching Chat Messages... ");
-        List<ChatMessage> messages = dbManager.getChatMessages(userId);
-        System.out.println("Done");
+            System.out.print("4/9 Fetching Chat Messages... ");
+            List<ChatMessage> messages = dbManager.getChatMessages(userId);
+            System.out.println("Done");
 
-        System.out.print("5/9 Fetching Events... ");
-        List<AppEvent> events = dbManager.getAllEvents(userId);
-        System.out.println("Done");
+            System.out.print("5/9 Fetching Events... ");
+            List<AppEvent> events = dbManager.getAllEvents(userId);
+            System.out.println("Done");
 
-        System.out.print("6/9 Fetching Tasks... ");
-        List<Task> tasks = dbManager.getAllTasks(userId);
-        System.out.println("Done");
+            System.out.print("6/9 Fetching Tasks... ");
+            List<Task> tasks = dbManager.getAllTasks(userId);
+            System.out.println("Done");
 
-        System.out.print("7/9 Fetching Habits... ");
-        List<Habit> habits = dbManager.getAllHabits(userId);
-        System.out.println("Done");
+            System.out.print("7/9 Fetching Habits... ");
+            List<Habit> habits = dbManager.getAllHabits(userId);
+            System.out.println("Done");
 
-        System.out.print("8/9 Fetching Sessions... ");
-        List<Session> sessions = dbManager.getAllIndividualSessions(userId);
-        System.out.println("Done");
+            System.out.print("8/9 Fetching Sessions... ");
+            List<Session> sessions = dbManager.getAllIndividualSessions(userId);
+            System.out.println("Done");
 
-        System.out.println("9/9 Creating final LoginResponse object...");
-        LoginResponse rs = new LoginResponse(
-            user, 
-            friends, 
-            allUsers, 
-            notifications, 
-            messages, 
-            events, 
-            tasks, 
-            habits, 
-            sessions
-        );
+            System.out.println("9/9 Creating final LoginResponse object...");
+            LoginResponse rs = new LoginResponse(
+                user, 
+                friends, 
+                allUsers, 
+                notifications, 
+                messages, 
+                events, 
+                tasks, 
+                habits, 
+                sessions
+            );
 
-        System.out.println("--- LoginResponse Successfully Built ---\n");
-        return rs;
+            System.out.println("--- LoginResponse Successfully Built ---\n");
+            return rs;
 
-    } catch (Exception e) {
-        System.err.println("\n❌ CRITICAL FAILURE during LoginResponse construction!");
-        System.err.println("Error Message: " + e.getMessage());
-        e.printStackTrace();
-        return null;
+        } catch (Exception e) {
+            System.err.println("\n❌ CRITICAL FAILURE during LoginResponse construction!");
+            System.err.println("Error Message: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
     }
-}
-
 }

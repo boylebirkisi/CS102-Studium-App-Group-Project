@@ -1,8 +1,6 @@
 package cs102groupproject.Client;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Map;
 
 import com.fatboyindustrial.gsonjavatime.Converters;
 import com.google.api.client.auth.oauth2.Credential;

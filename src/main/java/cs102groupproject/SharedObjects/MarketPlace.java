@@ -1,7 +1,9 @@
 package cs102groupproject.SharedObjects;
 
 import java.util.ArrayList;
-
+/**
+ * Class representing a marketplace containing furniture items for sale.
+ */
 public class MarketPlace {
 
     private ArrayList<Furniture> furnitureList;

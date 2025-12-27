@@ -32,7 +32,9 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
+/**
+ * Controller for the socialization UI.
+ */
 public class SocializationController implements UIController {
     Stage popUpStage = null;
     ArrayList<User> friendsList;

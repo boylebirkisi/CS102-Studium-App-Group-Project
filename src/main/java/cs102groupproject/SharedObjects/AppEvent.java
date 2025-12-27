@@ -1,8 +1,9 @@
 package cs102groupproject.SharedObjects;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-
+/**
+ * Class representing an event in the application.
+ */
 public class AppEvent extends TransferObject {
     private String name;
     private String color;

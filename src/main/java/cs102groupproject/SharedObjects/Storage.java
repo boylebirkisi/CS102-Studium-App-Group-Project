@@ -1,7 +1,9 @@
 package cs102groupproject.SharedObjects;
 
 import java.util.ArrayList;
-
+/**
+ * Class representing a storage for owned furniture items.
+ */
 public class Storage {
 
     private final ArrayList<Furniture> ownedFurnitures;

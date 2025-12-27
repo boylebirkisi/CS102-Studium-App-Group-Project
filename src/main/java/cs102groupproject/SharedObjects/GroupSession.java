@@ -2,7 +2,9 @@ package cs102groupproject.SharedObjects;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-
+/**
+ * Class representing a group session with multiple participants and a group chat.
+ */
 public class GroupSession extends Session {
     private ArrayList<User> participants;
     private GroupChat chat;

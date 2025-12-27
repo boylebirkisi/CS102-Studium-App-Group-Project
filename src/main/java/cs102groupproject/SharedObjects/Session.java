@@ -1,7 +1,9 @@
 package cs102groupproject.SharedObjects;
 
 import java.time.LocalDateTime;
-
+/**
+ * Class representing a session.
+ */
 public class Session {
     private User owner;
     private String name;

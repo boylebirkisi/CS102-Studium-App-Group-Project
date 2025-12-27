@@ -13,7 +13,9 @@ import cs102groupproject.SharedObjects.GroupSession;
 import cs102groupproject.SharedObjects.Habit;
 import cs102groupproject.SharedObjects.Session;
 
-// Controller for the profile page UI
+/**
+ * Controller for the profile page UI.
+ */
 public class UserController implements UIController {
     ArrayList<Habit> habits;
     ArrayList<Session> sessions;

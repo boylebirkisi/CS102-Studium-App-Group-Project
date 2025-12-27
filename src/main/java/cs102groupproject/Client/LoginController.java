@@ -8,22 +8,22 @@ import com.fatboyindustrial.gsonjavatime.Converters;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import cs102groupproject.App;
 import cs102groupproject.Server.AuthService;
 import cs102groupproject.SharedObjects.ActionType;
-import cs102groupproject.SharedObjects.AppEvent;
 import cs102groupproject.SharedObjects.LoginResponse;
 import cs102groupproject.SharedObjects.ProtocolMessage;
 import cs102groupproject.SharedObjects.User;
 import cs102groupproject.SharedObjects.UserCredentials;
-import cs102groupproject.SharedObjects.VerificationCode;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
-
+/**
+ * LoginController handles the registration and login processes.
+ * Author: Delfin Eryılmaz
+ * Date: 27/12/2025
+ */
 public class LoginController implements UIController {
     String selectedAvatar;
     @FXML
@@ -39,9 +39,12 @@ public class LoginController implements UIController {
 
     private static String accessToken = null;
     private static String email = null;
-    private static final AuthService manager = new AuthService();
+
 
     @FXML
+    /**
+     * Initializing login controller and attach the listeners for the incoming responeses of the server.
+     */
     public void initialize() {
         Gson gson = Converters.registerAll(new GsonBuilder()).create();
 
@@ -57,11 +60,11 @@ public class LoginController implements UIController {
             });
         });
 
+        // After login success
         WebSocketClient.addListener(ActionType.LOGIN_SUCCESS, (payload) -> {
             String jsonString = gson.toJson(payload); 
             LoginResponse rs = gson.fromJson(jsonString, LoginResponse.class);
 
-            // 2. NULL CHECK: Ensure parsing worked before accessing methods
             if (rs == null || rs.getUser() == null) {
                 System.err.println("❌ Critical Error: LoginResponse or User data is missing from server!");
                 return;
@@ -76,7 +79,7 @@ public class LoginController implements UIController {
 
             Platform.runLater(() -> {
                     try {
-                        // Online userlar ekelenecek
+                        // Passing all the data we need on the app.
                         App.loadScrollableScene(rs.getHabits() != null ? new ArrayList<>(rs.getHabits()) : new ArrayList<>(),
                                                 rs.getEventsOfUser() != null ? new ArrayList<>(rs.getEventsOfUser()) : new ArrayList<>(),
                                                 rs.getTasksOfUser() != null ? new ArrayList<>(rs.getTasksOfUser()) : new ArrayList<>(),
@@ -90,6 +93,7 @@ public class LoginController implements UIController {
                 });
         });
 
+        // After register success
         WebSocketClient.addListener(ActionType.REGISTER_SUCCESS, (payload) -> {
             String jsonString = gson.toJson(payload); 
             LoginResponse rs = gson.fromJson(jsonString, LoginResponse.class);
@@ -104,7 +108,7 @@ public class LoginController implements UIController {
             Platform.runLater(() -> {
                     try {
                         ClientSession.login(loggedInUser);
-                        // Online userlar ekelenecek
+                        // Passing all the data we need on the app.
                         App.loadScrollableScene(rs.getHabits() != null ? new ArrayList<>(rs.getHabits()) : new ArrayList<>(),
                                                 rs.getEventsOfUser() != null ? new ArrayList<>(rs.getEventsOfUser()) : new ArrayList<>(),
                                                 rs.getTasksOfUser() != null ? new ArrayList<>(rs.getTasksOfUser()) : new ArrayList<>(),
@@ -118,6 +122,7 @@ public class LoginController implements UIController {
                 });
         });
 
+        // After user enter the right code they are redireceted to the avatar page.
         WebSocketClient.addListener(ActionType.CODE_SUCCESS, (payload) -> {
 
             Platform.runLater(() -> {
@@ -133,6 +138,9 @@ public class LoginController implements UIController {
     //! LOGIN1 METHODS
 
     @FXML
+    /**
+     * Open to verification page.
+     */
     public void handleRegisterButton() { 
         try {
             App.setRoot("VerificationPage");
@@ -151,6 +159,9 @@ public class LoginController implements UIController {
     }
 
     @FXML
+    /**
+     * Handles login operations.
+     */
     public void handleEnterLogin() {
         System.out.println("Login button clicked in LoginController");
 
@@ -174,6 +185,7 @@ public class LoginController implements UIController {
             return;
         }
 
+        // Sends request to the server.
         ProtocolMessage msg = new ProtocolMessage(ActionType.DEV_LOGIN, 
             new UserCredentials(
                 username,
@@ -189,6 +201,10 @@ public class LoginController implements UIController {
     }
 
     @FXML
+    /**
+     * Handles login with Google Button.
+     * @throws Exception
+     */
     private void handleLoginWithGoogleButton() throws Exception {
         System.out.println("Login with Google button clicked");
         // Creates a new thread to avoid blocking the JavaFX UI thread (which creates exceptions)
@@ -205,6 +221,7 @@ public class LoginController implements UIController {
                         throw new RuntimeException("No access token received");
                 }
 
+                // Sends request to the server
                 ProtocolMessage msg = new ProtocolMessage(
                     ActionType.LOGIN_WITH_GOOGLE,
                     accessToken
@@ -223,6 +240,9 @@ public class LoginController implements UIController {
     //! VERIFICATION PAGE METHODS
 
     @FXML
+    /**
+     * Handles sending code request by sends request to the server
+     */
     private void handleSendCode() {
         System.out.println("Send Code button clicked!");
         this.email = emailField.getText();
@@ -235,26 +255,32 @@ public class LoginController implements UIController {
     }
 
     @FXML
+    /**
+     * Verifies the entered code by sending information to the database for checking
+     */
     public void verifyCode() {
         if (!codeField.getText().isEmpty()) {
-        String codeEntered = codeField.getText();
-        
-        // Try to get email from field; if empty, use the saved static 'email'
-        String emailToUse = emailField.getText();
-        if (emailToUse == null || emailToUse.isEmpty()) {
-            emailToUse = LoginController.email; // Use the static one we saved earlier
+            String codeEntered = codeField.getText();
+            
+            String email = emailField.getText();
+            if (email == null || email.isEmpty()) {
+                email = LoginController.email; 
+            }
+
+            System.out.println("DEBUG: Verifying for Email -> " + email);
+
+            // Sends request to the darabase
+            WebSocketClient.send(new ProtocolMessage(
+                ActionType.VERIFY_CODE,
+                new UserCredentials(null, email, null, codeEntered, true, "")
+            ));
         }
-
-        System.out.println("DEBUG: Verifying for Email -> " + emailToUse);
-
-        WebSocketClient.send(new ProtocolMessage(
-            ActionType.VERIFY_CODE,
-            new UserCredentials(null, emailToUse, null, codeEntered, true, "")
-        ));
-    }
     }
 
     @FXML
+    /**
+     * Handles registration operations with googles.
+     */
     public void registerWithGoogleButton() {
         new Thread(() -> {
             try {
@@ -264,7 +290,6 @@ public class LoginController implements UIController {
                 Credential credential = oauthClient.authenticate();
     
                 // Extracts access token from Credential
-                
                 String accessToken = credential.getAccessToken();
 
                 //
@@ -294,7 +319,7 @@ public class LoginController implements UIController {
 
     //! AVATAR PAGE
 
-       @FXML
+    @FXML
     private void selectAvatar1() {
         selectedAvatar = "Avatar1";
         System.out.println("Selected Avatar 1");
@@ -320,6 +345,10 @@ public class LoginController implements UIController {
 
 
     @FXML
+    /**
+     * Handles two type of registrations, if it is google registration since we have access token
+     * sends request to server accordingly.
+     */
     public void handleRegistration() {
         if (usernameField.getText().isEmpty() || passwordField.getText().isEmpty() || departmentField.getText().isEmpty())
             return;

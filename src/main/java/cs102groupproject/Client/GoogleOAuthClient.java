@@ -12,7 +12,12 @@ import com.google.api.client.util.store.MemoryDataStoreFactory;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
-
+/**
+ * GoogleOAuthClient provides the information needed fot the Google authentication
+ * and handles all the redirecting and capturing the access token of the user.
+ * Author: Delfin Eryılmaz
+ * Date: 27/12/2025
+ */
 public class GoogleOAuthClient {
     // Instance variables for HTTP transport and JSON factory
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
@@ -25,7 +30,11 @@ public class GoogleOAuthClient {
         "https://www.googleapis.com/auth/calendar"
     );
 
-    // Load client secrets from client_secrets.json file -> for OAuth2 authentication
+    /**
+     * Load client secrets from client_secrets.json file -> for OAuth2 authentication
+     * @return
+     * @throws Exception
+     */
     private GoogleClientSecrets loadClientSecrets() throws Exception {
 
         InputStream in = GoogleOAuthClient.class
@@ -42,7 +51,11 @@ public class GoogleOAuthClient {
         );
     }
 
-    // Authenticates user and obtain OAuth2 Credential
+    /**
+     * Authenticates user and obtain OAuth2 Credential
+     * @return
+     * @throws Exception
+     */
     public Credential authenticate() throws Exception {
 
         GoogleClientSecrets clientSecrets = loadClientSecrets();

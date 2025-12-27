@@ -6,6 +6,7 @@ import cs102groupproject.Server.WebSocketServer;
 
 /**
  * Starts the WebSocket server.
+ * Author: Begüm Göktaş
  */
 public class ServerMain {
 

@@ -34,6 +34,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 /**
  * Controller for the socialization UI.
+ * @author Ali Mersin / Begüm Göktaş(partially)
  */
 public class SocializationController implements UIController {
     Stage popUpStage = null;
@@ -144,7 +145,6 @@ public class SocializationController implements UIController {
             });
         });
 
-        // Böyle data alınacak
         //this.friendsList = new ArrayList<>(ClientSession.getLoginResponse().getFriends());
         //this.chatMessages = new ArrayList<>(ClientSession.getLoginResponse().getMessages());
         
@@ -219,20 +219,17 @@ public class SocializationController implements UIController {
         VBox rightCol = new VBox(10);
         searchResultsHBox.getChildren().addAll(leftCol, rightCol);
 
-        // DİKKAT: onlineUsers yerine sunucudan gelen allUsers'ı kullanıyoruz
         if (allUsers == null || allUsers.isEmpty()) {
-            System.out.println("Hata: Gösterilecek kullanıcı bulunamadı (allUsers boş).");
+            System.out.println("Error: no user is here to be shown");
             return;
         }
 
         int count = 0;
         for (User user : allUsers) {
-            // Kendini ve mevcut arkadaşlarını arama sonuçlarında gösterme
             if (user.getId() == ClientSession.getUserId() || friendsList.contains(user)) {
                 continue;
             }
 
-            // Filtreleme: İsim eşleşiyorsa ekle
             if (name.isEmpty() || user.getUsername().toLowerCase().contains(name)) {
                 HBox userBox = createUserDisplayBox(user, false);
                 if (count % 2 == 0) leftCol.getChildren().add(userBox);
@@ -428,19 +425,15 @@ public class SocializationController implements UIController {
         idLabel.setVisible(false);
         Label userLabel = new Label(user.getUsername() + " / " + user.getDepartment());
         HBox userBox = new HBox(idLabel, avatarLabel, userLabel);
-        // Eğer arkadaş değilse "Add Friend" butonu ekle
         if (!isFriend) {
-                // Arama sonucunda çıkan ve arkadaş olmayan kullanıcılar için
                 Button addFriendButton = new Button("Add Friend");
                 addFriendButton.setOnAction(e -> {
-                    // Sunucuya arkadaş ekleme protokolünü gönder
                     WebSocketClient.send(new ProtocolMessage(ActionType.ADD_FRIEND, user));
                     addFriendButton.setDisable(true);
                     addFriendButton.setText("Request Sent");
                 });
                 userBox.getChildren().add(addFriendButton);
         }
-        // Eğer arkadaşsa "Send Message" butonu ekle
         else
         {
             Button sendMessageButton = new Button("Send Message");
@@ -464,7 +457,7 @@ public class SocializationController implements UIController {
                         ChatMessage newMessage = new ChatMessage(ClientSession.getUserId(), user.getId(), messageText);
                         WebSocketClient.send(new ProtocolMessage(ActionType.SEND_PRIVATE_MESSAGE, newMessage));
                         chatMessages.add(newMessage);
-                        renderMessage(newMessage, true); // Mesajı sağa yasla (sender biziz)
+                        renderMessage(newMessage, true);
                         // Label messageTextNode = new Label(newMessage.getMessage());
                         // LocalDateTime timestamp = newMessage.getTimestamp();
                         // Label messageTime = new Label(timestamp.getHour() + ":" + timestamp.getMinute());
@@ -501,7 +494,6 @@ public class SocializationController implements UIController {
                 }
             });
             userBox.getChildren().add(sendMessageButton);
-            // Arkadaşlıktan çıkarma için sağ tıklama menüsü ekle
             ContextMenu contextMenu = new ContextMenu();
             MenuItem removeFriendItem = new MenuItem("Remove Friend");
             removeFriendItem.setOnAction(e ->
@@ -534,7 +526,6 @@ public class SocializationController implements UIController {
         textLabel.setWrapText(true);
         textLabel.setMaxWidth(250);
         
-        // Modern Chat Baloncuğu Stili
         String color = isMine ? "#0084ff" : "#e4e6eb";
         String textColor = isMine ? "white" : "black";
         textLabel.setStyle("-fx-background-color: " + color + "; " +
@@ -553,7 +544,6 @@ public class SocializationController implements UIController {
         
         chatVBox.getChildren().add(messageRow);
         
-        // Otomatik aşağı kaydırma
         Platform.runLater(() -> chatScrollPane.setVvalue(1.0));
     }
 

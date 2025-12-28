@@ -72,9 +72,21 @@ Studium is designed as a single-page, scrollable application for ease of use. He
 - Delfin Eryılmaz
 - Gülşen Mercan
 - Ali Mersin
+---
 
 ### Installation & Execution
 1. **Clone the repository:**
    ```bash
    git clone [https://github.com/boylebirkisi/CS102-Studium-App-Group-Project.git](https://github.com/boylebirkisi/CS102-Studium-App-Group-Project.git)
    cd CS102-Studium-App-Group-Project
+2. **Launch ServerMain.java first to initialize the WebSocket environment**
+3. **After launching ServerMain.java, launch the App.java to start the client interface**
+4. **Then you are ready to start using our app!**
+---
+
+### Important Notes for Authentication
+
+To successfully log in and use the application, please ensure the following conditions are met:
+
+1. **Authorized IP Address:** Access to the backend services is restricted. Your IP address must be added to the **Authorized IP List** in the server configuration to establish a connection.
+2. **Pre-approved Google Accounts:** For security reasons, the system only allows logins from Google accounts that have been **approved** in the database. Unauthorized accounts will be denied access.

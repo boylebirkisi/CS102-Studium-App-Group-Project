@@ -80,13 +80,13 @@ public class EventPlannerPopUpController implements UIController {
         LocalDateTime endDate = endDatePicker.getValue().atTime(endHour, endMinute);
 
         AppEvent event = new AppEvent(eventName, color, startDate, endDate,
-                ClientSession.getUserId(), importance, ""); // String png null olmasın boş olsun
+                ClientSession.getUserId(), importance, ""); 
 
         WebSocketClient.send(new ProtocolMessage(ActionType.CREATE_EVENT, event));
         // ownerController.refreshUI();
         ownerController.closePopUp();
         } catch (Exception e) {
-        System.err.println("Zaman formatı hatası! Lütfen HH:mm şeklinde girin.");
+        System.err.println("Time formatting mistake: Enter in the form of HH:MM");
     }
     }
     /** 

@@ -21,7 +21,10 @@ import javafx.util.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+/**
+ * Controller for handling furniture placement and office logic
+ * @author Gülşen Mercan
+ */
 public class OfficeController {
 
 
@@ -50,6 +53,9 @@ public class OfficeController {
 
     @FXML private Pane DESK_1, DESK_2, WALL_LEFT_1, WALL_RIGHT_1, FLOOR_1;
 
+    /**
+     * Initializes the office controller, lists all zones.
+     */
     @FXML
     public void initialize() {
         instance = this;
@@ -74,12 +80,20 @@ public class OfficeController {
     }
 
 
+    /**
+     * Returns the placement mode true for 
+     * a furniture item, and calls the show previews method.
+     * @param f furniture
+     */
     private void enterPlacementMode(Furniture f) {
         pendingFurniture = f;
         placementMode = true;
         showPreviews();
     }
 
+    /**
+     * Exits from the placement mode.
+     */
     private void exitPlacementMode() {
         pendingFurniture = null;
         placementMode = false;
@@ -94,6 +108,10 @@ public class OfficeController {
         }
     }
 
+    /**
+     * Shows previews for 
+     * furniture at the zones that are available.
+     */
     private void showPreviews() {
         if (!placementMode || pendingFurniture == null) return;
 
@@ -123,6 +141,11 @@ public class OfficeController {
         }
     }
 
+    /**
+     * Placement method for furniture, shows a 
+     * confirmation message, and handles left-right click.
+     * @param e MouseEvent
+     */
     @FXML
     private void placeFurniture(MouseEvent e) {
 
@@ -173,6 +196,9 @@ public class OfficeController {
         exitPlacementMode();
     }
 
+    /**
+     * Resets zone visibility to false.
+     */
     private void resetZones() {
         for (Pane zone : allZones) {
             zone.getChildren().clear();
@@ -182,6 +208,9 @@ public class OfficeController {
         }
     }
 
+    /**
+     * Opens session pop up.
+     */
     @FXML
     private void openSessionPopup() {
         try {
@@ -203,6 +232,9 @@ public class OfficeController {
         }
     }
 
+    /**
+     * Handles the opening and closing of the side panel.
+     */
     @FXML
     public void toggleSidePanel() {
 

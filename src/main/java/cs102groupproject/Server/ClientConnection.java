@@ -1,10 +1,14 @@
 package cs102groupproject.Server;
 
 import jakarta.websocket.Session;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+
 import cs102groupproject.SharedObjects.*;
+
 /**
  * ClientConnection class listens the requests coming from the clients and functions as a router
  * since it handles the requests via server classes which are related to the incoming requests. Thus,
@@ -53,7 +57,7 @@ public class ClientConnection {
                 User user = AuthService.login(credentials);
 
                 if (user == null) {
-                    sendError("Developer Login failed: Invalid credentials."); // Fix the text here
+                    sendError("Developer Login failed: Invalid credentials.");
                     return;
                 }
 
@@ -63,26 +67,21 @@ public class ClientConnection {
 
                 LoginResponse loginResponse = authService.loginResponse(userId, user);
 
-                // DAHA EKLENECEK ÇOK ŞEY VAR (BÜTÜN USERLAR; SESSIONLAR
                 send(new ProtocolMessage(
                         ActionType.LOGIN_SUCCESS,
                         loginResponse
                 ));
                 break;
             }
-
              case ADD_FRIEND: {
                 User targetUser = message.getPayloadAs(User.class);
-                int currentUserId = userId; // O anki bağlantıdan ID'yi al
+                int currentUserId = userId;
 
                 DBManager db = new DBManager();
-                // 1. Veritabanına kaydet (DBManager'da bu metodun olduğunu varsayıyoruz)
                 db.addFriend(currentUserId, targetUser.getId());
 
-                // 2. Ekleyen kişiye onay gönder
                 send(new ProtocolMessage(ActionType.FRIEND_ADDED, targetUser));
 
-                // 3. Eklene kişiye (eğer online ise) bildirim gönder
                 ClientConnection targetConn = sessionManager.getConnection(targetUser.getId());
                 if (targetConn != null) {
                     User currentUser = loggedInUser;
@@ -90,7 +89,6 @@ public class ClientConnection {
                 }
                 break;
             }   
-
             case SEND_PRIVATE_MESSAGE: {
                 ChatMessage chatMsg = message.getPayloadAs(ChatMessage.class);
                 chatService.saveMessage(chatMsg);
@@ -114,7 +112,7 @@ public class ClientConnection {
 
             case CREATE_TASK: {
                 Task task = message.getPayloadAs(Task.class);
-                Task savedTask = taskService.createTask(task); // DB'ye kaydet ve ID al
+                Task savedTask = taskService.createTask(task);
                 send(new ProtocolMessage(ActionType.TASK_CREATED, savedTask));
                 break;
             }
@@ -230,7 +228,6 @@ public class ClientConnection {
 
                 LoginResponse loginResponse = authService.loginResponse(userId, user);
 
-                // DAHA EKLENECEK ÇOK ŞEY VAR (BÜTÜN USERLAR; SESSIONLAR
                 send(new ProtocolMessage(
                         ActionType.LOGIN_SUCCESS,
                         loginResponse

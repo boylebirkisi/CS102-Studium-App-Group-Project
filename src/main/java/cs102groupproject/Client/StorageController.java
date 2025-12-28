@@ -10,6 +10,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 
+/**
+ * Controller for handling the user’s stored furniture.
+ * @author Gülşen Mercan
+ */
 public class StorageController {
 
     @FXML
@@ -23,18 +27,27 @@ public class StorageController {
         refreshStatic();
     }
 
+    /**
+     * Initializes the controller instance.
+     */
     @FXML
     public void initialize() {
         instance = this;
         refresh();
     }
 
+    /**
+     * Refreshes the controller instance.
+     */
     public static void refreshStatic() {
         if (instance != null) {
             instance.refresh();
         }
     }
 
+    /**
+     * Refreshes the storage, adds all owned storage furniture.
+     */
     private void refresh() {
         contentBox.getChildren().clear();
         if (storage == null) return;
@@ -51,7 +64,6 @@ public class StorageController {
                 try {
                     App.setRoot("Office1");
                 } catch (IOException e1) {
-                    // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
             });
@@ -60,6 +72,11 @@ public class StorageController {
         }
     }
 
+    /**
+     * Returns to the office view and closes the side panel.
+     * @param e
+     * @throws IOException
+     */
     @FXML
     private void goBack(ActionEvent e) throws IOException {
         App.setRoot("Office1");

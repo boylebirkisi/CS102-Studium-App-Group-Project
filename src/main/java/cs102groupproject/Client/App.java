@@ -25,7 +25,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("Login1TEST"), 640, 480); // to use login test, change primary to Login1TEST 
+        scene = new Scene(loadFXML("Login1TEST"), 640, 480);
         stage.setScene(scene);
         stage.show();
         stage.setMaximized(true);

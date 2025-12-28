@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 /**
  * Controller for the task planner pop-up.
+ * @author Ali Mersin
  */
 public class TaskPlannerPopUpController implements UIController {
     PlannerController ownerController;

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 /**
  * Class representing a group session with multiple participants and a group chat.
+ * @author Ali Mersin
  */
 public class GroupSession extends Session {
     private ArrayList<User> participants;

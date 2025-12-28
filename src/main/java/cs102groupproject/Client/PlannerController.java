@@ -39,7 +39,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 /**
  * Controller for the planner UI.
- * Authors: Ali Mersin / Begüm Göktaş(partially)
+ * @authors: Ali Mersin / Begüm Göktaş(partially)
  */
 public class PlannerController implements UIController {
     ArrayList<Habit> habits;

@@ -27,7 +27,7 @@ public class NotificationService {
     }
 
     /**
-     * Sends PDF request notificaiton to the user.
+     * Sends PDF request notification to the user.
      * @param userID
      * @param referenceID
      * @param notification

@@ -3,6 +3,7 @@ package cs102groupproject.SharedObjects;
 import java.time.LocalDateTime;
 /**
  * Class representing a chat message between users.
+ * @author Ali Mersin
  */
 public class ChatMessage {
     private int senderID;

@@ -15,6 +15,7 @@ import cs102groupproject.SharedObjects.Session;
 
 /**
  * Controller for the profile page UI.
+ * @author Ali Mersin
  */
 public class UserController implements UIController {
     ArrayList<Habit> habits;
@@ -43,7 +44,9 @@ public class UserController implements UIController {
         refreshUI();
     }
 
-    // Refreshes the UI elements
+    /**
+     * Refreshes the UI elements
+     */
     private void refreshUI()
     {
         // displayUserInfo();

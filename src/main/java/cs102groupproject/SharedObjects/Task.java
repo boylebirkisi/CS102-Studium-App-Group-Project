@@ -3,6 +3,7 @@ package cs102groupproject.SharedObjects;
 import java.time.LocalDate;
 /**
  * Class representing a task.
+ * @author Ali Mersin
  */
 public class Task extends TransferObject{
 	private String name;

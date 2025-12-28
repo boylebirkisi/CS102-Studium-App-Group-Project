@@ -3,6 +3,7 @@ package cs102groupproject.SharedObjects;
 import java.time.LocalDate;
 /**
  * Class representing a habit.
+ * @author Ali Mersin
  */
 public class Habit extends TransferObject{
     private String name;

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 /**
  * Class representing a day cell in a calendar with tasks and events.
+ * @author Ali Mersin
  */
 public class DayCell {
     private ArrayList<Task> weeklyTasks;

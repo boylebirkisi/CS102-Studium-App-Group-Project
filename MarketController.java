@@ -10,6 +10,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+/**Controller class for market view in the side panel. 
+ * @author Gülşen Mercan
+ * @date 24/12/2025
+ */
 public class MarketController {
 
     private static MarketController instance;
@@ -18,26 +22,33 @@ public class MarketController {
     @FXML
     private VBox marketBox;
 
+    /**Initializes the market place and controller.*/
     @FXML
     public void initialize() {
         instance = this;
             if (market == null) {
-        market = new MarketPlace(); // TEST İÇİN
+        market = new MarketPlace(); 
     }
         refresh();
     }
 
+    /**
+     * Assigns the marketplace to the chosen market.
+     * @param m
+     */
     public static void setMarket(MarketPlace m) {
         market = m;
         refreshStatic();
     }
 
+    /**Refreshes the controller instance. */
     public static void refreshStatic() {
         if (instance != null) {
             instance.refresh();
         }
     }
 
+    /**Refreshes the marketplace and adds furniture.*/
     private void refresh() {
         System.out.println("Market items: " + market.getAvailableItems().size());
 
@@ -49,6 +60,11 @@ public class MarketController {
         }
     }
 
+    /**
+     * Generates a marketplace card for a furniture.
+     * @param f furniture
+     * @return the item card
+     */
     private HBox createItemRow(Furniture f) {
 
         HBox row = new HBox(12);

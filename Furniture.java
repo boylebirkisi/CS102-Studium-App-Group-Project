@@ -1,5 +1,9 @@
 package cs102groupproject.SharedObjects;
 
+/**Represents furniture items.
+ * @author Gülşen Mercan
+ * @date 24/12/2025
+ */
 public class Furniture {
     private int ID;
     private String name;
@@ -84,21 +88,21 @@ public class Furniture {
         this.imagePath = imagePath;
     }
     
+    public PlaceType getPlaceType() {
+        return PlaceType.valueOf(category);
+    }
+    
     @Override
-public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof Furniture)) return false;
-    Furniture f = (Furniture) o;
-    return this.ID == f.ID;
-}
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Furniture)) return false;
+        Furniture f = (Furniture) o;
+        return this.ID == f.ID;
+    }
 
-@Override
-public int hashCode() {
-    return Integer.hashCode(ID);
-}
-
-public PlaceType getPlaceType() {
-    return PlaceType.valueOf(category);
-}
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(ID);
+    }
 
 }

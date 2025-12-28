@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
  * Class representing a chat message between users.
  * @author Ali Mersin
  */
-public class ChatMessage {
+public class ChatMessage extends TransferObject{
     private int senderID;
     private int receiverID;
     private String message;

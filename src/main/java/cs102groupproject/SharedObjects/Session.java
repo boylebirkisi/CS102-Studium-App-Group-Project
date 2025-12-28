@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
  * Class representing a session.
  * @author Ali Mersin
  */
-public class Session {
+public class Session extends TransferObject{
     private User owner;
     private String name;
     private String type;

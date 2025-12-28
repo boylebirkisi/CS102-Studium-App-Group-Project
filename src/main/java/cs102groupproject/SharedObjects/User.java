@@ -3,7 +3,7 @@ package cs102groupproject.SharedObjects;
  * Class representing a user in the application.
  * @author Ali Mersin
  */
-public class User {
+public class User extends TransferObject{
     private int id;
     private String username;
     private String department;

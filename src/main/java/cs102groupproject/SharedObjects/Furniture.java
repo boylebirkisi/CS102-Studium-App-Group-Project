@@ -3,7 +3,7 @@ package cs102groupproject.SharedObjects;
  * Class representing a piece of furniture before placement in a virtual room or before purchase.
  * @author Ali Mersin
  */
-public class Furniture {
+public class Furniture extends TransferObject{
     private int ID;
     private String name;
     private String description;

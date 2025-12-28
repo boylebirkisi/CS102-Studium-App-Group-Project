@@ -4,7 +4,7 @@ import java.util.ArrayList;
 /**
  * Class representing a storage for owned furniture items.
  */
-public class Storage {
+public class Storage extends TransferObject{
 
     private final ArrayList<Furniture> ownedFurnitures;
 

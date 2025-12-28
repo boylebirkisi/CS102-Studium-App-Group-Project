@@ -1,82 +1,85 @@
-// package cs102groupproject.SharedObjects;
+package cs102groupproject.SharedObjects;
 
-// import javafx.scene.paint.Color;
+import javafx.scene.paint.Color;
+/**
+ * OwnedFurniture class represents the furnitures user has bought. It
+ * can show both used and stored situations.
+ * Author:
+ * Date:
+ */
+public class OwnedFurniture {
+    private int furnitureID;
+    private int userID;
+    private Furniture furniture;
+    private boolean isUsedNow;
+    private Color color;          
+    private int offsetX;
+    private int offsetY;
+    private PlaceType placeType;
+    private String placeId; 
 
-// public class OwnedFurniture {
-//     private int furnitureID;
-//     private int userID;
-//     private Furniture furniture;
-//     private boolean isUsedNow;
-//     private Color color;          
-//     private int offsetX;
-//     private int offsetY;
-//     private PlaceType placeType;
-//     private String placeId; 
+    public OwnedFurniture(int furnitureID, int userID, boolean isUsedNow, PlaceType placeType) {
+        this.furnitureID = furnitureID;
+        this.userID = userID;
+        this.isUsedNow = isUsedNow;
+        this.offsetX = 0;
+        this.offsetY = 0;
+        this.placeType = placeType;
+    }
 
-//     public OwnedFurniture(int furnitureID, int userID, boolean isUsedNow, PlaceType placeType) {
-//         this.furnitureID = furnitureID;
-//         this.userID = userID;
-//         this.isUsedNow = isUsedNow;
-//         this.offsetX = 0;
-//         this.offsetY = 0;
-//         this.placeType = placeType;
-//     }
+    public int getFurnitureID() {
+        return furnitureID;
+    }
 
-//     public int getFurnitureID() {
-//         return furnitureID;
-//     }
+    public int getUserID() {
+        return userID;
+    }
 
-//     public int getUserID() {
-//         return userID;
-//     }
+    public boolean getIsUsedNow() {
+        return isUsedNow;
+    }
 
-//     public boolean getIsUsedNow() {
-//         return isUsedNow;
-//     }
+    public void setIsUsedNow(boolean isUsedNow) {
+        this.isUsedNow = isUsedNow;
+    }
 
-//     public void setIsUsedNow(boolean isUsedNow) {
-//         this.isUsedNow = isUsedNow;
-//     }
+    public Color getColor() {
+        return color;
+    }
 
-//     public Color getColor() {
-//         return color;
-//     }
+    public Furniture getFurniture() {     
+        return furniture;
+    }
 
-//     public Furniture getFurniture() {     
-//         return furniture;
-//     }
+    public int getXPosition() {
+        return offsetX;
+    }
 
-//     public int getXPosition() {
-//         return offsetX;
-//     }
+    public void setxPosition(int offsetX) {
+        this.offsetX = offsetX;
+    }
 
-//     public void setxPosition(int offsetX) {
-//         this.offsetX = offsetX;
-//     }
+    public int getYPosition() {
+        return offsetY;
+    }
 
-//     public int getYPosition() {
-//         return offsetY;
-//     }
+    public void setyPosition(int offsetY) {
+        this.offsetY = offsetY;
+    }
 
-//     public void setyPosition(int offsetY) {
-//         this.offsetY = offsetY;
-//     }
+    public PlaceType getPlaceType() {
+        return placeType;
+    }
 
-//     public PlaceType getPlaceType() {
-//         return placeType;
-//     }
+    public String getPlaceId() {      
+        return placeId;
+    }
 
-//     public String getPlaceId() {      
-//         return placeId;
-//     }
+    public void setPlaceId(String placeId) { 
+        this.placeId = placeId;
+    }
 
-//     public void setPlaceId(String placeId) { 
-//         this.placeId = placeId;
-//     }
-
-//     public void setPlaceType(PlaceType placeType) {
-//         this.placeType = placeType;
-//     }
-
-
-// }
+    public void setPlaceType(PlaceType placeType) {
+        this.placeType = placeType;
+    }
+}

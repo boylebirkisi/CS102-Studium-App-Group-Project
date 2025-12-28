@@ -1,0 +1,14 @@
+Gülşen MERCAN
+29 September - 5 October: Discussed the project idea with other members and clarified some details.
+6 October - 12 October: Met with other members to discuss the requirements for our project in preparation for the Project Requirements report.
+13 October - 19 October: Contributed to writing the Requirements Report.
+20 October - 26 October: Helped with the final revisions of the report and prepared for the presentation.
+27 October - 2 November: Met with other teammates to prepare for the UI Design Report and discussed some design ideas.
+3 November - 9 November: Created UI views from scratch using Figma and ProCreate.
+10 November - 16 November: In addition to generating the necessary figures, I helped with the design of the UI report and prepared for the presentation.
+17 November - 23 November: Started drawing sketches of how the design would look and some initial objects.
+24 November - 30 November: Spent most of my time on the UI parts of the project, started writing some basic classes.
+1 December - 7 December: I wrote the introduction of the Detailed Design Report.
+8 December - 14 December: I finished drawing the objects and the main office view, and edited the library view.
+15 December - 21 December: I designed FXML files for the main views and pop-ups, but was unable to work on the code due to personal reasons.
+22 December - 28 December: 

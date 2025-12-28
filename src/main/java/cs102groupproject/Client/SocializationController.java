@@ -117,7 +117,6 @@ public class SocializationController implements UIController {
         });
         
         WebSocketClient.addListener(ActionType.RECEIVE_PRIVATE_MESSAGE, (payload) -> {
-            // Güvenli dönüşüm
             String json = WebSocketClient.getGson().toJson(payload);
             ChatMessage incomingMsg = WebSocketClient.getGson().fromJson(json, ChatMessage.class);
             
@@ -140,7 +139,7 @@ public class SocializationController implements UIController {
             Platform.runLater(() -> {
                 if (!friendsList.contains(newFriend)) {
                     friendsList.add(newFriend);
-                    refreshUI(); // Listeyi güncelle
+                    refreshUI(); 
                 }
             });
         });

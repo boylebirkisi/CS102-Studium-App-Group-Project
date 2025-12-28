@@ -4,7 +4,7 @@ import cs102groupproject.SharedObjects.Habit;
 /**
  * Performs server-side processing for habit-related operations
  * and provides database interactions.
- * Author: Begüm Göktaş
+ * @author Begüm Göktaş
  * Date: 27/12/2025
  */
 public class HabitService {

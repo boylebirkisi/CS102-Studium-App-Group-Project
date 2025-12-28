@@ -144,7 +144,7 @@
                     <execution>
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>cs102groupproject.App</mainClass>
+                            <mainClass>cs102groupproject.Client.App</mainClass>
                         </configuration>
                     </execution>
                 </executions>

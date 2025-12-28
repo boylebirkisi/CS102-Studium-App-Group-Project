@@ -11,4 +11,4 @@ Delfin Eryılmaz
 1 December - 7 December: I helped Begüm for the writing of the server–client model section of the Detailed Design Report and design UML Class Diagram for SharedObjects.(~ 12 hours)
 8 December - 14 December: I started writing code for databse (~ 5 hours).
 15 December - 21 December: I wrote all independent parts of the database, authentication and Google Calendar (~ 20).
-22 December - 28 December: I coded the remaining parts of the database, LoginController and fixed the bugs in classes. (~ 25 hours)
+22 December - 28 December: I coded the remaining parts of the database, LoginController and fixed the bugs in classes. Additionally, I helped to write final version of the Detailed Design Report. (~ 40 hours)

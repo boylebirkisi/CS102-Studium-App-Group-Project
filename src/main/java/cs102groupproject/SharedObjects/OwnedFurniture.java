@@ -4,8 +4,7 @@ import javafx.scene.paint.Color;
 /**
  * OwnedFurniture class represents the furnitures user has bought. It
  * can show both used and stored situations.
- * Author:
- * Date:
+ * Author: Gülşen Mercan
  */
 public class OwnedFurniture {
     private int furnitureID;

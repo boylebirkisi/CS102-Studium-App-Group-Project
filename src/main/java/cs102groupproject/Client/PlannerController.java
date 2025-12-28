@@ -197,15 +197,15 @@ public class PlannerController implements UIController {
         if (habit == null) return;
         for (int i = 0; i < habitCircleFlowPane.getChildren().size(); i++) {
             CheckBox cb = (CheckBox) habitCircleFlowPane.getChildren().get(i);
-            final int index = i; // Lambda içinde kullanmak için final olmalı
+            final int index = i;
             cb.setOnAction(null);
             cb.setSelected(habit.getCompletionString().charAt(i) == '1');
 
             // clicking
-            cb.setOnAction(e -> { // 2. Şimdi tertemiz yeni aksiyonu ata
+            cb.setOnAction(e -> {
                         habit.invertCompletedAtIndex(index); 
                         WebSocketClient.send(new ProtocolMessage(ActionType.UPDATE_HABIT, habit));
-                        System.out.println("Habit güncellendi: " + habit.getCompletionString());
+                        System.out.println("Habit is updated " + habit.getCompletionString());
             });
         }
         boolean[] habitCompletionArray = new boolean[habit.getCompletionString().length()];

@@ -7,7 +7,7 @@ import com.google.gson.GsonBuilder;
 /**
  * Represents a message exchanged between client and server per instance.
  */
-public class ProtocolMessage {
+public class ProtocolMessage extends TransferObject{
     private static final Gson gson = Converters.registerAll(new GsonBuilder()).create();
 
     private ActionType action;

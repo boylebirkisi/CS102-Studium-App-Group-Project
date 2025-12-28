@@ -4,7 +4,7 @@ import java.util.ArrayList;
 /**
  * Class representing a marketplace containing furniture items for sale.
  */
-public class MarketPlace {
+public class MarketPlace extends TransferObject{
 
     private ArrayList<Furniture> furnitureList;
 

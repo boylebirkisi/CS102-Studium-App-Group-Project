@@ -3,7 +3,7 @@ package cs102groupproject.SharedObjects;
  * Class representing user credentials for authentication.
  * @author Ali Mersin
  */
-public class UserCredentials {
+public class UserCredentials extends TransferObject{
     private String username;
     private String email;
     private String accessToken;

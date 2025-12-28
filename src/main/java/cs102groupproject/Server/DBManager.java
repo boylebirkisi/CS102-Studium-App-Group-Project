@@ -637,7 +637,7 @@ public class DBManager {
 
         try (Connection conn = connect(); PreparedStatement stmt = conn.prepareStatement(sqlCommand)) {
 
-            stmt.setInt(1, userId);
+            stmt.setString(1, "" + userId);
             
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {

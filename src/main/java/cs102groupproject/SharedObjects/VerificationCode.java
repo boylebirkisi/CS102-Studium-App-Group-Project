@@ -2,7 +2,7 @@ package cs102groupproject.SharedObjects;
 /**
  * Class representing a verification code sent to a user's email.
  */
-public class VerificationCode {
+public class VerificationCode extends TransferObject{
     private String storedCode;
     private String email;
     private long expiryTime;

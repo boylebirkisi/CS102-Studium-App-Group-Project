@@ -4,7 +4,7 @@ import java.util.Set;
 /**
  * Class representing a place where furniture can be placed in an office.
  */
-public class Place {
+public class Place extends TransferObject{
 
     private String id;
     private PlaceType type;

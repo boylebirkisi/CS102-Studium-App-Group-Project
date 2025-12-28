@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Class for the login response and initial values.
  */
-public class LoginResponse {
+public class LoginResponse extends TransferObject{
     private User user;
     private List<User> friends;
     private List<User> allUsers;

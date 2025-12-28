@@ -10,7 +10,6 @@ import javafx.scene.paint.Color;
 public class OwnedFurniture {
     private int furnitureID;
     private int userID;
-    private Furniture furniture;
     private boolean isUsedNow;
     private Color color;          
     private int offsetX;
@@ -45,10 +44,6 @@ public class OwnedFurniture {
 
     public Color getColor() {
         return color;
-    }
-
-    public Furniture getFurniture() {     
-        return furniture;
     }
 
     public int getXPosition() {

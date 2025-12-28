@@ -190,13 +190,18 @@ public class SocializationController implements UIController {
         refreshUI();
     }
 
-    // Refreshes the UI elements
+    /**
+     * Refreshes the UI elements
+    */
     private void refreshUI() {
         displayCurrencyEarned();
         listFriends();
         displayOnlineFriends();
     }
 
+    /**
+     * Displays the group currency earned by the user
+     */
     @FXML
     private void displayCurrencyEarned()
     {
@@ -242,7 +247,7 @@ public class SocializationController implements UIController {
     }
 
     /**
-     * Get sessions button action
+     * Search sessions button action
      */
     @FXML
     private void searchSessions()
@@ -642,13 +647,17 @@ public class SocializationController implements UIController {
         popUpStage.centerOnScreen();
     }
 
-    // Close the popup window
+    /**
+     * Closes the group session planner popup.
+     */
     public void closePopUp()
     {
         popUpStage.close();
     }
 
-    // Refresh button action
+    /**
+     * Refresh button action
+     */
     @FXML
     public void refreshButtonFunctionality() {
         refreshUI();

@@ -21,6 +21,7 @@ import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 /**
  * Controller for the Group Session Planner Pop-Up.
+ * @author Ali Mersin
  */
 public class GroupSessionPlannerPopUpController implements UIController {
     private SocializationController ownerController;
@@ -94,7 +95,9 @@ public class GroupSessionPlannerPopUpController implements UIController {
                         .getChildren().add(friendBox);
         }
     }
-    // Create Session button action
+    /**
+     * Create Session button action
+     */
     @FXML
     private void handleCreateSessionButton() {
 
@@ -130,7 +133,9 @@ public class GroupSessionPlannerPopUpController implements UIController {
         // Popup closing
         ownerController.closePopUp();
     }
-    // Cancel button action
+    /** 
+     * Cancel button action
+     */
     @FXML
     private void handleCancelButton() {
         ownerController.closePopUp();

@@ -1,7 +1,5 @@
 package cs102groupproject.Server;
 
-import java.util.*;
-
 import cs102groupproject.SharedObjects.GroupSession;
 /**
  * performs part of the session creation-related operations and 

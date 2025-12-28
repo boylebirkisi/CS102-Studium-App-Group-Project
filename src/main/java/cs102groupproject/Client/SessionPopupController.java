@@ -13,6 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 /**
  * Controller for the session creation pop-up.
+ * @author Ali Mersin
  */
 public class SessionPopupController {
 
@@ -42,7 +43,9 @@ public class SessionPopupController {
         );
     }
 
-    // Confirm button action
+    /**
+     * Confirm button action
+     */
     @FXML
     private void onConfirm() {
         // data from UI
@@ -76,13 +79,17 @@ public class SessionPopupController {
         close();
     }
 
-    // Cancel button action
+    /**
+     * Cancel button action
+     */
     @FXML
     private void onCancel() {
         close();
     }
 
-    // Close the popup window
+    /**
+     * Closes the popup window
+     */
     private void close() {
         Stage stage = (Stage) confirmButton.getScene().getWindow();
         stage.close();

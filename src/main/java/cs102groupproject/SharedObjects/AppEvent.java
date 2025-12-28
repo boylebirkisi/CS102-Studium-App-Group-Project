@@ -3,6 +3,7 @@ package cs102groupproject.SharedObjects;
 import java.time.LocalDateTime;
 /**
  * Class representing an event in the application.
+ * @author Ali Mersin
  */
 public class AppEvent extends TransferObject {
     private String name;

@@ -14,6 +14,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 /**
  * Controller for the notifications UI.
+ * @author Ali Mersin
  */
 public class NotificationsController implements UIController {
     ArrayList<Notification> notifications;

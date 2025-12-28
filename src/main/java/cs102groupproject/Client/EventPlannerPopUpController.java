@@ -13,6 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 /**
  * Controller for the event planner pop-up.
+ * @author Ali Mersin
  */
 public class EventPlannerPopUpController implements UIController {
     PlannerController ownerController;
@@ -50,7 +51,9 @@ public class EventPlannerPopUpController implements UIController {
     {
         this.ownerController = ownerController;
     }
-    // Create Event button action
+    /**
+     * Create Event button action
+     */
     @FXML
     private void handleCreateEventButton()
     {
@@ -86,7 +89,9 @@ public class EventPlannerPopUpController implements UIController {
         System.err.println("Zaman formatı hatası! Lütfen HH:mm şeklinde girin.");
     }
     }
-    // Cancel button action
+    /** 
+     * Cancel button action
+     */
     @FXML
     private void handleCancelButton()
     {

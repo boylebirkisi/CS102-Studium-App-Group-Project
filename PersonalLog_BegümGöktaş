@@ -10,5 +10,5 @@ BEGÜM GÖKTAŞ
 24 November - 30 November: I continued researching the server–client model, discussed the design with the team, and participated in meetings focused on the detailed design. (~ 2-3 hours)
 1 December - 7 December: I wrote the server–client model section of the Detailed Design Report and created the corresponding UML diagrams.(~ 10-12 hours)
 8 December - 14 December: I started writing code for the server–client model on my computer and worked on resolving my remaining questions.(~ 3 hours)
-15 December - 21 December:
-22 December - 28 December: 
+15 December - 21 December: I contiuned to code the server-client model.(~ 15 hours)
+22 December - 28 December: I almost finished the integration of server side of the application with the other parts(client(controllers) and database). (~ 17-20 hours)
